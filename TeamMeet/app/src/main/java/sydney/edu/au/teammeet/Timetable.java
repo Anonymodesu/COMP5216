@@ -18,7 +18,7 @@ public class Timetable {
         }
 
         for(int i = 0; i < activities.length; i++) {
-            activities[i] = "";
+            activities[i] = null;
         }
     }
 

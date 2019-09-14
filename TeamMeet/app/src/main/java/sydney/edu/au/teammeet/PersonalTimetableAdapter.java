@@ -10,23 +10,18 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.InputType;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
 public class PersonalTimetableAdapter extends TimetableAdapter {
 
-    private static void setColorFilter(@NonNull Drawable drawable, int color) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            drawable.setColorFilter(new BlendModeColorFilter(color, BlendMode.SRC_ATOP));
-        } else {
-            drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-        }
-    }
-
-    public PersonalTimetableAdapter(Context context, final Timetable timetable) {
+    public PersonalTimetableAdapter(final Context context, final Timetable timetable) {
         super(context, timetable);
 
         //simple touches alternates colour
@@ -52,28 +47,44 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
                 String[] weights = new String[] {"Free", "Low", "Medium", "High"};
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+                final View editFields = LayoutInflater.from(context).inflate(R.layout.edit_timeslot, null);
+
                 // Set up the activity text input
-                final EditText inputActivity = new EditText(mContext);
-                inputActivity.setText(mTimetable.getActivity(position));
+                final EditText inputActivity = editFields.findViewById(R.id.activity_input_field);
                 // Specify the type of input expected; this, for example, sets the input as plaintext
                 inputActivity.setInputType(InputType.TYPE_CLASS_TEXT);
-                builder.setView(inputActivity)
+                // Restore existing activity notes
+                String activity = mTimetable.getActivity(position);
+                if(activity != null) {
+                    inputActivity.setText(mTimetable.getActivity(position));
+                }
+
+                //Set up radio button weighting input
+                final RadioGroup weightingSelection  = editFields.findViewById(R.id.timeslot_weighting_selection);
+                weightingSelection.check(weightingToId(mTimetable.getWeighting(position)));
+
+                builder.setView(editFields)
                         .setTitle("Edit Timeslot")
                         .setMessage("Input timeslot weight and associated activity.")
 
-                        //weight the timeslot
-                        //this doesnt work yet...
-                        .setItems(weights, new DialogInterface.OnClickListener()  {
-                            @Override
-                            public void onClick(DialogInterface dialog, int indexSelected ) {
-                                //chosenWeighting = indexSelected;
-                            }
-                        })
                         .setPositiveButton("Confirm", new
                                 DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         //save the weighting and activity back to timetable
-                                        mTimetable.setActivity(position, inputActivity.getText().toString());
+                                        String currentActivity = inputActivity.getText().toString();
+                                        int currentWeighting = idToWeighting(weightingSelection.getCheckedRadioButtonId());
+                                        mTimetable.setWeighting(position, currentWeighting);
+
+                                        if(currentWeighting > 0) {
+                                            mTimetable.setActivity(position, currentActivity);
+                                            
+                                            //cant associate activities to weighting==0 timeslots
+                                        } else if (!currentActivity.equals("")) {
+                                            Toast.makeText(context, "Can't associate an activity to free timeslots", Toast.LENGTH_LONG).show();
+                                            mTimetable.setActivity(position, "");
+                                        }
+
                                         notifyItemChanged(position);
                                     }
                                 })
@@ -117,5 +128,32 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
                 break;
         }
         holder.myTextView.setBackgroundColor(colour);
+    }
+
+
+    //returns XML radio button ID associated with the weighting
+    private int weightingToId(int weighting) {
+        switch(weighting) {
+            case 0: return R.id.free_radio;
+            case 1: return R.id.low_radio;
+            case 2: return R.id.medium_radio;
+            case 3: return R.id.high_radio;
+            default:
+                Log.d("INCORRECT WEIGHTING", "" + weighting);
+                return -1;
+        }
+    }
+
+    //returns the weighting associated with the radio button ID
+    private int idToWeighting(int id) {
+        switch(id) {
+            case R.id.free_radio: return 0;
+            case R.id.low_radio: return 1;
+            case R.id.medium_radio: return 2;
+            case R.id.high_radio: return 3;
+            default:
+                Log.d("INCORRECT ID", "" + id);
+                return -1;
+        }
     }
 }
