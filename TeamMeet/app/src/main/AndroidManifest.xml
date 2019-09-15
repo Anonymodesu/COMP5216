@@ -12,7 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".EditProfileActivity"></activity>
+        <activity android:name=".ChangePasswordActivity" />
+        <activity android:name=".MainActivity" />
         <activity android:name=".RegisterActivity" />
         <activity
             android:name=".BaseActivity"
