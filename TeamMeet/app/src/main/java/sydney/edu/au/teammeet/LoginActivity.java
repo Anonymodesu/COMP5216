@@ -80,9 +80,6 @@ public class LoginActivity extends BaseActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null){
-            SendUserToMainActivity();
-        }
     }
 
     private void AllowUserToLogin(){
@@ -99,10 +96,18 @@ public class LoginActivity extends BaseActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            FirebaseUser currentUser = mAuth.getCurrentUser();
+                            assert currentUser != null;
+                            if(!currentUser.isEmailVerified()){
+                                Toast.makeText(LoginActivity.this, R.string.pls_verify_email,
+                                        Toast.LENGTH_SHORT).show();
+                                hideProgressDialog();
+                                return;
+                            }
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             SendUserToMainActivity();
-                            Toast.makeText(LoginActivity.this, R.string.auth_success,
+                            Toast.makeText(LoginActivity.this, R.string.register_success,
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             // If sign in fails, display a message to the user.
