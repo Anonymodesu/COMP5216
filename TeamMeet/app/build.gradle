@@ -36,16 +36,19 @@ dependencies {
 
     // Google Sign In SDK (only required for Google Sign In)
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
-
-    // Facebook Android SDK (only required for Facebook Login)
-    // Used in FacebookLoginActivity.
-    implementation 'com.facebook.android:facebook-login:[5,6)'
-    implementation 'com.facebook.android:facebook-login:4.42.0'
+// FirebaseUI (for authentication)
+    implementation 'com.firebaseui:firebase-ui-auth:4.3.2'
+// Required only if Facebook login support is required
+// Find the latest Facebook SDK releases here: https://goo.gl/Ce5L94 implementation 'com.facebook.android:facebook-android-sdk:5.0.0'
+    implementation 'com.facebook.android:facebook-android-sdk:5.0.0'
     implementation 'androidx.browser:browser:1.0.0'
+    //for circle image view, see https://github.com/hdodenhof/CircleImageView
+    implementation 'de.hdodenhof:circleimageview:3.0.1'
 
     // Firebase UI
     // Used in FirebaseUIActivity.
     implementation 'com.firebaseui:firebase-ui-auth:4.3.2'
+
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
