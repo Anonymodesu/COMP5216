@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -14,8 +14,22 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/global_header"
+        android:layout_margin="@dimen/field_margin"
+        android:layout_centerHorizontal="true"
         android:text="Haha Nothing here"
         tools:layout_editor_absoluteX="119dp"
-        tools:layout_editor_absoluteY="318dp" />
+        tools:layout_editor_absoluteY="318dp"
+        />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:id="@+id/TestChangePassWordBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Link to Change Password"
+        tools:layout_editor_absoluteX="134dp"
+        tools:layout_editor_absoluteY="459dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/textView"
+        />
+</RelativeLayout>

@@ -149,4 +149,10 @@ public class LoginActivity extends BaseActivity {
     public void SendUserToForgetPwActivity(){
 
     }
+    public void open_password(View v) {
+        finish();
+        Intent i = new Intent(LoginActivity.this,ChangePasswordActivity.class);
+        startActivity(i);
+    }
+
 }

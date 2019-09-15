@@ -5,10 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="100dp"
     android:background="@color/colorPrimary">
+
     <ImageView
         android:id="@+id/Logo"
         android:layout_width="120dp"
         android:layout_height="120dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="291dp"
         android:background="@drawable/logo" />
 
     <TextView
