@@ -2,52 +2,93 @@ package sydney.edu.au.teammeet;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.BlendMode;
-import android.graphics.BlendModeColorFilter;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.RecyclerView;
+
+import org.w3c.dom.Text;
 
 public class PersonalTimetableAdapter extends TimetableAdapter {
 
     public PersonalTimetableAdapter(final Context context, final Timetable timetable) {
         super(context, timetable);
+        setupClickListeners(context, timetable);
+    }
 
+    // binds the data to View of each cell
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int adapterPos) {
+        int viewType = getItemViewType(adapterPos);
+        if(viewType == TIMESLOT_VIEW_TYPE) { //generate timeslot values
+
+            int timetablePos = adapterPosToTimetablePos(adapterPos);
+            TextView textView = ((TimeslotViewHolder) holder).myTextView;
+
+            int weighting = mTimetable.getWeighting(timetablePos);
+            textView.setText("" + weighting);
+
+            //cell changes colour depending on weighting
+            int colour = Color.WHITE;
+            switch(weighting) {
+                case 0:
+                    colour = Color.parseColor("#FFFFFF"); //white
+                    break;
+
+                case 1:
+                    colour = Color.parseColor("#FFFF00"); //yellow
+                    break;
+
+                case 2:
+                    colour = Color.parseColor("#FF9900"); //orange
+                    break;
+
+                case 3:
+                    colour = Color.parseColor("#FF0000"); //red
+                    break;
+            }
+            textView.setBackgroundColor(colour);
+
+        } else { //let super class handle descriptor cells
+            super.onBindViewHolder(holder, adapterPos);
+        }
+
+    }
+
+    private void setupClickListeners(final Context context, final Timetable timetable) {
         //simple touches alternates colour
         setClickListener(new ItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
-                if(mTimetable.getWeighting(position) > 0) {
-                    mTimetable.setWeighting(position, 0);
+            public void onItemClick(View view, int adapterPos) {
+                int timetablePos = adapterPosToTimetablePos(adapterPos);
+
+                if(mTimetable.getWeighting(timetablePos) > 0) {
+                    mTimetable.setWeighting(timetablePos, 0);
 
                 } else {
 
-                    mTimetable.setWeighting(position, 2);
+                    mTimetable.setWeighting(timetablePos, 2);
                 }
 
-                notifyItemChanged(position);
+                notifyItemChanged(adapterPos);
             }
         });
 
         //long touches allow for more customised edits
         setLongClickListener(new TimetableAdapter.ItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(View view, final int position) {
-                String[] weights = new String[] {"Free", "Low", "Medium", "High"};
-
+            public boolean onItemLongClick(View view, final int adapterPos) {
+                final int timetablePos = adapterPosToTimetablePos(adapterPos);
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-
                 final View editFields = LayoutInflater.from(context).inflate(R.layout.edit_timeslot, null);
 
                 // Set up the activity text input
@@ -55,14 +96,14 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
                 // Specify the type of input expected; this, for example, sets the input as plaintext
                 inputActivity.setInputType(InputType.TYPE_CLASS_TEXT);
                 // Restore existing activity notes
-                String activity = mTimetable.getActivity(position);
+                String activity = mTimetable.getActivity(timetablePos);
                 if(activity != null) {
-                    inputActivity.setText(mTimetable.getActivity(position));
+                    inputActivity.setText(mTimetable.getActivity(timetablePos));
                 }
 
                 //Set up radio button weighting input
                 final RadioGroup weightingSelection  = editFields.findViewById(R.id.timeslot_weighting_selection);
-                weightingSelection.check(weightingToId(mTimetable.getWeighting(position)));
+                weightingSelection.check(weightingToId(mTimetable.getWeighting(timetablePos)));
 
                 builder.setView(editFields)
                         .setTitle("Edit Timeslot")
@@ -74,18 +115,18 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
                                         //save the weighting and activity back to timetable
                                         String currentActivity = inputActivity.getText().toString();
                                         int currentWeighting = idToWeighting(weightingSelection.getCheckedRadioButtonId());
-                                        mTimetable.setWeighting(position, currentWeighting);
+                                        mTimetable.setWeighting(timetablePos, currentWeighting);
 
                                         if(currentWeighting > 0) {
-                                            mTimetable.setActivity(position, currentActivity);
-                                            
+                                            mTimetable.setActivity(timetablePos, currentActivity);
+
                                             //cant associate activities to weighting==0 timeslots
                                         } else if (!currentActivity.equals("")) {
                                             Toast.makeText(context, "Can't associate an activity to free timeslots", Toast.LENGTH_LONG).show();
-                                            mTimetable.setActivity(position, "");
+                                            mTimetable.setActivity(timetablePos, "");
                                         }
 
-                                        notifyItemChanged(position);
+                                        notifyItemChanged(adapterPos);
                                     }
                                 })
                         .setNegativeButton("Cancel", new
@@ -100,34 +141,6 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
                 return true;
             }
         });
-    }
-
-    // binds the data to the TextView in each cell
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        int weighting = mTimetable.getWeighting(position);
-        holder.myTextView.setText("" + weighting);
-
-        //cell changes colour depending on weighting
-        int colour = Color.WHITE;
-        switch(weighting) {
-            case 0:
-                colour = Color.parseColor("#FFFFFF"); //white
-                break;
-
-            case 1:
-                colour = Color.parseColor("#FFFF00"); //yellow
-                break;
-
-            case 2:
-                colour = Color.parseColor("#FF9900"); //orange
-                break;
-
-            case 3:
-                colour = Color.parseColor("#FF0000"); //red
-                break;
-        }
-        holder.myTextView.setBackgroundColor(colour);
     }
 
 

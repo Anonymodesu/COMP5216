@@ -23,7 +23,8 @@ public class PersonalTimetableActivity extends AppCompatActivity {
         setContentView(R.layout.activity_personal_timetable);
 
         timetableRecyclerView = findViewById(R.id.timetablegridview);
-        timetableRecyclerView.setLayoutManager(new GridLayoutManager(this, 7));
+        // add 1 to the Grid's spanCount to account for hour descriptors
+        timetableRecyclerView.setLayoutManager(new GridLayoutManager(this, Timetable.NUM_DAYS + 1));
         timetableGridAdapter = new PersonalTimetableAdapter(this, new Timetable());
         timetableRecyclerView.setAdapter(timetableGridAdapter);
     }

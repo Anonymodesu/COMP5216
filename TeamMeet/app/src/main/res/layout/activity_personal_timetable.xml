@@ -6,14 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".PersonalTimetableActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/timetablegridview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/clear_timetable_button"
-        android:layout_alignParentTop="false"
-        android:layout_centerInParent="true" />
-
     <Button
         android:id="@+id/clear_timetable_button"
         android:layout_width="wrap_content"
@@ -22,4 +14,13 @@
         android:layout_centerInParent="true"
         android:onClick="onClear"
         android:text="Clear Timetable" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/timetablegridview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/clear_timetable_button"
+        android:layout_alignParentTop="false"
+        android:layout_centerInParent="true" />
+
 </RelativeLayout>
