@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,6 +27,7 @@ public class RegisterActivity extends BaseActivity {
     //Views
     private EditText UserEmail, UserPassword, UserConfirmPassword,UserName;
     private Button CreateAccountButton;
+    private TextView pageName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,9 @@ public class RegisterActivity extends BaseActivity {
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+        pageName = findViewById(R.id.page_name);
+        //set page title
+        pageName.setText("Register");
         UserEmail = (EditText) findViewById(R.id.Siginup_Email);
         UserPassword = (EditText) findViewById(R.id.Signup_Password);
         UserConfirmPassword = (EditText) findViewById(R.id.Signup_Confirmpw);

@@ -13,14 +13,14 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:src="@drawable/profile"
         app:civ_border_width="2dp"
         app:civ_border_color="@color/colorPrimaryDark"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/global_header"
-        android:layout_margin="@dimen/field_margin"/>
+        android:layout_margin="@dimen/field_margin_small"/>
     <EditText
         android:id="@+id/Siginup_Username"
         android:layout_width="match_parent"
@@ -74,7 +74,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/Signup_Confirmpw"
-        android:layout_margin="@dimen/field_margin"
+        android:layout_margin="@dimen/field_margin_small"
         android:textColor="@color/textPrimary"
         android:background="@color/colorPrimary"
         android:text="Create Account" />

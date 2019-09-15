@@ -6,8 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.view.View;
 
@@ -16,59 +18,92 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class ChangePasswordActivity extends AppCompatActivity {
+public class ChangePasswordActivity extends BaseActivity {
+    private static final String TAG = "ChangePasswordActivity";
 
-    EditText e1;
-    FirebaseAuth auth;
-    ProgressDialog dialog;
+    private EditText userEmail;
+    private FirebaseAuth mAuth;
+    private ProgressDialog dialog;
     private Button updatePasswordBtn;
+    private TextView pageName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
-        e1 = findViewById(R.id.EditPasswordText);
-        auth = FirebaseAuth.getInstance();
-        dialog = new ProgressDialog(this);
+        //views
+        pageName = findViewById(R.id.page_name);
+        //set page title
+        pageName.setText("Update Password");
 
+        mAuth = FirebaseAuth.getInstance();
+
+        userEmail = findViewById(R.id.pw_reset_email);
         updatePasswordBtn = findViewById(R.id.UpdatePasswordBtn);
         updatePasswordBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                change(view);
+                sendResetPwEmail();
+//                change(view);
             }
         });
     }
 
-    public void change(View v) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        System.out.println("Current user email: "+ user.getEmail()+" "+user.getDisplayName());
-        if (user != null) {
-            dialog.setMessage("Changing Password, Please Wait...");
-            user.updatePassword(e1.getText().toString())
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful()) {
-                                dialog.dismiss();
-                                System.out.println("coming here, sending user back to main");
-                                SendUserToMainActivity();
-                                Toast.makeText(getApplicationContext(),"Your Password has been Changed",Toast.LENGTH_LONG).show();
-                            }
-                            else{
-                                dialog.dismiss();
-                                Toast.makeText(getApplicationContext(), "Password could not be Changed",Toast.LENGTH_LONG).show();
-                            }
+    public void sendResetPwEmail(){
+        showProgressDialog();
+        mAuth.sendPasswordResetEmail(userEmail.getText().toString())
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "SendResetPasswordLink:success");
+                            Toast.makeText(ChangePasswordActivity.this, "Reset password link has been sent to you email address", Toast.LENGTH_SHORT).show();
+                            SendUserToLoginActivity();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "SendResetPasswordLink:failure", task.getException());
+                            String message = task.getException().getMessage();
+                            Toast.makeText(ChangePasswordActivity.this, "send reset password email failed: " + message, Toast.LENGTH_SHORT).show();
                         }
-                    });
-        }
-
+                        hideProgressDialog();
+                    }
+                });
     }
+//    public void change(View v) {
+//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//        System.out.println("Current user email: "+ user.getEmail()+" "+user.getDisplayName());
+//        if (user != null) {
+//            dialog.setMessage("Changing Password, Please Wait...");
+//            user.updatePassword(e1.getText().toString())
+//                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<Void> task) {
+//                            if(task.isSuccessful()) {
+//                                dialog.dismiss();
+//                                System.out.println("coming here, sending user back to main");
+//                                SendUserToMainActivity();
+//                                Toast.makeText(getApplicationContext(),"Your Password has been Changed",Toast.LENGTH_LONG).show();
+//                            }
+//                            else{
+//                                dialog.dismiss();
+//                                Toast.makeText(getApplicationContext(), "Password could not be Changed",Toast.LENGTH_LONG).show();
+//                            }
+//                        }
+//                    });
+//        }
+//
+//    }
 
     public void SendUserToMainActivity(){
         Intent mainIntent = new Intent(ChangePasswordActivity.this, MainActivity.class);
         //can be deleted depend on main page
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(mainIntent);
+        finish();
+    }
+    private void SendUserToLoginActivity() {
+        Intent intent = new Intent(ChangePasswordActivity.this, LoginActivity.class);
+        startActivity(intent);
         finish();
     }
 }

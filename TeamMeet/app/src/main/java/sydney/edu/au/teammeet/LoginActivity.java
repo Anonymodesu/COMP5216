@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -46,6 +47,7 @@ public class LoginActivity extends BaseActivity {
     private static final int RC_SIGN_IN = 9001;
 
     private EditText userEmail, userPassword;
+    private TextView pageName;
     private ImageView googleSignInButton, facebookSignInButton;
     private GoogleSignInClient mGoogleSignInClient;
 //for facebook sign in
@@ -66,6 +68,10 @@ public class LoginActivity extends BaseActivity {
         }
         mCallbackManager = CallbackManager.Factory.create();
         //Views
+        pageName = findViewById(R.id.page_name);
+        //set page title
+        pageName.setText(R.string.pageName_Login);
+
         userEmail = findViewById(R.id.userEmail);
         userPassword = findViewById(R.id.userPassword);
         googleSignInButton = findViewById(R.id.google_signin_button);
@@ -313,11 +319,7 @@ public class LoginActivity extends BaseActivity {
         finish();
     }
     public void SendUserToForgetPwActivity(){
-
-    }
-    public void open_password(View v) {
-        finish();
-        Intent i = new Intent(LoginActivity.this,ChangePasswordActivity.class);
-        startActivity(i);
+        Intent intent = new Intent(LoginActivity.this, ChangePasswordActivity.class);
+        startActivity(intent);
     }
 }
