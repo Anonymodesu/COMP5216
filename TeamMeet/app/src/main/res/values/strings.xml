@@ -2,8 +2,8 @@
 <resources>
     <string name="app_name">Team Meet</string>
     <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
-    <string name="facebook_app_id">2234831713475693</string>
-    <string name="fb_login_protocol_scheme">fb2234831713475693</string>
+    <string name="facebook_app_id" translatable="false">2234831713475693</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb2234831713475693</string>
 
     <string name="signed_out">Signed Out</string>
     <string name="sign_in">Sign In</string>

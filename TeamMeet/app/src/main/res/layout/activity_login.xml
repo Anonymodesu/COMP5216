@@ -81,7 +81,8 @@
             android:layout_height="80dp"
             android:layout_marginLeft="80dp"
             android:layout_marginTop="8dp"
-            android:src="@drawable/facebook" />
+            android:src="@drawable/facebook">
+        </androidx.appcompat.widget.AppCompatImageView>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/google_signin_button"
