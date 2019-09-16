@@ -1,15 +1,24 @@
 package sydney.edu.au.teammeet;
 
-public class Timetable {
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+import org.litepal.crud.LitePalSupport;
+
+public class Timetable extends LitePalSupport{
 
     private static final int NUM_DAYS = 7;
     private static final int NUM_HALF_HOURS = 24;
     private static final int NUM_CELLS = NUM_DAYS * NUM_HALF_HOURS;
 
     private final String[] activities;
+
     private final int[] availabilities;
 
     public Timetable() {
+
         activities = new String[NUM_CELLS];
         availabilities = new int[NUM_CELLS];
 

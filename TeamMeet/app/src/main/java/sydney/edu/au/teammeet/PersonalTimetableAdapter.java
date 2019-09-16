@@ -7,16 +7,26 @@ import android.graphics.BlendModeColorFilter;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
+import org.litepal.LitePal;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class PersonalTimetableAdapter extends TimetableAdapter {
+
+    ArrayList<String> items;
+    private TimetableBean mTimetableBean;
 
     private static void setColorFilter(@NonNull Drawable drawable, int color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -33,12 +43,12 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
         setClickListener(new ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                if(mTimetable.getWeighting(position) > 0) {
+                if (mTimetable.getWeighting(position) > 0) {
                     mTimetable.setWeighting(position, 0);
-
+                    //saveItemsToDatabase();
                 } else {
-
                     mTimetable.setWeighting(position, 2);
+                    //saveItemsToDatabase();
                 }
 
                 notifyItemChanged(position);
@@ -49,44 +59,55 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
         setLongClickListener(new TimetableAdapter.ItemLongClickListener() {
             @Override
             public boolean onItemLongClick(View view, final int position) {
-                String[] weights = new String[] {"Free", "Low", "Medium", "High"};
+                String[] weights = new String[]{"Free", "Low", "Medium", "High"};
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 // Set up the activity text input
                 final EditText inputActivity = new EditText(mContext);
-                inputActivity.setText(mTimetable.getActivity(position));
-                // Specify the type of input expected; this, for example, sets the input as plaintext
-                inputActivity.setInputType(InputType.TYPE_CLASS_TEXT);
-                builder.setView(inputActivity)
-                        .setTitle("Edit Timeslot")
-                        .setMessage("Input timeslot weight and associated activity.")
 
-                        //weight the timeslot
-                        //this doesnt work yet...
-                        .setItems(weights, new DialogInterface.OnClickListener()  {
-                            @Override
-                            public void onClick(DialogInterface dialog, int indexSelected ) {
-                                //chosenWeighting = indexSelected;
-                            }
-                        })
-                        .setPositiveButton("Confirm", new
-                                DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        //save the weighting and activity back to timetable
-                                        mTimetable.setActivity(position, inputActivity.getText().toString());
-                                        notifyItemChanged(position);
-                                    }
-                                })
-                        .setNegativeButton("Cancel", new
-                                DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        // User cancelled the dialog
-                                        // Nothing happens
-                                    }
-                                });
+                if (inputActivity.getText().toString() == null) {
+                }
+                    inputActivity.setText(mTimetable.getActivity(position));
+                    // Specify the type of input expected; this, for example, sets the input as plaintext
+                    inputActivity.setInputType(InputType.TYPE_CLASS_TEXT);
+                    builder.setView(inputActivity)
+                            .setTitle("Edit Timeslot")
+                            .setMessage("Input timeslot weight and associated activity.")
 
-                builder.create().show();
-                return true;
+                            //weight the timeslot
+                            //this doesnt work yet...
+                            .setItems(weights, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int indexSelected) {
+                                    //chosenWeighting = indexSelected;
+                                }
+                            })
+                            .setPositiveButton("Confirm", new
+                                    DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            //save the weighting and activity back to timetable
+                                            mTimetable.setActivity(position, inputActivity.getText().toString());
+                                            notifyItemChanged(position);
+
+                                            //save data to local database
+                                            mTimetableBean = new TimetableBean();
+                                            mTimetableBean.setTimetableID(position);
+                                            mTimetableBean.setActivities(inputActivity.getText().toString());
+                                            mTimetableBean.saveThrows();
+
+                                            Log.i("Input:" + position, inputActivity.getText().toString());
+                                        }
+                                    })
+                            .setNegativeButton("Cancel", new
+                                    DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            // User cancelled the dialog
+                                            // Nothing happens
+                                        }
+                                    });
+
+                    builder.create().show();
+                    return true;
             }
         });
     }
@@ -118,4 +139,5 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
         }
         holder.myTextView.setBackgroundColor(colour);
     }
+
 }

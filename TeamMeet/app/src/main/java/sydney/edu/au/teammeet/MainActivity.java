@@ -5,6 +5,8 @@ import android.view.View;
 import android.content.Intent;
 import android.os.Bundle;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     public final int GOTO_PERSONAL_TIMETABLE_CODE = 420;

@@ -1,5 +1,6 @@
 package sydney.edu.au.teammeet;
 
+import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.BaseAdapter;
 import android.content.Context;
@@ -11,9 +12,15 @@ import android.view.LayoutInflater;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.litepal.LitePal;
+import org.litepal.crud.LitePalSupport;
+
+import java.util.ArrayList;
+
 //Base Timetable class for personal timetables and group timetable adapters
 public abstract class TimetableAdapter extends RecyclerView.Adapter<TimetableAdapter.ViewHolder> {
     protected Timetable mTimetable;
+    protected TimetableBean mTimetableBean;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private ItemLongClickListener mLongClickListener;
@@ -43,6 +50,8 @@ public abstract class TimetableAdapter extends RecyclerView.Adapter<TimetableAda
     public void clearTimetable() {
         mTimetable = new Timetable();
         notifyDataSetChanged();
+        //delete data from the local database
+        LitePal.deleteAll(TimetableBean.class);
     }
 
 
@@ -95,4 +104,5 @@ public abstract class TimetableAdapter extends RecyclerView.Adapter<TimetableAda
     public interface ItemLongClickListener {
         boolean onItemLongClick(View view, int position);
     }
+
 }
