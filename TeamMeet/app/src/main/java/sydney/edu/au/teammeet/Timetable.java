@@ -9,9 +9,10 @@ import org.litepal.crud.LitePalSupport;
 
 public class Timetable extends LitePalSupport{
 
-    private static final int NUM_DAYS = 7;
-    private static final int NUM_HALF_HOURS = 24;
-    private static final int NUM_CELLS = NUM_DAYS * NUM_HALF_HOURS;
+    public static final int START_HOUR = 8;
+    public static final int NUM_DAYS = 7;
+    public static final int NUM_HALF_HOURS = 24;
+    public static final int NUM_CELLS = NUM_DAYS * NUM_HALF_HOURS;
 
     private final String[] activities;
 
@@ -27,7 +28,7 @@ public class Timetable extends LitePalSupport{
         }
 
         for(int i = 0; i < activities.length; i++) {
-            activities[i] = "";
+            activities[i] = null;
         }
     }
 
