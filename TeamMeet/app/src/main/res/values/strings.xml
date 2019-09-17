@@ -4,10 +4,16 @@
     <string name="facebook_app_id" translatable="false">2234831713475693</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb2234831713475693</string>
 
+    <!--String for global drawer items-->
+    <string name="home">Home</string>
+    <string name="profile">My Profile</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="time_table">My Timetable</string>
+    <string name="group">My Group</string>
+
     <string name="signed_out">Signed Out</string>
     <string name="sign_in">Sign In</string>
     <string name="create_account">Create Account</string>
-    <string name="sign_out">Sign Out</string>
     <string name="disconnect">Disconnect</string>
     <string name="loading">Loading…</string>
     <string name="auth_success">You are logged in successfully.</string>
@@ -16,7 +22,7 @@
     <string name="auth_status_failed">Please Sign in again or Sign up for a new account</string>
     <string name="title_activity_base">BaseActivity</string>
     <string name="emailpassword_status_fmt">Email User: %1$s (verified: %2$b)</string>
-    <string name="pls_verify_email">Please verify your email address before you login</string>
+    <string name="pls_verify_email">A email has been sent to your email address when you register, please verify before you login</string>
     <string name="draw_open">Drawer Open</string>
     <string name="draw_close">Drawer Close</string>
     <string name="pageName_Login">Log In</string>

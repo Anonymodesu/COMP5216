@@ -33,7 +33,8 @@ public class RegisterActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
+        //setup soft keyboard setting for login
+        setupUI(findViewById(R.id.register_form), RegisterActivity.this);
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         pageName = findViewById(R.id.page_name);
@@ -96,10 +97,12 @@ public class RegisterActivity extends BaseActivity {
                                         }
                                     });
 
-                            Toast.makeText(RegisterActivity.this, R.string.auth_success, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(RegisterActivity.this, R.string.auth_success, Toast.LENGTH_SHORT).show();
+                            showSnackbar(getResources().getString(R.string.register_success), RegisterActivity.this);
                         } else {
                             String message = task.getException().getMessage();
-                            Toast.makeText(RegisterActivity.this, R.string.auth_failed + message, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(RegisterActivity.this, R.string.auth_failed + message, Toast.LENGTH_SHORT).show();
+                            showSnackbar(R.string.auth_failed + message, RegisterActivity.this);
                         }
 
                         hideProgressDialog();
@@ -155,14 +158,16 @@ public class RegisterActivity extends BaseActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(RegisterActivity.this,
-                                    "Verification email sent to " + user.getEmail(),
-                                    Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(RegisterActivity.this,
+////                                    "Verification email sent to " + user.getEmail(),
+////                                    Toast.LENGTH_SHORT).show();
+                            showSnackbar("Verification email has been sent to " + user.getEmail(), RegisterActivity.this);
                         } else {
                             Log.e(TAG, "sendEmailVerification", task.getException());
-                            Toast.makeText(RegisterActivity.this,
-                                    "Failed to send verification email.",
-                                    Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(RegisterActivity.this,
+//                                    "Failed to send verification email.",
+//                                    Toast.LENGTH_SHORT).show();
+                            showSnackbar("Failed to send verification email.", RegisterActivity.this);
                         }
                         // [END_EXCLUDE]
                     }

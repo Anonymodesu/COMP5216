@@ -1,11 +1,14 @@
 package sydney.edu.au.teammeet;
 
 import androidx.annotation.NonNull;
+import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -59,6 +62,12 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        //set up page name
+        pageName=findViewById(R.id.page_name);
+        pageName.setText("Log In");
+       //setup soft keyboard setting for login
+        setupUI(findViewById(R.id.signin_form), LoginActivity.this);
+
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
@@ -68,9 +77,9 @@ public class LoginActivity extends BaseActivity {
         }
         mCallbackManager = CallbackManager.Factory.create();
         //Views
-        pageName = findViewById(R.id.page_name);
-        //set page title
-        pageName.setText(R.string.pageName_Login);
+//        pageName = findViewById(R.id.page_name);
+//        //set page title
+//        pageName.setText(R.string.pageName_Login);
 
         userEmail = findViewById(R.id.userEmail);
         userPassword = findViewById(R.id.userPassword);
@@ -160,14 +169,16 @@ public class LoginActivity extends BaseActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            Toast.makeText(LoginActivity.this, R.string.auth_success, Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(LoginActivity.this, R.string.auth_success, Toast.LENGTH_SHORT).show();
+                            showSnackbar(getResources().getString(R.string.auth_success), LoginActivity.this);
                             //FirebaseUser user = mAuth.getCurrentUser();
                             SendUserToMainActivity();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             String message = task.getException().getMessage();
-                            Toast.makeText(LoginActivity.this, R.string.auth_failed + message, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(LoginActivity.this, R.string.auth_failed + message, Toast.LENGTH_SHORT).show();
+                            showSnackbar(R.string.auth_failed + message, LoginActivity.this);
                         }
 
                         // [START_EXCLUDE]
@@ -196,8 +207,9 @@ public class LoginActivity extends BaseActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+//                                    Toast.LENGTH_SHORT).show();
+                            showSnackbar("Authentication failed.", LoginActivity.this);
                         }
 
                         // [START_EXCLUDE]
@@ -224,7 +236,8 @@ public class LoginActivity extends BaseActivity {
                 Log.w(TAG, "Google sign in failed", e);
                 // [START_EXCLUDE]
                 String message = task.getException().getMessage();
-                Toast.makeText(LoginActivity.this, R.string.auth_failed + message, Toast.LENGTH_SHORT).show();
+                showSnackbar(R.string.auth_failed + message, LoginActivity.this);
+//                Toast.makeText(LoginActivity.this, R.string.auth_failed + message, Toast.LENGTH_SHORT).show();
                 // [END_EXCLUDE]
             }
         }else{
@@ -251,21 +264,21 @@ public class LoginActivity extends BaseActivity {
                             FirebaseUser currentUser = mAuth.getCurrentUser();
                             assert currentUser != null;
                             if(!currentUser.isEmailVerified()){
-                                Toast.makeText(LoginActivity.this, R.string.pls_verify_email,
-                                        Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(LoginActivity.this, R.string.pls_verify_email,
+//                                        Toast.LENGTH_SHORT).show();
+                                showSnackbar(getResources().getString(R.string.pls_verify_email), LoginActivity.this);
                                 hideProgressDialog();
                                 return;
                             }
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             SendUserToMainActivity();
-                            Toast.makeText(LoginActivity.this, R.string.register_success,
-                                    Toast.LENGTH_SHORT).show();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, R.string.auth_failed,
-                                    Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(LoginActivity.this, R.string.auth_failed,
+//                                    Toast.LENGTH_SHORT).show();
+                            showSnackbar(getResources().getString(R.string.auth_failed), LoginActivity.this);
                         }
 
                         hideProgressDialog();

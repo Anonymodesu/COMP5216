@@ -17,7 +17,7 @@
         android:layout_below="@+id/global_header"
         android:layout_margin="@dimen/field_margin"
         android:layout_centerHorizontal="true"
-        android:text="Haha Nothing here"
+        android:text="Swipe left to open menu and Sign out"
         tools:layout_editor_absoluteX="119dp"
         tools:layout_editor_absoluteY="318dp" />
 
