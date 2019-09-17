@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/global_header"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/header_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary">
+    <ImageView
+        android:id="@+id/Logo"
+        android:layout_width="120dp"
+        android:layout_height="100dp"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/field_margin_small"
+        android:background="@drawable/logo" />
+
+    <TextView
+        android:id="@+id/page_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text=""
+        android:textColor="@color/textPrimary"
+        android:textSize="24sp" />
+    <TextView
+        android:id="@+id/status"
+        style="@style/ThemeOverlay.MyTextDetail"
+        android:text=""
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/page_name"
+        android:textColor="@color/colorAccent"/>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</RelativeLayout>
