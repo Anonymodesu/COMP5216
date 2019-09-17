@@ -15,14 +15,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "472424947088-m5ung6fj7odpn3phki573in4ufs3pdeu.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "sydney.edu.au.teammeet",
-            "certificate_hash": "c215c9ebcb5831c78baa91b871bf6af55cee643e"
-          }
-        },
-        {
           "client_id": "472424947088-e0e89fpilbj7o7ora7o0tus480btnd5r.apps.googleusercontent.com",
           "client_type": 3
         }

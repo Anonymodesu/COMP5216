@@ -6,8 +6,6 @@
     <color name="colorAccent">#fabf41</color>
     <color name="textPrimary">#fcfced</color>
     <color name="textSecondary">#165394</color>
-    <color name="textNormal">#595758</color>
-    <color name="textAccent">#b83383</color>
 
     <color name="grey_100">#F5F5F5</color>
     <color name="grey_300">#E0E0E0</color>

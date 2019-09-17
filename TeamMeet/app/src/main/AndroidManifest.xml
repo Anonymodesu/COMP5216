@@ -18,16 +18,7 @@
             android:resource="@xml/litepal" />-->
 
         <activity android:name=".PersonalTimetableActivity" /> <!-- android:theme="@style/AppTheme" -->
-
-        <activity android:name=".ChangePasswordActivity"></activity>
-        <activity android:name=".EditProfileActivity" />
-        <activity android:name=".MainActivity" />
-        <activity android:name=".RegisterActivity" />
-        <activity
-            android:name=".BaseActivity"
-            android:label="@string/title_activity_base"
-            android:theme="@style/NoActionBar" /> <!-- android:theme="@style/AppTheme" -->
-        <activity android:name=".LoginActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
