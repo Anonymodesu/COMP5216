@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EditProfileActivity">
+
+
+    <include
+        android:id="@+id/global_header"
+        layout="@layout/global_header">
+    </include>
+
+    <EditText
+        android:id="@+id/Edit_Profile_Page"
+        android:layout_width="147dp"
+        android:layout_height="49dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Edit Profile"
+        tools:layout_editor_absoluteX="115dp"
+        tools:layout_editor_absoluteY="136dp" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/edit_profile_image"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_below="@+id/global_header"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/field_margin"
+        android:src="@drawable/profile"
+        app:civ_border_color="@color/colorPrimaryDark"
+        app:civ_border_width="2dp"
+        tools:layout_editor_absoluteX="112dp"
+        tools:layout_editor_absoluteY="194dp" />
+
+    <EditText
+        android:id="@+id/edit_screen_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/global_header"
+        android:layout_margin="@dimen/field_margin_small"
+        android:drawableLeft="@drawable/email"
+        android:hint="Screen Name"
+        android:inputType="textEmailAddress"
+        tools:layout_editor_absoluteX="10dp"
+        tools:layout_editor_absoluteY="350dp" />
+
+    <EditText
+        android:id="@+id/edit_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/global_header"
+        android:layout_margin="@dimen/field_margin_small"
+        android:drawableLeft="@drawable/email"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        tools:layout_editor_absoluteX="9dp"
+        tools:layout_editor_absoluteY="419dp" />
+
+    <EditText
+        android:id="@+id/Edit_Password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/userEmail"
+        android:layout_margin="@dimen/field_margin_small"
+        android:drawableLeft="@drawable/password"
+        android:hint="Password"
+        android:inputType="textPassword"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="501dp" />
+
+    <Button
+        android:id="@+id/Change_Password_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Chane you password"
+        tools:layout_editor_absoluteX="221dp"
+        tools:layout_editor_absoluteY="577dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
