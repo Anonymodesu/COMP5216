@@ -21,24 +21,27 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends BaseActivity {
+    //Variables for global navigation
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     public Toolbar toolbar;
     private TextView pageName;
-    private Button TestChangePasswordBtn;
     private FirebaseAuth mAuth;
-
     private String userName, userEmail;
+    //Variables for main activity
+    private Button TestChangePasswordBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //set up pagename
+        //[START_of setup page header and navigation
+        //set up page name
         pageName=findViewById(R.id.page_name);
         pageName.setText("Home");
-
+        //get current user information
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         assert user != null;
@@ -47,6 +50,7 @@ public class MainActivity extends BaseActivity {
         //set up global nav drawer
         setSupportActionBar(toolbar);
         DrawerUtil.getDrawer(this, toolbar, userName, userEmail);
+        //[END_of setup page header and navigation]
 
 
         TestChangePasswordBtn =  findViewById(R.id.TestChangePassWordBtn);

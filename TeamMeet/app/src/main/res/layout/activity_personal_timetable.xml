@@ -8,26 +8,28 @@
 
     <include
         android:id="@+id/global_header"
-        layout="@layout/global_header"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"></include>
+        layout="@layout/global_header"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/global_header"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true">
 
     <Button
         android:id="@+id/clear_timetable_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/global_header"
-        android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"
+        android:layout_gravity="center"
         android:onClick="onClear"
+        style="@style/ThemeOverlay.MyDarkButton"
         android:text="Clear Timetable" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/timetablegridview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/clear_timetable_button"
-        android:layout_alignParentTop="false"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true" />
+    </LinearLayout>
 
 </RelativeLayout>

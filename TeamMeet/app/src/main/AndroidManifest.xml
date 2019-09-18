@@ -28,8 +28,11 @@
         <activity
             android:name=".BaseActivity"
             android:label="@string/title_activity_base"
+            android:resizeableActivity="true"
             android:theme="@style/NoActionBar" /> <!-- android:theme="@style/AppTheme" -->
-        <activity android:name=".LoginActivity">
+        <activity android:name=".LoginActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:resizeableActivity="true">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

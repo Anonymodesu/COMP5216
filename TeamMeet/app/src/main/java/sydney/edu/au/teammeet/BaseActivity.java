@@ -123,10 +123,6 @@ public class BaseActivity extends AppCompatActivity {
                     .withSelectedItem(-1)
                     .withDrawerGravity(Gravity.END)
                     .addDrawerItems(
-//                            drawerEmptyItem,
-//                            drawerItemUsername,
-//                            drawerItemEmail,
-//                            new DividerDrawerItem(),
                             profileItem,
                             drawerItemHome,
                             drawerItemProfile,

@@ -5,7 +5,7 @@ android {
     buildToolsVersion "29.0.1"
     defaultConfig {
         applicationId "sydney.edu.au.teammeet"
-        minSdkVersion 23
+        minSdkVersion 24
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -26,6 +26,7 @@ dependencies {
     implementation 'androidx.vectordrawable:vectordrawable-animated:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
+    implementation 'org.litepal.android:java:3.0.0'
     //support for global navigation drawer see https://github.com/mikepenz/MaterialDrawer
     implementation("com.mikepenz:materialdrawer:6.0.9@aar") {
         transitive = true

@@ -20,13 +20,17 @@
         app:civ_border_width="2dp"
         app:civ_border_color="@color/colorPrimaryDark"
         android:layout_centerHorizontal="true"
-        android:layout_above="@+id/Siginup_Username"
+        android:layout_below="@+id/global_header"
         android:layout_margin="@dimen/field_margin_small"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profile_image">
     <EditText
         android:id="@+id/Siginup_Username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/Siginup_Email"
         android:ems="10"
         android:hint=" user name"
         android:background="@color/textPrimary"
@@ -38,7 +42,6 @@
         android:id="@+id/Siginup_Email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/Signup_Password"
         android:ems="10"
         android:hint="email"
         android:inputType="textEmailAddress"
@@ -50,7 +53,6 @@
         android:id="@+id/Signup_Password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/Signup_Confirmpw"
         android:ems="10"
         android:hint="password"
         android:inputType="textPassword"
@@ -62,7 +64,6 @@
         android:id="@+id/Signup_Confirmpw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/Signup_Button"
         android:ems="10"
         android:layout_margin="@dimen/field_margin_small"
         android:hint="confirm password"
@@ -74,9 +75,9 @@
         android:id="@+id/Signup_Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/field_margin_small"
-        android:textColor="@color/textPrimary"
-        android:background="@color/colorPrimary"
+        android:textSize="@dimen/button_text_size"
+        style="@style/ThemeOverlay.MyDarkButton"
         android:text="Create Account" />
+    </LinearLayout>
 </RelativeLayout>

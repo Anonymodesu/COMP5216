@@ -31,6 +31,7 @@
         tools:layout_editor_absoluteY="459dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/textView"
+        style="@style/ThemeOverlay.MyDarkButton"
         />
 
 </RelativeLayout>
