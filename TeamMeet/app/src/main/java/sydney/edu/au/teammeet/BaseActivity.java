@@ -31,6 +31,12 @@ import android.widget.Toast;
 
 public class BaseActivity extends AppCompatActivity {
 
+    private static final int HOME_ID = 1;
+    private static final int PROFILE_ID = 2;
+    private static final int TIMETABLE_ID = 3;
+    private static final int SIGNOUT_ID = 4;
+    private static final int GROUP_ID = 5;
+
     @VisibleForTesting
     public ProgressDialog mProgressDialog;
 
@@ -95,15 +101,15 @@ public class BaseActivity extends AppCompatActivity {
             //if you want to update the items at a later time it is recommended to keep it in a variable
             ProfileDrawerItem profileItem = new ProfileDrawerItem().withName(username).withEmail(email).withIcon(R.drawable.profile);
 
-            PrimaryDrawerItem drawerItemHome = new PrimaryDrawerItem().withIdentifier(1)
+            PrimaryDrawerItem drawerItemHome = new PrimaryDrawerItem().withIdentifier(HOME_ID)
                     .withName(R.string.home).withIcon(R.drawable.home);
-            PrimaryDrawerItem drawerItemProfile = new PrimaryDrawerItem().withIdentifier(2)
+            PrimaryDrawerItem drawerItemProfile = new PrimaryDrawerItem().withIdentifier(PROFILE_ID)
                     .withName(R.string.profile).withIcon(R.drawable.ic_person_grey_24dp);
-            PrimaryDrawerItem drawerItemTimeTable = new PrimaryDrawerItem().withIdentifier(3)
+            PrimaryDrawerItem drawerItemTimeTable = new PrimaryDrawerItem().withIdentifier(TIMETABLE_ID)
                     .withName(R.string.time_table).withIcon(R.drawable.ic_looks_one_black_24dp);
-            PrimaryDrawerItem drawerItemSignOut = new PrimaryDrawerItem().withIdentifier(4)
+            PrimaryDrawerItem drawerItemSignOut = new PrimaryDrawerItem().withIdentifier(SIGNOUT_ID)
                     .withName(R.string.sign_out).withIcon(R.drawable.logout);
-            PrimaryDrawerItem drawerItemGroup = new PrimaryDrawerItem().withIdentifier(5)
+            PrimaryDrawerItem drawerItemGroup = new PrimaryDrawerItem().withIdentifier(GROUP_ID)
                     .withName(R.string.group).withIcon(R.drawable.ic_group_black_24dp);
 
 
@@ -131,9 +137,14 @@ public class BaseActivity extends AppCompatActivity {
                     .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                         @Override
                         public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                            if (drawerItem.getIdentifier() == 4 && !(activity instanceof LoginActivity)) {
+
+                            if (drawerItem.getIdentifier() == SIGNOUT_ID && !(activity instanceof LoginActivity)) {
                                 // load tournament screen
                                 Intent intent = new Intent(activity, LoginActivity.class);
+                                view.getContext().startActivity(intent);
+
+                            } else if (drawerItem.getIdentifier() == TIMETABLE_ID && !(activity instanceof PersonalTimetableActivity))  {
+                                Intent intent = new Intent(activity, PersonalTimetableActivity.class);
                                 view.getContext().startActivity(intent);
                             }
                             return true;

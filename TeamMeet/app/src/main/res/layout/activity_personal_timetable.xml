@@ -6,10 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".PersonalTimetableActivity">
 
+    <include
+        android:id="@+id/global_header"
+        layout="@layout/global_header"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"></include>
+
     <Button
         android:id="@+id/clear_timetable_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/global_header"
         android:layout_alignParentTop="true"
         android:layout_centerInParent="true"
         android:onClick="onClear"

@@ -18,7 +18,7 @@ import org.litepal.LitePal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PersonalTimetableActivity extends AppCompatActivity {
+public class PersonalTimetableActivity extends BaseActivity {
 
     private RecyclerView timetableRecyclerView;
     private TimetableAdapter timetableGridAdapter;
