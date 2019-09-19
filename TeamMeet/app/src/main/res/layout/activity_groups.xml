@@ -9,4 +9,24 @@
         android:id="@+id/global_header"
         layout="@layout/global_header">
     </include>
+
+
+    <Button
+        android:id="@+id/create_new_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/global_header"
+        android:layout_alignRight="@id/global_header"
+        android:layout_below="@id/global_header"
+        android:text="Create New Group"
+        android:layout_marginBottom="20dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id = "@+id/list_of_groups"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/create_new_group"
+        android:scrollbars = "vertical"
+        />
+
 </RelativeLayout>
