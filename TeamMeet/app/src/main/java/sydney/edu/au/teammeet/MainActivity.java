@@ -55,29 +55,6 @@ public class MainActivity extends BaseActivity {
         pageName = findViewById(R.id.page_name);
         pageName.setText("Home");
 
-//        FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
-//        final CollectionReference users = mFirestore.collection("Users");
-        //Query query = users.whereEqualTo("uid", mAuth.getCurrentUser().getUid());
-        /*
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (!task.isSuccessful()) {
-                    //Map<String, Object> userDetails = new HashMap<>();
-                    //userDetails.put("username", mAuth.getCurrentUser().getDisplayName());
-                    //userDetails.put("photo", null);
-                    //userDetails.put("timetable", new Timetable());
-                    //userDetails.put("groups", new ArrayList<String>());
-
-                    //users.document(mAuth.getCurrentUser().getUid()).set(userDetails);
-                }else{
-                    Log.d(TAG, "successful");
-                }
-            }
-        });
-        */
-
-
         //get current user information
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
@@ -85,6 +62,35 @@ public class MainActivity extends BaseActivity {
         userName = user.getDisplayName();
         userEmail = user.getEmail();
         userId = user.getUid();
+
+        //referencing Users collection on Firestore
+        FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
+        final CollectionReference users = mFirestore.collection("Users");
+        //find all users with the same UID as the currently logged in user
+        final Query query = users.whereEqualTo("uid", userId);
+
+
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    //if no user exists in the collection, add their details to the database and continue 
+                    if (task.getResult().size() == 0) {
+                        Map<String, Object> userDetails = new HashMap<>();
+                        userDetails.put("username", userName);
+                        userDetails.put("photo", null);
+                        userDetails.put("timetable", new Timetable());
+                        userDetails.put("groups", new ArrayList<String>());
+
+                        users.document(mAuth.getCurrentUser().getUid()).set(userDetails);
+                    }
+                }else{
+                    Log.d(TAG, "error fetching query");
+                }
+            }
+        });
+
+
         //set up global nav drawer
         setSupportActionBar(toolbar);
         DrawerUtil.getDrawer(this, toolbar, userName, userEmail);
