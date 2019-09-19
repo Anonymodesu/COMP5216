@@ -20,7 +20,7 @@
 
         <activity android:name=".PersonalTimetableActivity" /> <!-- android:theme="@style/AppTheme" -->
 
-
+        <activity android:name=".GroupsActivity"/>
         <activity android:name=".EditProfileActivity" />
         <activity android:name=".ChangePasswordActivity" />
         <activity android:name=".MainActivity" />

@@ -34,4 +34,16 @@
         style="@style/ThemeOverlay.MyDarkButton"
         />
 
+    <Button
+        android:id="@+id/GoToGroups"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go To Groups"
+        tools:layout_editor_absoluteX="134dp"
+        tools:layout_editor_absoluteY="459dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/TestChangePassWordBtn"
+        style="@style/ThemeOverlay.MyDarkButton"
+        />
+
 </RelativeLayout>

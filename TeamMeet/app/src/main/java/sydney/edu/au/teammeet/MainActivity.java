@@ -43,7 +43,7 @@ public class MainActivity extends BaseActivity {
     private FirebaseAuth mAuth;
     private String userName, userEmail, userId;
     //Variables for main activity
-    private Button TestChangePasswordBtn;
+    private Button TestChangePasswordBtn, GoToGroupsBtn;
 
 
     @Override
@@ -74,7 +74,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    //if no user exists in the collection, add their details to the database and continue 
+                    //if no user exists in the collection, add their details to the database and continue
                     if (task.getResult().size() == 0) {
                         Map<String, Object> userDetails = new HashMap<>();
                         userDetails.put("username", userName);
@@ -106,6 +106,15 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+        GoToGroupsBtn = findViewById(R.id.GoToGroups);
+
+        GoToGroupsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SendUserToGroupsActivity();
+            }
+        });
+
     }
 
 
@@ -114,6 +123,14 @@ public class MainActivity extends BaseActivity {
         //can be deleted depend on main page
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(mainIntent);
+        finish();
+    }
+
+    //redirect user to see their groups
+    private void SendUserToGroupsActivity() {
+        Intent groupIntent = new Intent(MainActivity.this, GroupsActivity.class);
+        groupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(groupIntent);
         finish();
     }
 
