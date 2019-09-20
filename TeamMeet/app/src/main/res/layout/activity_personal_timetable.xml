@@ -22,7 +22,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:onClick="onClear"
-        style="@style/ThemeOverlay.MyDarkButton"
         android:text="Clear Timetable" />
 
     <androidx.recyclerview.widget.RecyclerView

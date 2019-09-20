@@ -26,4 +26,5 @@
     <string name="draw_open">Drawer Open</string>
     <string name="draw_close">Drawer Close</string>
     <string name="pageName_Login">Log In</string>
+    <string name="save">save</string>
 </resources>

@@ -142,6 +142,15 @@ public class BaseActivity extends AppCompatActivity {
                             } else if (drawerItem.getIdentifier() == TIMETABLE_ID && !(activity instanceof PersonalTimetableActivity))  {
                                 Intent intent = new Intent(activity, PersonalTimetableActivity.class);
                                 view.getContext().startActivity(intent);
+                            } else if (drawerItem.getIdentifier() == PROFILE_ID && !(activity instanceof EditProfileActivity))  {
+                                Intent intent = new Intent(activity, EditProfileActivity.class);
+                                view.getContext().startActivity(intent);
+                            } else if (drawerItem.getIdentifier() == HOME_ID && !(activity instanceof MainActivity))  {
+                                Intent intent = new Intent(activity, MainActivity.class);
+                                view.getContext().startActivity(intent);
+                            } else if (drawerItem.getIdentifier() == GROUP_ID && !(activity instanceof GroupsActivity))  {
+                                Intent intent = new Intent(activity, GroupsActivity.class);
+                                view.getContext().startActivity(intent);
                             }
                             return true;
                         }

@@ -57,13 +57,15 @@ public class ChangePasswordActivity extends BaseActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "SendResetPasswordLink:success");
-                            Toast.makeText(ChangePasswordActivity.this, "Reset password link has been sent to you email address", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(ChangePasswordActivity.this, "Reset password link has been sent to you email address", Toast.LENGTH_SHORT).show();
+                            showSnackbar("Reset password link has been sent to you email address", ChangePasswordActivity.this);
                             SendUserToLoginActivity();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "SendResetPasswordLink:failure", task.getException());
                             String message = task.getException().getMessage();
-                            Toast.makeText(ChangePasswordActivity.this, "send reset password email failed: " + message, Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(ChangePasswordActivity.this, "send reset password email failed: " + message, Toast.LENGTH_SHORT).show();
+                            showSnackbar("send reset password email failed: ", ChangePasswordActivity.this);
                         }
                         hideProgressDialog();
                     }
@@ -93,14 +95,7 @@ public class ChangePasswordActivity extends BaseActivity {
 //        }
 //
 //    }
-
-    public void SendUserToMainActivity(){
-        Intent mainIntent = new Intent(ChangePasswordActivity.this, MainActivity.class);
-        //can be deleted depend on main page
-        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(mainIntent);
-        finish();
-    }
+    
     private void SendUserToLoginActivity() {
         Intent intent = new Intent(ChangePasswordActivity.this, LoginActivity.class);
         startActivity(intent);

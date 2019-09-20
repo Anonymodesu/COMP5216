@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".EditProfileActivity"
     android:background="@color/grey_100">
-
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
     <include
         android:id="@+id/global_header"
         layout="@layout/global_header">
     </include>
+
 <LinearLayout
+    android:id="@+id/edit_field"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_below="@+id/global_header"
     android:orientation="vertical"
     android:layout_margin="@dimen/field_margin"
-    android:background="@color/textPrimary">
+    android:background="@color/colorWhite">
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/edit_profile_image"
         android:layout_width="120dp"
@@ -26,9 +29,8 @@
         android:layout_gravity="center"
         android:layout_margin="@dimen/field_margin_small"
         android:src="@drawable/profile"
-        app:civ_border_color="@color/colorPrimaryDark"
+        app:civ_border_color="@color/colorPrimary"
         app:civ_border_width="2dp" />
-
     <EditText
         android:id="@+id/edit_screen_name"
         android:layout_width="match_parent"
@@ -50,10 +52,21 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/field_margin"
         android:layout_gravity="center"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/textSecondary"
         android:text="Reset password"
         android:textSize="18dp"/>
 </LinearLayout>
+    </LinearLayout>
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/btn_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/save"
+        android:contentDescription="@string/save"
+        app:backgroundTint="@color/colorPrimary"
+        app:srcCompat="@drawable/ic_save_white_24dp"
+        app:layout_anchor="@id/edit_field"
+        app:layout_anchorGravity="top|right|end"/>
 
-</RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
 

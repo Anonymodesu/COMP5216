@@ -97,14 +97,6 @@ public class MainActivity extends BaseActivity {
         //[END_of setup page header and navigation]
 
 
-        TestChangePasswordBtn =  findViewById(R.id.TestChangePassWordBtn);
-
-        TestChangePasswordBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SendUserToChangePasswordActivity();
-            }
-        });
 
         GoToGroupsBtn = findViewById(R.id.GoToGroups);
 
