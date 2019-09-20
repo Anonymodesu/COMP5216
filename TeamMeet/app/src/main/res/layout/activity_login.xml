@@ -7,6 +7,7 @@
     android:orientation="vertical"
     android:id="@+id/signin_form"
     tools:context=".LoginActivity"
+    android:background="@color/grey_100"
     android:fitsSystemWindows="true">
     <include
         android:id="@+id/global_header"
@@ -18,22 +19,25 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/global_header"
         android:orientation="vertical"
-        android:weightSum="3">
+        android:layout_marginTop="@dimen/field_margin"
+        android:layout_marginLeft="@dimen/field_margin_small"
+        android:layout_marginRight="@dimen/field_margin_small">
     <!-- Email Label -->
     <EditText android:id="@+id/userEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
-        android:layout_below="@+id/global_header"
-        android:drawableLeft="@drawable/email"
-        android:hint="Email" />
+        android:drawableLeft="@drawable/ic_email_grey_24dp"
+        android:padding="10dp"
+        android:hint=" Email" />
     <EditText android:id="@+id/userPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
-        android:layout_below="@+id/userEmail"
-        android:drawableLeft="@drawable/password"
-        android:hint="Password"/>
+        android:layout_marginTop="@dimen/field_margin_small"
+        android:padding="10dp"
+        android:drawableLeft="@drawable/ic_password_grey_24dp"
+        android:hint=" Password"/>
     <Button
         android:id="@+id/btn_login"
         android:layout_width="fill_parent"
@@ -41,27 +45,27 @@
         android:layout_margin="@dimen/field_margin"
         android:text="Log In"
         android:textSize="@dimen/button_text_size"
-        android:layout_below="@id/userPassword"
         style="@style/ThemeOverlay.MyDarkButton"/>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/link_forgetpw_signup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/field_margin_small"
         android:layout_centerInParent="true"
         android:layout_below="@+id/login_form">
         <TextView android:id="@+id/link_register"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sign up |"
-            android:textSize="16dip"/>
+            android:textSize="16dip"
+            android:textColor="@color/colorPrimaryDark"/>
 
         <TextView android:id="@+id/link_forgetpw"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/btn_login"
             android:text="  Forget your password?"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="16dip"/>
     </LinearLayout>
 
@@ -90,16 +94,16 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/facebook_signin_button"
-            android:layout_width="100dp"
-            android:layout_height="80dp"
+            android:layout_width="80dp"
+            android:layout_height="60dp"
             android:layout_weight="1"
             android:src="@drawable/facebook">
         </androidx.appcompat.widget.AppCompatImageView>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/google_signin_button"
-            android:layout_width="90dp"
-            android:layout_height="75dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_weight="1"
             android:src="@drawable/google" />
     </LinearLayout>
