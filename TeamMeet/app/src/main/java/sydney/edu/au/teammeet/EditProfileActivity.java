@@ -79,6 +79,7 @@ public class EditProfileActivity extends BaseActivity {
         FirebaseUser userAuth = mAuth.getCurrentUser();
         assert userAuth != null;
         userId = userAuth.getUid();
+        email = userAuth.getEmail();
 
         userEmail = (EditText) findViewById(R.id.edit_email);
         userName = (EditText) findViewById(R.id.edit_screen_name);
@@ -99,7 +100,6 @@ public class EditProfileActivity extends BaseActivity {
                 imagePath = user.getPhoto();
                 phoneNumber = user.getPhone();
                 name = user.getUsername();
-                email = user.getEmail();
                 userEmail.setText(email);
                 userName.setText(name);
                 userPhone.setText(phoneNumber);
