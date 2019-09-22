@@ -55,6 +55,14 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-auth:4.3.2'
 
     implementation 'com.google.firebase:firebase-firestore:21.1.1'
+    implementation 'com.google.firebase:firebase-storage:19.0.1'
+
+    //lib for display profile images see https://github.com/square/picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    //for profile image cropping see https://github.com/ArthurHub/Android-Image-Cropper
+    dependencies {
+        api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+    }
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'

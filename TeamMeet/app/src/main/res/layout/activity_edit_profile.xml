@@ -22,6 +22,14 @@
     android:orientation="vertical"
     android:layout_margin="@dimen/field_margin"
     android:background="@color/colorWhite">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="save"
+        android:textSize="16dp"
+        android:textColor="@color/grey_500"
+        android:layout_gravity="end"
+        android:layout_marginRight="@dimen/field_margin"/>
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/edit_profile_image"
         android:layout_width="120dp"
@@ -47,17 +55,25 @@
         android:hint="Email"
         android:inputType="textEmailAddress" />
 
+    <EditText
+        android:id="@+id/edit_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/field_margin_small"
+        android:hint="Phone Number"
+        android:inputType="textPhonetic" />
+
     <TextView android:id="@+id/link_resetpw"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/field_margin"
+        android:layout_margin="@dimen/field_margin_small"
         android:layout_gravity="center"
         android:textColor="@color/textSecondary"
         android:text="Reset password"
         android:textSize="18dp"/>
 </LinearLayout>
     </LinearLayout>
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

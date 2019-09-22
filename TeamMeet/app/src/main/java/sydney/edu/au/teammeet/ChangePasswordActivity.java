@@ -95,7 +95,7 @@ public class ChangePasswordActivity extends BaseActivity {
 //        }
 //
 //    }
-    
+
     private void SendUserToLoginActivity() {
         Intent intent = new Intent(ChangePasswordActivity.this, LoginActivity.class);
         startActivity(intent);
