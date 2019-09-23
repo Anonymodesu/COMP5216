@@ -43,7 +43,7 @@ public class MainActivity extends BaseActivity {
     private FirebaseAuth mAuth;
     private String userName, userEmail, userId;
     //Variables for main activity
-    private Button TestChangePasswordBtn, GoToGroupsBtn;
+    private Button TestChangePasswordBtn;
 
 
     @Override
@@ -95,18 +95,6 @@ public class MainActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         DrawerUtil.getDrawer(this, toolbar, userName, userEmail);
         //[END_of setup page header and navigation]
-
-
-
-        GoToGroupsBtn = findViewById(R.id.GoToGroups);
-
-        GoToGroupsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SendUserToGroupsActivity();
-            }
-        });
-
     }
 
 
@@ -119,11 +107,6 @@ public class MainActivity extends BaseActivity {
     }
 
     //redirect user to see their groups
-    private void SendUserToGroupsActivity() {
-        Intent groupIntent = new Intent(MainActivity.this, GroupsActivity.class);
-        groupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(groupIntent);
-        finish();
-    }
+
 
 }
