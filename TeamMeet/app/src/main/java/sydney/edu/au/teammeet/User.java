@@ -1,10 +1,15 @@
 package sydney.edu.au.teammeet;
 
+import java.util.HashMap;
+
 public class User {
     private String username;
     private String email;
     private String phone;
     private String photo;
+    private HashMap<String, String> coordinates;
+    private HashMap<String, String> isMemberOf;
+
     public User(){}
     public User(String username, String email, String phone, String photo){
 
@@ -40,5 +45,37 @@ public class User {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public HashMap<String, String> getCoordinates() {
+        return coordinates;
+    }
+
+    public HashMap<String, String> getIsMemberOf() {
+        return isMemberOf;
+    }
+
+    public void setCoordinates(HashMap<String, String> coordinates) {
+        this.coordinates = coordinates;
+    }
+
+    public void setIsMemberOf(HashMap<String, String> isMemberOf) {
+        this.isMemberOf = isMemberOf;
+    }
+
+    public void addToCoordinates(String groupId, String groupName) {
+        if (coordinates == null) {
+            setCoordinates(new HashMap<String, String>());
+        }
+
+        coordinates.put(groupId, groupName);
+    }
+
+    public void addToMemberOf(String groupId, String groupName) {
+        if (isMemberOf == null) {
+            setIsMemberOf(new HashMap<String, String>());
+        }
+
+        isMemberOf.put(groupId, groupName);
     }
 }

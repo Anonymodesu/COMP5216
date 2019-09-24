@@ -2,12 +2,22 @@ package sydney.edu.au.teammeet;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 
@@ -16,6 +26,12 @@ public class CreateNewGroupActivity extends BaseActivity {
     private EditText editText;
     private Button backToGroups;
     private Button addToDatabase;
+    private User user;
+    private String currentUserID;
+    DocumentReference userDoc;
+    FirebaseUser currentUser;
+    CollectionReference groups;
+    CollectionReference users;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +42,7 @@ public class CreateNewGroupActivity extends BaseActivity {
         backToGroups = (Button) findViewById(R.id.back_to_groups);
         addToDatabase = (Button) findViewById(R.id.add_to_db);
 
+        //navigate back to the Groups page if they click on the Back Button
         backToGroups.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -35,24 +52,63 @@ public class CreateNewGroupActivity extends BaseActivity {
             }
         });
 
+        //save Group to database if they click on th other button
         addToDatabase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
-                final CollectionReference groups = mFirestore.collection("Groups");
-                //final CollectionReference users = mFirestore.collection("Users");
+                currentUser = mAuth.getCurrentUser();
+                assert currentUser != null;
+                currentUserID = currentUser.getUid();
 
-                ArrayList<String> coordinators = new ArrayList<String>();
-                ArrayList<String> members = new ArrayList<String>();
-                coordinators.add(mAuth.getCurrentUser().getUid());
-                Group group = new Group(coordinators, members, editText.getText().toString());
-                groups.add(group);
+                groups = mFirestore.collection("Groups");
+                users = mFirestore.collection("Users");
+                userDoc = users.document(currentUserID);
 
-                Intent intent = new Intent();
-                setResult(RESULT_OK, intent);
-                finish();
+                //fetch details of the user who is currently logged in
+                userDoc.get()
+                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                user = documentSnapshot.toObject(User.class);
+                                assert user != null;
+
+                                //create new Group object, add current user as coordinator
+                                ArrayList<String> coordinators = new ArrayList<String>();
+                                ArrayList<String> members = new ArrayList<String>();
+                                coordinators.add(currentUserID);
+                                Group group = new Group(coordinators, members, editText.getText().toString());
+                                groups.add(group)
+                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                            @Override
+                                            public void onSuccess(DocumentReference documentReference) {
+                                                //add group details to user's coordinates attribute
+                                                user.addToCoordinates(documentReference.getId(), editText.getText().toString());
+                                                showSnackbar("Group has been made successfully", CreateNewGroupActivity.this);
+
+                                                //add user details to the database
+                                                userDoc.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        Intent intent = new Intent();
+                                                        setResult(RESULT_OK, intent);
+                                                        finish();
+                                                    }
+                                                });
+                                            }
+                                        });
+
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                showSnackbar("Error in making new group", CreateNewGroupActivity.this);
+                            }
+                });
+
+
             }
         });
     }
