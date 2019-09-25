@@ -22,6 +22,7 @@ import java.util.HashMap;
 
 public class GroupsActivity extends BaseActivity {
 
+    private Toolbar toolbar;
     private RecyclerView coordinatedRecyclerView;
     private RecyclerView memberRecyclerView;
     private RecyclerView.LayoutManager coordLayoutManager;
@@ -29,7 +30,7 @@ public class GroupsActivity extends BaseActivity {
     private MyAdapter coordAdapter;
     private MyAdapter memberAdapter;
     private Button createGroupsBtn;
-    private String currentUserID;
+    private String currentUserID, userName, userEmail;
     private User user;
 
     FirebaseFirestore mFirestore;
@@ -55,6 +56,9 @@ public class GroupsActivity extends BaseActivity {
 
         memberLayoutManager = new LinearLayoutManager(this);
         memberRecyclerView.setLayoutManager(memberLayoutManager);
+
+        //set up global nav drawer
+        setSupportActionBar(toolbar);
 
         mFirestore = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -107,6 +111,11 @@ public class GroupsActivity extends BaseActivity {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         user = documentSnapshot.toObject(User.class);
+                        userName = user.getUsername();
+                        userEmail = user.getEmail();
+
+                        DrawerUtil.getDrawer(GroupsActivity.this, toolbar, userName, userEmail);
+
                         String[] strings = {};
                         HashMap<String, String> map = user.getCoordinates();
 

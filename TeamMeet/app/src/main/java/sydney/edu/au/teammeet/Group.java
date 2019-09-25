@@ -6,11 +6,13 @@ public class Group {
     private ArrayList<String> coordinators;
     private ArrayList<String> members;
     private String groupName;
+    private Timetable timetable;
 
     public Group(ArrayList<String> coordinators, ArrayList<String> members, String groupName) {
         this.coordinators = coordinators;
         this.members = members;
         this.groupName = groupName;
+        this.timetable = new Timetable();
     }
 
     public void setCoordinators(ArrayList<String> coordinators) {
@@ -43,5 +45,9 @@ public class Group {
 
     public void setGroupName(String groupName) {
         this.groupName = groupName;
+    }
+
+    private void setTimetable(Timetable timetable) {
+        this.timetable = timetable;
     }
 }
