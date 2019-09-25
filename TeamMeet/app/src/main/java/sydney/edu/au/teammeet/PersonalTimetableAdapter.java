@@ -19,25 +19,19 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.w3c.dom.Text;
 
 import org.litepal.LitePal;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class PersonalTimetableAdapter extends TimetableAdapter {
 
 
-    ArrayList<String> items;
     private TimetableBean mTimetableBean;
 
-   
-    public PersonalTimetableAdapter(final Context context, final Timetable timetable) {
-        super(context, timetable);
+    public PersonalTimetableAdapter(final Context context, final Timetable timetable, int cellSize) {
+        super(context, timetable, cellSize);
         setupClickListeners(context, timetable);
-
     }
+
 
     // binds the data to View of each cell
     @Override
@@ -48,26 +42,30 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
             int timetablePos = adapterPosToTimetablePos(adapterPos);
             TextView textView = ((TimeslotViewHolder) holder).myTextView;
 
-            int weighting = mTimetable.getWeighting(timetablePos);
-            textView.setText("" + weighting);
+            String text = mTimetable.getActivity(timetablePos);
+            if(text == null) {
+                text = "";
+            }
+            textView.setText(text);
 
             //cell changes colour depending on weighting
+            int weighting = mTimetable.getWeighting(timetablePos);
             int colour = Color.WHITE;
             switch(weighting) {
                 case 0:
-                    colour = Color.parseColor("#FFFFFF"); //white
+                    colour = Color.parseColor("#E6E6FA"); //purple
                     break;
 
                 case 1:
-                    colour = Color.parseColor("#FFFF00"); //yellow
+                    colour = Color.parseColor("#F0E68C"); //yellow
                     break;
 
                 case 2:
-                    colour = Color.parseColor("#FF9900"); //orange
+                    colour = Color.parseColor("#FFA07A"); //aquamarine
                     break;
 
                 case 3:
-                    colour = Color.parseColor("#FF0000"); //red
+                    colour = Color.parseColor("#7FFFD4"); //light salmon
                     break;
             }
             textView.setBackgroundColor(colour);
@@ -75,6 +73,8 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
         } else { //let super class handle descriptor cells
             super.onBindViewHolder(holder, adapterPos);
         }
+
+
 
     }
 
@@ -164,6 +164,14 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
                 return true;
             }
         });
+    }
+
+
+    public void clearTimetable() {
+        mTimetable = new Timetable();
+        notifyDataSetChanged();
+        //delete data from the local database
+        LitePal.deleteAll(TimetableBean.class);
     }
 
 

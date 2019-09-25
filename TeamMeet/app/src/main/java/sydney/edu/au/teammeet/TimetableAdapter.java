@@ -25,21 +25,27 @@ public abstract class TimetableAdapter extends RecyclerView.Adapter<RecyclerView
     protected static final int DAY_VIEW_TYPE = 1;
     protected static final int HOUR_VIEW_TYPE = 2;
 
+    protected static final int SMALL_CELL_SIZE = 150;
+    protected static final int LARGE_CELL_SIZE = 300;
+
     //add 1 to to account for row descriptors
     private static final int ITEMS_PER_ROW = Timetable.NUM_DAYS + 1;
 
+    protected final int cellSize;
+
     protected Timetable mTimetable;
     protected TimetableBean mTimetableBean;
-    private LayoutInflater mInflater;
+    protected LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private ItemLongClickListener mLongClickListener;
     protected Context mContext;
 
     // data is passed into the constructor
-    public TimetableAdapter(Context context, final Timetable timetable) {
+    public TimetableAdapter(Context context, final Timetable timetable, int cellSize) {
         this.mInflater = LayoutInflater.from(context);
         this.mTimetable = timetable;
         this.mContext = context;
+        this.cellSize = cellSize;
     }
 
     //return the type of cell
@@ -56,11 +62,18 @@ public abstract class TimetableAdapter extends RecyclerView.Adapter<RecyclerView
         }
     }
 
+
     // inflates the cell layout from xml when needed
     @Override
     @NonNull
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.timetable_cell, parent, false);
+
+        //set cell size
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        params.height = cellSize;
+        params.width = cellSize;
+        view.setLayoutParams(params);
 
         switch(viewType) {
             case TIMESLOT_VIEW_TYPE: return new TimeslotViewHolder(view);
@@ -107,13 +120,6 @@ public abstract class TimetableAdapter extends RecyclerView.Adapter<RecyclerView
     public int getItemCount() {
         //add 1 to account for row/column descriptors
         return (Timetable.NUM_DAYS + 1) * (Timetable.NUM_HALF_HOURS + 1);
-    }
-
-    public void clearTimetable() {
-        mTimetable = new Timetable();
-        notifyDataSetChanged();
-        //delete data from the local database
-        LitePal.deleteAll(TimetableBean.class);
     }
 
     // stores and recycles day/hour descriptors as they are scrolled off screen
