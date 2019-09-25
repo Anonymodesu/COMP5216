@@ -11,7 +11,7 @@ public class User {
     private HashMap<String, String> isMemberOf;
 
     public User(){}
-    public User(String username, String email, String phone, String photo){
+    public User(String username, String email, String phone, String photo, HashMap<String, String> coordinates, HashMap<String, String> isMemberOf ){
 
     }
 

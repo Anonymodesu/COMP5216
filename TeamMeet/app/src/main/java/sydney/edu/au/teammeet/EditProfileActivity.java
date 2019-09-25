@@ -44,8 +44,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class EditProfileActivity extends BaseActivity {
     private String TAG = "Edit Profile";
     //Views
-    private EditText userName, userEmail, userPhone;
-    private TextView resetPw;
+    private EditText userName, userPhone;
+    private TextView resetPw, userEmail;
     private CircleImageView ProfileImage;
     private FloatingActionButton saveBtn;
     private TextView pageName;
@@ -81,7 +81,7 @@ public class EditProfileActivity extends BaseActivity {
         userId = userAuth.getUid();
         email = userAuth.getEmail();
 
-        userEmail = (EditText) findViewById(R.id.edit_email);
+        userEmail = (TextView) findViewById(R.id.email);
         userName = (EditText) findViewById(R.id.edit_screen_name);
         userPhone = (EditText) findViewById(R.id.edit_phone);
         saveBtn = (FloatingActionButton) findViewById(R.id.btn_save);
@@ -160,13 +160,8 @@ public class EditProfileActivity extends BaseActivity {
     private void SaveUserInformation() {
         String name = userName.getText().toString();
         String phone = userPhone.getText().toString();
-        String email = userEmail.getText().toString();
-        if(!validateForm()){
-            return;
-        }
         showProgressDialog();
         user.setUsername(name);
-        user.setEmail(email);
         user.setPhone(phone);
         final StorageReference filePath = UserProfileImageRef.child(userId+".jpg");
         UploadTask uploadTask = filePath.putFile(resultUri);
@@ -214,34 +209,6 @@ public class EditProfileActivity extends BaseActivity {
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(mainIntent);
         finish();
-    }
-
-    private boolean validateForm() {
-        boolean valid = true;
-        String displayName = userName.getText().toString();
-        if (TextUtils.isEmpty(displayName)) {
-            userName.setError("User Name can not be empty");
-            valid = false;
-        } else {
-            userName.setError(null);
-        }
-
-        String email = userEmail.getText().toString();
-        if (TextUtils.isEmpty(email)) {
-            userEmail.setError("Email address can not be empty");
-            valid = false;
-        } else {
-            userEmail.setError(null);
-        }
-
-        String phoneNumber = userPhone.getText().toString();
-        if (TextUtils.isEmpty(phoneNumber)) {
-            userPhone.setError("Password is Required.");
-            valid = false;
-        } else {
-            userPhone.setError(null);
-        }
-        return valid;
     }
     public void SendUserToForgetPwActivity(){
         Intent intent = new Intent(EditProfileActivity.this, ChangePasswordActivity.class);

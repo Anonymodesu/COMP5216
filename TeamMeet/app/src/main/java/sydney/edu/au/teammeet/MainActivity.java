@@ -70,25 +70,20 @@ public class MainActivity extends BaseActivity {
         final Query query = users.whereEqualTo("uid", userId);
 
 
-//        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    //if no user exists in the collection, add their details to the database and continue
-//                    if (task.getResult().size() == 0) {
-//                        Map<String, Object> userDetails = new HashMap<>();
-//                        userDetails.put("username", userName);
-//                        userDetails.put("photo", null);
-//                        userDetails.put("timetable", new Timetable());
-//                        userDetails.put("groups", new ArrayList<String>());
-//
-//                        users.document(mAuth.getCurrentUser().getUid()).set(userDetails);
-//                    }
-//                }else{
-//                    Log.d(TAG, "error fetching query");
-//                }
-//            }
-//        });
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    //if no user exists in the collection, add their details to the database and continue
+                    if (task.getResult() == null) {
+                        User user = new User(userName, userEmail, null, null, null, null);
+                        users.document(userId).set(user);
+                    }
+                }else{
+                    Log.d(TAG, "error fetching query");
+                }
+            }
+        });
 
 
         //set up global nav drawer
