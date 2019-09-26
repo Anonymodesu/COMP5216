@@ -187,7 +187,6 @@ public class EditProfileActivity extends BaseActivity {
         }
     }
 
-<<<<<<< HEAD
     private void SaveUserInformation() {
         String name = userName.getText().toString();
         String phone = userPhone.getText().toString();
@@ -233,43 +232,17 @@ public class EditProfileActivity extends BaseActivity {
         currentUser.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
+                if (task.isSuccessful()) {
                     hideProgressDialog();
                     showSnackbar("User Information has been updated successfully", EditProfileActivity.this);
                     SendUserToMainActivity();
-                }else{
+                } else {
                     String message = task.getException().getMessage();
                     showSnackbar(message, EditProfileActivity.this);
                     hideProgressDialog();
                 }
             }
         });
-=======
-
-
-    private void SaveUserInformation(){
-            String name = userName.getText().toString();
-            String phone = userPhone.getText().toString();
-            showProgressDialog();
-            user.setUsername(name);
-            user.setEmail(email);
-            user.setPhone(phone);
-            user.setPhoto(user.getPhoto());
-            currentUser.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()){
-                                    hideProgressDialog();
-                                    showSnackbar("User Information has been updated successfully", EditProfileActivity.this);
-                                    SendUserToMainActivity();
-                                }else{
-                                    String message = task.getException().getMessage();
-                                    showSnackbar(message, EditProfileActivity.this);
-                                    hideProgressDialog();
-                                }
-                            }
-                        });
->>>>>>> 03a84d4144d37c2159a5c41cb9c4264d25287a46
     }
 
     private void SendUserToMainActivity() {
