@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,16 +22,21 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.storage.FirebaseStorage;
 
 public class MainActivity extends BaseActivity {
     //Variables for global navigation
@@ -42,8 +48,8 @@ public class MainActivity extends BaseActivity {
     private TextView pageName;
     private FirebaseAuth mAuth;
     private String userName, userEmail, userId;
-    //Variables for main activity
-    private Button TestChangePasswordBtn;
+    DocumentReference currentUser;
+
 
 
     @Override
@@ -62,46 +68,48 @@ public class MainActivity extends BaseActivity {
         userName = user.getDisplayName();
         userEmail = user.getEmail();
         userId = user.getUid();
-
         //referencing Users collection on Firestore
         FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
-        final CollectionReference users = mFirestore.collection("Users");
-        //find all users with the same UID as the currently logged in user
-        final Query query = users.whereEqualTo("uid", userId);
-
-
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    //if no user exists in the collection, add their details to the database and continue
-                    if (task.getResult().size() == 0) {
-                        User user = new User(userName, userEmail, null, null, null, null);
-                        users.document(userId).set(user);
-                    }
-                }else{
-                    Log.d(TAG, "error fetching query");
+        currentUser = mFirestore.collection("Users").document(userId);
+        currentUser.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>(){
+         @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task)
+         {
+             if(task.isSuccessful()){
+                 DocumentSnapshot document = task.getResult();
+                if(!document.exists())
+                {
+                    User newUser = new User(userName, userEmail, null, null, null, null);
+                    currentUser.set(newUser);
                 }
             }
+         }
         });
+        //find all users with the same UID as the currently logged in user
+//        final Query query = users.whereEqualTo("uid", userId);
 
+
+//        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    //if no user exists in the collection, add their details to the database and continue
+//                    if (task.getResult().isEmpty()) {
+//                        User newUser = new User(userName, userEmail, null, null, null, null);
+//                        users.document(userId).set(newUser);
+//                    } else {
+//                        Toast.makeText(MainActivity.this, "Fucking work you piece of shit", Toast.LENGTH_SHORT).show();
+//                    }
+//                }else{
+//                    Log.d(TAG, "error fetching query");
+//                }
+//            }
+//        });
 
         //set up global nav drawer
         setSupportActionBar(toolbar);
         DrawerUtil.getDrawer(this, toolbar, userName, userEmail);
         //[END_of setup page header and navigation]
     }
-
-
-    private void SendUserToChangePasswordActivity(){
-        Intent mainIntent = new Intent(MainActivity.this, ChangePasswordActivity.class);
-        //can be deleted depend on main page
-        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(mainIntent);
-        finish();
-    }
-
-    //redirect user to see their groups
-
 
 }

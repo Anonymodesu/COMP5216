@@ -12,7 +12,12 @@ public class User {
 
     public User(){}
     public User(String username, String email, String phone, String photo, HashMap<String, String> coordinates, HashMap<String, String> isMemberOf ){
-
+        this.username = username;
+        this.email = email;
+        this.phone = phone;
+        this.photo = photo;
+        this.coordinates = coordinates;
+        this.isMemberOf = isMemberOf;
     }
 
     public String getUsername() {

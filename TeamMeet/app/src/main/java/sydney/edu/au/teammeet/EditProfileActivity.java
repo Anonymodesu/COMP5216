@@ -51,7 +51,6 @@ public class EditProfileActivity extends BaseActivity {
     private TextView pageName;
     DocumentReference currentUser;
     User user;
-    UploadTask uploadTask;
 
     //firebase authentication
     private FirebaseAuth mAuth;
@@ -155,8 +154,6 @@ public class EditProfileActivity extends BaseActivity {
                 resultUri = result.getUri();
                 ProfileImage.setImageURI(resultUri);
             }
-        }else{
-            resultUri = Uri.parse(imagePath);
         }
     }
 
@@ -168,8 +165,7 @@ public class EditProfileActivity extends BaseActivity {
         user.setEmail(email);
         user.setPhone(phone);
         final StorageReference filePath = UserProfileImageRef.child(userId+".jpg");
-        if (imagePath== null) {
-            uploadTask = filePath.putFile(resultUri);
+        UploadTask uploadTask = filePath.putFile(resultUri);
         Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
@@ -187,25 +183,25 @@ public class EditProfileActivity extends BaseActivity {
                     Uri downloadUri = task.getResult();
                     assert downloadUri != null;
                     user.setPhoto(downloadUri.toString());
+                    currentUser.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()){
+                                hideProgressDialog();
+                                showSnackbar("User Information has been updated successfully", EditProfileActivity.this);
+                                SendUserToMainActivity();
+                            }else{
+                                String message = task.getException().getMessage();
+                                showSnackbar(message, EditProfileActivity.this);
+                                hideProgressDialog();
+                            }
+                        }
+                    });
                 }
 
             }
         });
-        }
-        currentUser.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
-                    hideProgressDialog();
-                    showSnackbar("User Information has been updated successfully", EditProfileActivity.this);
-                    SendUserToMainActivity();
-                }else{
-                    String message = task.getException().getMessage();
-                    showSnackbar(message, EditProfileActivity.this);
-                    hideProgressDialog();
-                }
-            }
-        });
+
     }
 
     private void SendUserToMainActivity() {
