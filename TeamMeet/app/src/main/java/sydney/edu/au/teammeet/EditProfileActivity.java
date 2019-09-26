@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -116,7 +117,14 @@ public class EditProfileActivity extends BaseActivity {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SaveUserInformation();
+                String phoneNo = userPhone.getText().toString();
+                if (!phoneNo.matches("^[0-9]+$")) {
+                    userPhone.setError("Phone number must only consist of digits");
+                } else if (userName.getText().toString().trim().length() == 0){
+                    userName.setError("You must enter a username");
+                } else {
+                    SaveUserInformation();
+                }
             }
         });
         resetPw.setOnClickListener(new View.OnClickListener(){
@@ -161,47 +169,58 @@ public class EditProfileActivity extends BaseActivity {
         String name = userName.getText().toString();
         String phone = userPhone.getText().toString();
         showProgressDialog();
+
         user.setUsername(name);
-        user.setEmail(email);
         user.setPhone(phone);
-        final StorageReference filePath = UserProfileImageRef.child(userId+".jpg");
-        UploadTask uploadTask = filePath.putFile(resultUri);
-        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-            @Override
-            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                if (!task.isSuccessful()) {
-                    throw task.getException();
-                }
+
+        //if the user has uploaded a picture, include the picture with what needs to be saved in the database
+        if (resultUri != null) {
+            final StorageReference filePath = UserProfileImageRef.child(userId+".jpg");
+            UploadTask uploadTask = filePath.putFile(resultUri);
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
 
                 // Continue with the task to get the download URL
-                return filePath.getDownloadUrl();
-            }
-        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful()) {
-                    Uri downloadUri = task.getResult();
-                    assert downloadUri != null;
-                    user.setPhoto(downloadUri.toString());
-                    currentUser.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()){
-                                hideProgressDialog();
-                                showSnackbar("User Information has been updated successfully", EditProfileActivity.this);
-                                SendUserToMainActivity();
-                            }else{
-                                String message = task.getException().getMessage();
-                                showSnackbar(message, EditProfileActivity.this);
-                                hideProgressDialog();
-                            }
-                        }
-                    });
+                    return filePath.getDownloadUrl();
                 }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadUri = task.getResult();
+                        assert downloadUri != null;
+                        user.setPhoto(downloadUri.toString());
+                        setUserInformation();
+                        return;
+                    }
+                }
+            });
+        }
 
+        //else save the changes they have made to username and phone number
+        setUserInformation();
+
+    }
+
+    private void setUserInformation() {
+        currentUser.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    hideProgressDialog();
+                    showSnackbar("User Information has been updated successfully", EditProfileActivity.this);
+                    SendUserToMainActivity();
+                }else{
+                    String message = task.getException().getMessage();
+                    showSnackbar(message, EditProfileActivity.this);
+                    hideProgressDialog();
+                }
             }
         });
-
     }
 
     private void SendUserToMainActivity() {
