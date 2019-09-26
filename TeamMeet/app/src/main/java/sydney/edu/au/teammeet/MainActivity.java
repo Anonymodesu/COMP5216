@@ -75,7 +75,7 @@ public class MainActivity extends BaseActivity {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     //if no user exists in the collection, add their details to the database and continue
-                    if (task.getResult() == null) {
+                    if (task.getResult().size() == 0) {
                         User user = new User(userName, userEmail, null, null, null, null);
                         users.document(userId).set(user);
                     }
