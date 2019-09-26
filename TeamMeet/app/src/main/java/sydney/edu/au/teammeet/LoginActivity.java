@@ -209,7 +209,7 @@ public class LoginActivity extends BaseActivity {
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
 //                            Toast.makeText(LoginActivity.this, "Authentication failed.",
 //                                    Toast.LENGTH_SHORT).show();
-                            showSnackbar("Authentication failed.", LoginActivity.this);
+                            showSnackbar("Authenticating with Facebook has failed", LoginActivity.this);
                         }
 
                         // [START_EXCLUDE]
@@ -278,7 +278,7 @@ public class LoginActivity extends BaseActivity {
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
 //                            Toast.makeText(LoginActivity.this, R.string.auth_failed,
 //                                    Toast.LENGTH_SHORT).show();
-                            showSnackbar(getResources().getString(R.string.auth_failed), LoginActivity.this);
+                            showSnackbar("Login failed. Please check your email and password", LoginActivity.this);
                         }
 
                         hideProgressDialog();
