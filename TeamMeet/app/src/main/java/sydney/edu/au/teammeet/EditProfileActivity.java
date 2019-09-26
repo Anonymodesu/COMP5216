@@ -148,7 +148,7 @@ public class EditProfileActivity extends BaseActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode ==  MY_PERMISSIONS_REQUEST_READ_PHOTOS) {
+        if (requestCode == MY_PERMISSIONS_REQUEST_READ_PHOTOS) {
             if (resultCode == RESULT_OK && data != null) {
                 Uri photoUri = data.getData();
                 CropImage.activity(photoUri)
@@ -156,15 +156,38 @@ public class EditProfileActivity extends BaseActivity {
 
             }
         }
-        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            if(resultCode == RESULT_OK){
+            if (resultCode == RESULT_OK) {
                 resultUri = result.getUri();
-                ProfileImage.setImageURI(resultUri);
+                final StorageReference filePath = UserProfileImageRef.child(userId + ".jpg");
+                UploadTask uploadTask = filePath.putFile(resultUri);
+                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                    @Override
+                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                        if (!task.isSuccessful()) {
+                            throw task.getException();
+                        }
+
+                        // Continue with the task to get the download URL
+                        return filePath.getDownloadUrl();
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        if (task.isSuccessful()) {
+                            Uri downloadUri = task.getResult();
+                            assert downloadUri != null;
+                            user.setPhoto(downloadUri.toString());
+                            ProfileImage.setImageURI(resultUri);
+                        }
+                    }
+                });
             }
         }
     }
 
+<<<<<<< HEAD
     private void SaveUserInformation() {
         String name = userName.getText().toString();
         String phone = userPhone.getText().toString();
@@ -221,6 +244,32 @@ public class EditProfileActivity extends BaseActivity {
                 }
             }
         });
+=======
+
+
+    private void SaveUserInformation(){
+            String name = userName.getText().toString();
+            String phone = userPhone.getText().toString();
+            showProgressDialog();
+            user.setUsername(name);
+            user.setEmail(email);
+            user.setPhone(phone);
+            user.setPhoto(user.getPhoto());
+            currentUser.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()){
+                                    hideProgressDialog();
+                                    showSnackbar("User Information has been updated successfully", EditProfileActivity.this);
+                                    SendUserToMainActivity();
+                                }else{
+                                    String message = task.getException().getMessage();
+                                    showSnackbar(message, EditProfileActivity.this);
+                                    hideProgressDialog();
+                                }
+                            }
+                        });
+>>>>>>> 03a84d4144d37c2159a5c41cb9c4264d25287a46
     }
 
     private void SendUserToMainActivity() {
