@@ -19,6 +19,9 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -39,6 +42,13 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserInfo;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Arrays;
 
@@ -57,6 +67,7 @@ public class LoginActivity extends BaseActivity {
     private CallbackManager mCallbackManager;
 
     private FirebaseAuth mAuth;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,16 +81,12 @@ public class LoginActivity extends BaseActivity {
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
+        user = mAuth.getCurrentUser();
         if (user != null){
             //user is signed in log user out
             signOut();
         }
         mCallbackManager = CallbackManager.Factory.create();
-        //Views
-//        pageName = findViewById(R.id.page_name);
-//        //set page title
-//        pageName.setText(R.string.pageName_Login);
 
         userEmail = findViewById(R.id.userEmail);
         userPassword = findViewById(R.id.userPassword);
@@ -194,7 +201,6 @@ public class LoginActivity extends BaseActivity {
         // [START_EXCLUDE silent]
         showProgressDialog();
         // [END_EXCLUDE]
-
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -310,7 +316,16 @@ public class LoginActivity extends BaseActivity {
         return valid;
     }
     private void signOut() {
-        mAuth.signOut();
+        if (user != null) {
+            for(UserInfo userInfo: user.getProviderData()){
+                if(userInfo.getProviderId().equals("facebook.com")){
+                    facebookSignOut();
+                }else if(userInfo.getProviderId().equals("google.com")){
+                    googleSignOut();
+                }
+            }
+            mAuth.signOut();
+        }
     }
     private void facebookSignOut(){
         LoginManager.getInstance().logOut();

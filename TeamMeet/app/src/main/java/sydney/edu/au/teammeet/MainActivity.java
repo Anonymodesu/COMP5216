@@ -8,18 +8,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,6 +22,7 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -38,6 +33,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 
+import org.json.JSONObject;
+
 public class MainActivity extends BaseActivity {
     //Variables for global navigation
     private String TAG = "";
@@ -47,7 +44,7 @@ public class MainActivity extends BaseActivity {
     public Toolbar toolbar;
     private TextView pageName;
     private FirebaseAuth mAuth;
-    private String userName, userEmail, userId;
+    private String userName, userEmail, userId, userPhoto, userPhone;
     DocumentReference currentUser;
 
 
@@ -68,6 +65,21 @@ public class MainActivity extends BaseActivity {
         userName = user.getDisplayName();
         userEmail = user.getEmail();
         userId = user.getUid();
+        userPhoto = null;
+        userPhone = null;
+
+        for(UserInfo userInfo: user.getProviderData()) {
+            if (userInfo.getProviderId().equals("facebook.com")) {
+                userPhoto = "https://graph.facebook.com/" + userInfo.getUid() + "/picture?type=large";
+                userPhone = userInfo.getPhoneNumber();
+            }
+            if (userInfo.getProviderId().equals("google.com")) {
+                userPhoto = userInfo.getPhotoUrl().toString();
+                showSnackbar(userPhoto, MainActivity.this);
+                userPhone = userInfo.getPhoneNumber();
+            }
+        }
+
         //referencing Users collection on Firestore
         FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
         currentUser = mFirestore.collection("Users").document(userId);
@@ -79,7 +91,7 @@ public class MainActivity extends BaseActivity {
                  DocumentSnapshot document = task.getResult();
                 if(!document.exists())
                 {
-                    User newUser = new User(userName, userEmail, null, null, null, null);
+                    User newUser = new User(userName, userEmail, userPhone, userPhoto, null, null);
                     currentUser.set(newUser);
                 }
             }
