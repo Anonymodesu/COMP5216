@@ -75,7 +75,6 @@ public class MainActivity extends BaseActivity {
             }
             if (userInfo.getProviderId().equals("google.com")) {
                 userPhoto = userInfo.getPhotoUrl().toString();
-                showSnackbar(userPhoto, MainActivity.this);
                 userPhone = userInfo.getPhoneNumber();
             }
         }

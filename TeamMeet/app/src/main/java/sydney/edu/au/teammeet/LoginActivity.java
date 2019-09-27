@@ -320,8 +320,6 @@ public class LoginActivity extends BaseActivity {
             for(UserInfo userInfo: user.getProviderData()){
                 if(userInfo.getProviderId().equals("facebook.com")){
                     facebookSignOut();
-                }else if(userInfo.getProviderId().equals("google.com")){
-                    googleSignOut();
                 }
             }
             mAuth.signOut();
