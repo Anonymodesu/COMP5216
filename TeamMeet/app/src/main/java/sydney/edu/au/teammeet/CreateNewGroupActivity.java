@@ -56,60 +56,67 @@ public class CreateNewGroupActivity extends BaseActivity {
         addToDatabase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
-                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                int textLength = editText.getText().toString().trim().length();
 
-                currentUser = mAuth.getCurrentUser();
-                assert currentUser != null;
-                currentUserID = currentUser.getUid();
+                if (textLength == 0 || textLength > 32) {
+                    editText.setError("The group name must contain between 1 and 32 characters.");
+                } else {
 
-                groups = mFirestore.collection("Groups");
-                users = mFirestore.collection("Users");
-                userDoc = users.document(currentUserID);
+                    FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
+                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
-                //fetch details of the user who is currently logged in
-                userDoc.get()
-                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                            @Override
-                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                user = documentSnapshot.toObject(User.class);
-                                assert user != null;
+                    currentUser = mAuth.getCurrentUser();
+                    assert currentUser != null;
+                    currentUserID = currentUser.getUid();
 
-                                //create new Group object, add current user as coordinator
-                                ArrayList<String> coordinators = new ArrayList<String>();
-                                ArrayList<String> members = new ArrayList<String>();
-                                coordinators.add(currentUserID);
-                                Group group = new Group(coordinators, members, editText.getText().toString());
-                                groups.add(group)
-                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                            @Override
-                                            public void onSuccess(DocumentReference documentReference) {
-                                                //add group details to user's coordinates attribute
-                                                user.addToCoordinates(documentReference.getId(), editText.getText().toString());
-                                                showSnackbar("Group has been made successfully", CreateNewGroupActivity.this);
+                    groups = mFirestore.collection("Groups");
+                    users = mFirestore.collection("Users");
+                    userDoc = users.document(currentUserID);
 
-                                                //add user details to the database
-                                                userDoc.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                        Intent intent = new Intent();
-                                                        setResult(RESULT_OK, intent);
-                                                        finish();
-                                                    }
-                                                });
-                                            }
-                                        });
+                    //fetch details of the user who is currently logged in
+                    userDoc.get()
+                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    user = documentSnapshot.toObject(User.class);
+                                    assert user != null;
 
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                showSnackbar("Error in making new group", CreateNewGroupActivity.this);
-                            }
-                });
+                                    //create new Group object, add current user as coordinator
+                                    ArrayList<String> coordinators = new ArrayList<String>();
+                                    ArrayList<String> members = new ArrayList<String>();
+                                    coordinators.add(currentUserID);
+                                    Group group = new Group(coordinators, members, editText.getText().toString());
+                                    groups.add(group)
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                @Override
+                                                public void onSuccess(DocumentReference documentReference) {
+                                                    //add group details to user's coordinates attribute
+                                                    user.addToCoordinates(documentReference.getId(), editText.getText().toString());
+                                                    showSnackbar("Group has been made successfully", CreateNewGroupActivity.this);
 
+                                                    //add user details to the database
+                                                    userDoc.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            Intent intent = new Intent();
+                                                            setResult(RESULT_OK, intent);
+                                                            finish();
+                                                        }
+                                                    });
+                                                }
+                                            });
 
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            showSnackbar("Error in making new group", CreateNewGroupActivity.this);
+                        }
+                    });
+                }
             }
         });
     }
 }
+
+
