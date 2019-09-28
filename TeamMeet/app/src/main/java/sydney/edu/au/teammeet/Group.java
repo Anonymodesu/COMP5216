@@ -8,6 +8,8 @@ public class Group {
     private String groupName;
     private Timetable timetable;
 
+    public Group(){}
+
     public Group(ArrayList<String> coordinators, ArrayList<String> members, String groupName) {
         this.coordinators = coordinators;
         this.members = members;

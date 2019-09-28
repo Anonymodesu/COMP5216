@@ -1,4 +1,3 @@
-
 <resources>
 
     <!-- Base application theme. -->
@@ -19,26 +18,26 @@
 
     <!-- My Dark Button -->
     <!--<style name="ThemeOverlay.MyDarkButton" parent="android:Widget.Button">-->
-        <!--<item name="android:layout_margin">4dp</item>-->
-        <!--<item name="android:textColor">@android:color/white</item>-->
-        <!--<item name="android:elevation">2dp</item>-->
-        <!--<item name="android:translationZ">2dp</item>-->
-        <!--<item name="android:background">@drawable/rounded_shape</item>-->
-        <!--<item name="android:padding">5dp</item>-->
+    <!--<item name="android:layout_margin">4dp</item>-->
+    <!--<item name="android:textColor">@android:color/white</item>-->
+    <!--<item name="android:elevation">2dp</item>-->
+    <!--<item name="android:translationZ">2dp</item>-->
+    <!--<item name="android:background">@drawable/rounded_shape</item>-->
+    <!--<item name="android:padding">5dp</item>-->
     <!--</style>-->
 
     <!-- Light EditTexts -->
     <!--<style name="ThemeOverlay.MyLightEditText" parent="ThemeOverlay.AppCompat.Dark" />-->
 
     <!--<style name="ThemeOverlay.MyTextDetail" parent="AppTheme">-->
-        <!--<item name="android:layout_width">wrap_content</item>-->
-        <!--<item name="android:layout_height">wrap_content</item>-->
-        <!--<item name="android:fadeScrollbars">true</item>-->
-        <!--<item name="android:gravity">center</item>-->
-        <!--<item name="android:maxLines">5</item>-->
-        <!--<item name="android:padding">4dp</item>-->
-        <!--<item name="android:scrollbars">vertical</item>-->
-        <!--<item name="android:textSize">14sp</item>-->
+    <!--<item name="android:layout_width">wrap_content</item>-->
+    <!--<item name="android:layout_height">wrap_content</item>-->
+    <!--<item name="android:fadeScrollbars">true</item>-->
+    <!--<item name="android:gravity">center</item>-->
+    <!--<item name="android:maxLines">5</item>-->
+    <!--<item name="android:padding">4dp</item>-->
+    <!--<item name="android:scrollbars">vertical</item>-->
+    <!--<item name="android:textSize">14sp</item>-->
     <!--</style>-->
 
     <style name="ThemeOverlay.TeamMeetIcon" parent="AppTheme">
@@ -59,4 +58,13 @@
     <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

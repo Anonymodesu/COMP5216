@@ -4,8 +4,8 @@
     package="sydney.edu.au.teammeet">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name="org.litepal.LitePalApplication"
@@ -15,14 +15,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-       <!-- <meta-data
+        <!--
+         <meta-data
             android:name="com.google.android.actions"
-            android:resource="@xml/litepal" />-->
+            android:resource="@xml/litepal" />
+        -->
+        <activity
+            android:name=".GroupProfileActivity"
+            android:resizeableActivity="true"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".AddNewMemberActivity" />
         <activity android:name=".PersonalTimetableActivity" /> <!-- android:theme="@style/AppTheme" -->
-        <activity android:name=".CreateNewGroupActivity"/>
-        <activity android:name=".GroupsActivity"/>
+        <activity android:name=".CreateNewGroupActivity" />
+        <activity android:name=".GroupsActivity" />
         <activity android:name=".EditProfileActivity" />
         <activity android:name=".ChangePasswordActivity" />
         <activity android:name=".MainActivity" />
@@ -32,18 +43,19 @@
             android:label="@string/title_activity_base"
             android:resizeableActivity="true"
             android:theme="@style/NoActionBar" /> <!-- android:theme="@style/AppTheme" -->
-        <activity android:name=".LoginActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:resizeableActivity="true">
-
+        <activity
+            android:name=".LoginActivity"
+            android:resizeableActivity="true"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat"/>
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
