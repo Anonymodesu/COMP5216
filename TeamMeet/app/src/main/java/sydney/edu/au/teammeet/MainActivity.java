@@ -90,7 +90,7 @@ public class MainActivity extends BaseActivity {
                  DocumentSnapshot document = task.getResult();
                 if(!document.exists())
                 {
-                    User newUser = new User(userName, userEmail, userPhone, userPhoto, null, null);
+                    User newUser = new User(userName, userEmail.toLowerCase(), userPhone, userPhoto, null, null);
                     currentUser.set(newUser);
                 }
             }

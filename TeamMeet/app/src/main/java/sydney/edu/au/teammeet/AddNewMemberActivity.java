@@ -89,7 +89,7 @@ public class AddNewMemberActivity extends BaseActivity {
                 //final DocumentReference newMemberDoc = users.whereEqualTo("email",txtMemberEmail.getText().toString()).get().getResult().getDocumentChanges().get(0).getDocument().getReference();
 
                 users
-                        .whereEqualTo("email", txtMemberEmail.getText().toString())
+                        .whereEqualTo("email", txtMemberEmail.getText().toString().toLowerCase())
                         .addSnapshotListener(new EventListener<QuerySnapshot>() {
                             @Override
                             public void onEvent(@Nullable QuerySnapshot snapshot, @Nullable FirebaseFirestoreException e) {
