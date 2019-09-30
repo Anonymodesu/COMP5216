@@ -60,6 +60,7 @@ dependencies {
     //lib for display profile images see https://github.com/square/picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
     //for profile image cropping see https://github.com/ArthurHub/Android-Image-Cropper
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
     dependencies {
         api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
     }

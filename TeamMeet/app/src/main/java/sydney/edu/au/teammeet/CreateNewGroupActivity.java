@@ -98,8 +98,10 @@ public class CreateNewGroupActivity extends BaseActivity {
                                                     userDoc.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                         @Override
                                                         public void onComplete(@NonNull Task<Void> task) {
-                                                            Intent intent = new Intent();
-                                                            setResult(RESULT_OK, intent);
+//                                                            Intent intent = new Intent();
+//                                                            setResult(RESULT_OK, intent);
+                                                            Intent intent = new Intent(CreateNewGroupActivity.this, GroupsActivity.class);
+                                                            startActivity(intent);
                                                             finish();
                                                         }
                                                     });
