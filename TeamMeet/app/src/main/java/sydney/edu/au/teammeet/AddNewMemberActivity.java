@@ -111,73 +111,69 @@ public class AddNewMemberActivity extends BaseActivity {
                                             }
                                         }
                                     }
+
+                                    //fetch details of the user who is currently logged in
+                                    groupDoc.get()
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                    final Group group = documentSnapshot.toObject(Group.class);
+                                                    assert group != null;
+                                                    //group.addMember(txtMemberEmail.getText().toString());
+
+                                                    group.addMember(newMemberDoc.getId().toString());
+
+                                                    showSnackbar("Member has been added successfully", AddNewMemberActivity.this);
+
+                                                    //add user details to the database
+                                                    groupDoc.set(group).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            Intent intent = new Intent();
+                                                            setResult(RESULT_OK, intent);
+                                                            finish();
+                                                        }
+                                                    });
+
+                                                    newMemberDoc.get()
+                                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                                @Override
+                                                                public void onSuccess(DocumentSnapshot memberDocumentSnapshot) {
+                                                                    User newMemberUser = memberDocumentSnapshot.toObject(User.class);
+                                                                    assert newMemberUser != null;
+
+                                                                    newMemberUser.addToMemberOf(groupDoc.getId(), group.getGroupName());
+
+
+
+                                                                    // add to the database
+                                                                    newMemberDoc.set(newMemberUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                            Intent intent = new Intent();
+                                                                            setResult(RESULT_OK, intent);
+                                                                            finish();
+                                                                        }
+                                                                    });
+
+
+                                                                }
+                                                            }).addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            showSnackbar("Error in add new member", AddNewMemberActivity.this);
+                                                        }
+                                                    });
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            showSnackbar("Error in add new member", AddNewMemberActivity.this);
+                                        }
+                                    });
                                 }
                             }
                         });
-
-
-                //System.out.println("========= user email docuemnt ID: "+ newMemberDoc.getId().toString());
-
-                //fetch details of the user who is currently logged in
-                groupDoc.get()
-                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                            @Override
-                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                final Group group = documentSnapshot.toObject(Group.class);
-                                assert group != null;
-
-                                //group.addMember(txtMemberEmail.getText().toString());
-
-                                group.addMember(newMemberDoc.getId().toString());
-
-                                showSnackbar("Member has been added successfully", AddNewMemberActivity.this);
-
-                                //add user details to the database
-                                groupDoc.set(group).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        Intent intent = new Intent();
-                                        setResult(RESULT_OK, intent);
-                                        finish();
-                                    }
-                                });
-
-                                newMemberDoc.get()
-                                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                            @Override
-                                            public void onSuccess(DocumentSnapshot memberDocumentSnapshot) {
-                                                User newMemberUser = memberDocumentSnapshot.toObject(User.class);
-                                                assert newMemberUser != null;
-
-                                                newMemberUser.addToMemberOf(groupDoc.getId(), group.getGroupName());
-
-
-
-                                                // add to the database
-                                                newMemberDoc.set(newMemberUser).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                        Intent intent = new Intent();
-                                                        setResult(RESULT_OK, intent);
-                                                        finish();
-                                                    }
-                                                });
-
-
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        showSnackbar("Error in add new member", AddNewMemberActivity.this);
-                                    }
-                                });
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        showSnackbar("Error in add new member", AddNewMemberActivity.this);
-                    }
-                });
 
             }
         });

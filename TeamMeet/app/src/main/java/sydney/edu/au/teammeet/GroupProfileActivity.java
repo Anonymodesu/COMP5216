@@ -18,27 +18,29 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GroupProfileActivity extends BaseActivity {
 
     private Toolbar toolbar;
-    private RecyclerView coordinatedRecyclerView;
-    private RecyclerView memberRecyclerView;
-    private RecyclerView.LayoutManager coordLayoutManager;
-    private RecyclerView.LayoutManager memberLayoutManager;
-    private MyAdapter coordAdapter;
-    private MyAdapter memberAdapter;
+    private RecyclerView userRecyclerView;
+    //private RecyclerView memberRecyclerView;
+    private RecyclerView.LayoutManager userLayoutManager;
+    //private RecyclerView.LayoutManager memberLayoutManager;
+
     private Button addMemberBtn;
     private String currentUserID, userName, userEmail;
     private User user;
     private TextView groupName;
+    private sydney.edu.au.teammeet.UserViewAdapter userAdapter;
 
     FirebaseFirestore mFirestore;
     FirebaseAuth mAuth;
     CollectionReference users;
     FirebaseUser currentUser;
     DocumentReference userDoc;
+
 
     DocumentReference groupDoc;
     // private String documentId = "z5N4PPcb2UCm6zuVDZBG";
@@ -56,25 +58,21 @@ public class GroupProfileActivity extends BaseActivity {
         final String groupID = getIntent().getStringExtra("groupid");
         groupName.setText(groupname);
 
-        //coordinatedRecyclerView = (RecyclerView) findViewById(R.id.list_of_coord_groups);
-        //memberRecyclerView = (RecyclerView) findViewById(R.id.list_of_member_groups);
-        //coordinatedRecyclerView.setHasFixedSize(true);
-        //memberRecyclerView.setHasFixedSize(true);
+        userRecyclerView = (RecyclerView) findViewById(R.id.list_of_users);
+        userRecyclerView.setHasFixedSize(true);
 
-//        coordLayoutManager = new LinearLayoutManager(this);
-//        coordinatedRecyclerView.setLayoutManager(coordLayoutManager);
-//
-//        memberLayoutManager = new LinearLayoutManager(this);
-//        memberRecyclerView.setLayoutManager(memberLayoutManager);
+        userLayoutManager = new LinearLayoutManager(this);
+        userRecyclerView.setLayoutManager(userLayoutManager);
+
 
         //set up global nav drawer
         setSupportActionBar(toolbar);
 
-        //groupName.setText("team");
-
         mFirestore = FirebaseFirestore.getInstance();
         CollectionReference groups = mFirestore.collection("Groups");
-        //groupDoc = groups.document(documentId);
+        groupDoc = groups.document(groupID);
+
+        //fetch details of the user who is currently logged in
 
 
 
@@ -97,6 +95,7 @@ public class GroupProfileActivity extends BaseActivity {
         */
 
         boolean coordinates = getIntent().getBooleanExtra("coordinates", false);
+        showUsers();
 
         addMemberBtn = (Button) findViewById(R.id.add_new_member);
         if (!coordinates) {
@@ -118,11 +117,33 @@ public class GroupProfileActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (data != null && resultCode == RESULT_OK) {
+            showUsers();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        showUsers();
+    }
+
+    private void showUsers() {
+        groupDoc.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        final Group group = documentSnapshot.toObject(Group.class);
+                        assert group != null;
+
+                        ArrayList<String> users = new ArrayList<String>();
+                        users.addAll(group.getCoordinators());
+                        users.addAll(group.getMembers());
+
+                        userAdapter = new sydney.edu.au.teammeet.UserViewAdapter(users.toArray(new String[users.size()]));
+                        userRecyclerView.setAdapter(userAdapter);
+                    }
+                });
     }
 
 }
