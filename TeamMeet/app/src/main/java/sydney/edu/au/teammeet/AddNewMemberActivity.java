@@ -96,18 +96,19 @@ public class AddNewMemberActivity extends BaseActivity {
 
                                 if(e!=null || snapshot.size()==0){
                                     Toast.makeText(AddNewMemberActivity.this, "User not found", Toast.LENGTH_SHORT).show();
-                                }
+                                } else {
 
-                                for (DocumentChange userDoc : snapshot.getDocumentChanges()) {
-                                    User user = userDoc.getDocument().toObject(User.class);
-                                    //System.out.println("======== user: " + user.getEmail());
-                                    if (user.getEmail() != null) {
-                                        //group.addMember(userDoc.getDocument().getId());
-                                        if (userDoc.getType() == DocumentChange.Type.ADDED || userDoc.getType() == DocumentChange.Type.MODIFIED) {
-                                            //user.addToMemberOf(groupDoc.getId(), group.getGroupName());
-                                            newMemberDoc = userDoc.getDocument().getReference();
-                                            System.out.println("========= user email docuemnt ID: "+ userDoc.getDocument().getId());
-                                            break;
+                                    for (DocumentChange userDoc : snapshot.getDocumentChanges()) {
+                                        User user = userDoc.getDocument().toObject(User.class);
+                                        //System.out.println("======== user: " + user.getEmail());
+                                        if (user.getEmail() != null) {
+                                            //group.addMember(userDoc.getDocument().getId());
+                                            if (userDoc.getType() == DocumentChange.Type.ADDED || userDoc.getType() == DocumentChange.Type.MODIFIED) {
+                                                //user.addToMemberOf(groupDoc.getId(), group.getGroupName());
+                                                newMemberDoc = userDoc.getDocument().getReference();
+                                                System.out.println("========= user email docuemnt ID: " + userDoc.getDocument().getId());
+                                                break;
+                                            }
                                         }
                                     }
                                 }

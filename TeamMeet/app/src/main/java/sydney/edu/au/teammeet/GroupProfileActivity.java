@@ -41,7 +41,7 @@ public class GroupProfileActivity extends BaseActivity {
     DocumentReference userDoc;
 
     DocumentReference groupDoc;
-    private String documentId = "z5N4PPcb2UCm6zuVDZBG";
+    // private String documentId = "z5N4PPcb2UCm6zuVDZBG";
     private Group group;
     private final int ADD_MEMBER = 205;
 
@@ -52,6 +52,9 @@ public class GroupProfileActivity extends BaseActivity {
 
         groupName = (TextView) findViewById(R.id.group_name);
 
+        String groupname = getIntent().getStringExtra("groupname");
+        final String groupID = getIntent().getStringExtra("groupid");
+        groupName.setText(groupname);
 
         //coordinatedRecyclerView = (RecyclerView) findViewById(R.id.list_of_coord_groups);
         //memberRecyclerView = (RecyclerView) findViewById(R.id.list_of_member_groups);
@@ -71,7 +74,7 @@ public class GroupProfileActivity extends BaseActivity {
 
         mFirestore = FirebaseFirestore.getInstance();
         CollectionReference groups = mFirestore.collection("Groups");
-        groupDoc = groups.document(documentId);
+        //groupDoc = groups.document(documentId);
 
 
 
@@ -85,8 +88,6 @@ public class GroupProfileActivity extends BaseActivity {
         currentUserID = currentUser.getUid();
         userDoc = users.document(currentUserID);
         */
-        showGroupProfile();
-
 
         /*
         String[] moreStrings = {"What", "How we doin"};
@@ -94,68 +95,34 @@ public class GroupProfileActivity extends BaseActivity {
 
         memberRecyclerView.setAdapter(memberAdapter);
         */
+
+        boolean coordinates = getIntent().getBooleanExtra("coordinates", false);
+
         addMemberBtn = (Button) findViewById(R.id.add_new_member);
-        addMemberBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(GroupProfileActivity.this, AddNewMemberActivity.class);
-                intent.putExtra("groupDocId", documentId);
-                startActivityForResult(intent, ADD_MEMBER);
-            }
-        });
+        if (!coordinates) {
+            addMemberBtn.setVisibility(View.GONE);
+        } else {
+
+            addMemberBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(GroupProfileActivity.this, AddNewMemberActivity.class);
+                    intent.putExtra("groupDocId", groupID);
+                    startActivityForResult(intent, ADD_MEMBER);
+                }
+            });
+        }
 
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (data != null && resultCode == RESULT_OK) {
-
-            //showGroupProfile();
-        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //showGroupProfile();
     }
 
-    //there will be an equivalent for member groups when we distinguish further between coordinators and members
-    //PROBLEM IS THAT GROUPS MAY NOT BE LOADED IN ORDER OF CREATION DATE (????)
-    private void showGroupProfile() {
-
-        //fetch all groups (names) the user is currently in
-        groupDoc.get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-
-                        group = documentSnapshot.toObject(Group.class);
-                        assert group != null;
-
-                        groupName.setText(group.getGroupName());
-
-                        /*
-                        user = documentSnapshot.toObject(User.class);
-                        userName = user.getUsername();
-                        userEmail = user.getEmail();
-
-                        DrawerUtil.getDrawer(GroupProfileActivity.this, toolbar, userName, userEmail);
-
-                        String[] strings = {};
-                        HashMap<String, String> map = user.getCoordinates();
-
-                        if (map != null) {
-                            strings = map.values().toArray(new String[map.size()]);
-                        }
-                        */
-                        //coordAdapter = new MyAdapter(strings);
-                        //coordinatedRecyclerView.setAdapter(coordAdapter);
-
-
-
-                    }
-                });
-    }
 }
