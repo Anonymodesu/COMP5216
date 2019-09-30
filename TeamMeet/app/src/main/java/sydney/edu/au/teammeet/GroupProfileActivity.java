@@ -2,6 +2,7 @@ package sydney.edu.au.teammeet;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -18,6 +19,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -71,15 +73,15 @@ public class GroupProfileActivity extends BaseActivity {
         mFirestore = FirebaseFirestore.getInstance();
         CollectionReference groups = mFirestore.collection("Groups");
         groupDoc = groups.document(groupID);
+        users = mFirestore.collection("Users");
+
 
         //fetch details of the user who is currently logged in
 
 
 
         /*
-        mFirestore = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
-        users = mFirestore.collection("Users");
 
         currentUser = mAuth.getCurrentUser();
         assert currentUser != null;
@@ -136,12 +138,31 @@ public class GroupProfileActivity extends BaseActivity {
                         final Group group = documentSnapshot.toObject(Group.class);
                         assert group != null;
 
-                        ArrayList<String> users = new ArrayList<String>();
-                        users.addAll(group.getCoordinators());
-                        users.addAll(group.getMembers());
+                        final ArrayList<String> userIDs = new ArrayList<String>();
+                        final ArrayList<String> usernames = new ArrayList<String>();
+                        userIDs.addAll(group.getCoordinators());
+                        userIDs.addAll(group.getMembers());
 
-                        userAdapter = new sydney.edu.au.teammeet.UserViewAdapter(users.toArray(new String[users.size()]));
-                        userRecyclerView.setAdapter(userAdapter);
+                        for (String user: userIDs) {
+                            DocumentReference userDoc = users.document(user);
+                            userDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    User user = documentSnapshot.toObject(User.class);
+                                    userName = user.getUsername();
+                                    usernames.add(userName);
+                                    Log.e("TAGGING THIS SHIT", "The size is " + usernames.size());
+
+                                    if (usernames.size() == userIDs.size()) {
+                                        userAdapter = new sydney.edu.au.teammeet.UserViewAdapter(usernames.toArray(new String[usernames.size()]));
+                                        userRecyclerView.setAdapter(userAdapter);
+                                        return;
+                                    }
+                                }
+                            });
+                        }
+
+
                     }
                 });
     }
