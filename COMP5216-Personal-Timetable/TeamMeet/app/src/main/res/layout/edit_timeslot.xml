@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/edit_timeslot"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/activity_input_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Input activity here"
+        android:inputType="textPersonName" />
+
+    <RadioGroup
+        android:id="@+id/timeslot_weighting_selection"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:checkedButton="@id/medium_radio"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/free_radio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Free" />
+
+        <RadioButton
+            android:id="@+id/low_radio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Low" />
+
+        <RadioButton
+            android:id="@+id/medium_radio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Medium" />
+
+        <RadioButton
+            android:id="@+id/high_radio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="High" />
+    </RadioGroup>
+
+</LinearLayout>

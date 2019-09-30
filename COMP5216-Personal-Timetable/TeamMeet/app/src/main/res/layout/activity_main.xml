@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+    <include
+        android:id="@+id/global_header"
+        layout="@layout/global_header">
+    </include>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@+id/global_header"
+        android:layout_margin="@dimen/field_margin"
+        android:layout_centerHorizontal="true"
+        android:text="Swipe left to open menu and Sign out"
+        tools:layout_editor_absoluteX="119dp"
+        tools:layout_editor_absoluteY="318dp" />
+
+    <Button
+        android:id="@+id/TestChangePassWordBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Link to Change Password"
+        tools:layout_editor_absoluteX="134dp"
+        tools:layout_editor_absoluteY="459dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/textView"
+        style="@style/ThemeOverlay.MyDarkButton"
+        />
+
+</RelativeLayout>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<litpal>
+    <dbname value = "timetable"></dbname>
+
+    <version value = "3" >·</version>
+
+    <List>
+        <mapping class="sydney.edu.au.teammeet.Timetable"></mapping>
+        <mapping class="sydney.edu.au.teammeet.TimetableBean"></mapping>
+    </List>
+</litpal>

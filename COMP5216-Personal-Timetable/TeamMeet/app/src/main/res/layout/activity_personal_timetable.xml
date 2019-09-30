@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PersonalTimetableActivity">
+
+    <include
+        android:id="@+id/global_header"
+        layout="@layout/global_header"/>
+
+    <Button
+        android:id="@+id/clear_timetable_button"
+        style="@style/ThemeOverlay.MyDarkButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/global_header"
+        android:layout_gravity="center"
+        android:onClick="onClear"
+        android:text="Clear Timetable" />
+
+    <HorizontalScrollView
+        android:id="@+id/timetable_scroll_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_below="@id/clear_timetable_button"
+        android:fillViewport="false">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/timetablegridview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="true" />
+    </HorizontalScrollView>
+
+    <Button
+        android:id="@+id/zoom_button"
+        style="@style/ThemeOverlay.MyDarkButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/global_header"
+        android:layout_toRightOf="@id/clear_timetable_button"
+        android:onClick="onZoom"
+        android:text="Zoom" />
+
+</RelativeLayout>
