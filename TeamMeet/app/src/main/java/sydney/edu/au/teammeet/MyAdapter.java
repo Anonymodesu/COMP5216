@@ -205,6 +205,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
                                             ArrayList oldList = group.getMembers();
                                             oldList.remove(userId);
+                                            if(oldList.size()==0){
+                                                mFirestore.collection("Groups").document(item.getKey())
+                                                        .delete()
+                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void aVoid) {
+                                                                Log.d(TAG, "Empty Group successfully deleted!");
+                                                            }
+                                                        });
+                                            }
                                             group.setMembers(oldList);
                                             docRef.set(group).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
