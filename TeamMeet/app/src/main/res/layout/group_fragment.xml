@@ -6,6 +6,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id = "@+id/list_of_member_groups"
         android:layout_marginTop="@dimen/field_margin_small"
+        android:layout_marginBottom="45dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars = "vertical">
