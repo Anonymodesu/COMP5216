@@ -45,6 +45,7 @@ public class MainActivity extends BaseActivity {
     private TextView pageName;
     private FirebaseAuth mAuth;
     private String userName, userEmail, userId, userPhoto, userPhone;
+    private User newUser;
     DocumentReference currentUser;
 
 
@@ -90,9 +91,12 @@ public class MainActivity extends BaseActivity {
                  DocumentSnapshot document = task.getResult();
                 if(!document.exists())
                 {
-                    User newUser = new User(userName, userEmail.toLowerCase(), userPhone, userPhoto, null, null);
+                    newUser = new User(userName, userEmail.toLowerCase(), userPhone, userPhoto, null, null);
                     currentUser.set(newUser);
+                }else{
+                    newUser = document.toObject(User.class);
                 }
+                 ((UserClient)(getApplicationContext())).setUser(newUser);
             }
          }
         });

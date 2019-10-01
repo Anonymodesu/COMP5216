@@ -36,6 +36,6 @@
     <string name="leave">leave</string>
     <string name="dialog_delete_title">Leave group</string>
     <string name="dialog_delete_msg">Are you sure to leave this group?</string>
-    <string name="dialog_delete_btn">Delete</string>
+    <string name="dialog_delete_btn">Leave</string>
     <string name="cancel">Cancel</string>
 </resources>

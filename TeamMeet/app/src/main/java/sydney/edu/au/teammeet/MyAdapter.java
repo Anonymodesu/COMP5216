@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,19 +28,21 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static androidx.viewpager.widget.PagerAdapter.POSITION_NONE;
+import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private static final String TAG="MyAdapter";
+    private final List<Map.Entry<String, String>> mData;
     private String[] mDataset;
     private String[] mKeys;
     private boolean coordinates;
     FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
     FirebaseAuth mAuth= FirebaseAuth.getInstance();
-    ArrayList<String> myDataset = new ArrayList<String>();
-    ArrayList<String> myKeys = new ArrayList<String>();
+
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -58,16 +61,28 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public MyAdapter(HashMap<String, String> map, boolean coordinates) {
-
-
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            myDataset.add(entry.getValue());
-            myKeys.add(entry.getKey());
-        }
-
-        mDataset = myDataset.toArray(new String[myDataset.size()]);
-        mKeys = myKeys.toArray(new String[myKeys.size()]);
+        mData = new ArrayList<>(map.entrySet());
+//        ArrayList<String> myDataset = new ArrayList<String>();
+//        ArrayList<String> myKeys = new ArrayList<String>();
+//
+//
+//        for (Map.Entry<String, String> entry : map.entrySet()) {
+//            myDataset.add(entry.getValue());
+//            myKeys.add(entry.getKey());
+//        }
+//
+//        mDataset = myDataset.toArray(new String[myDataset.size()]);
+//        mKeys = myKeys.toArray(new String[myKeys.size()]);
         this.coordinates = coordinates;
+    }
+
+    public Map.Entry<String, String> getItem(int position) {
+        return mData.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return mData.get(position).getKey().hashCode();
     }
 
     // Create new views (invoked by the layout manager)
@@ -84,19 +99,23 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.groupName.setText(mDataset[position]);
+        final Map.Entry<String, String> item = getItem(position);
+//        holder.groupName.setText(mDataset[position]);
+        holder.groupName.setText(item.getValue());
         holder.groupName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Context context = view.getContext();
                 Intent intent = new Intent(context, GroupProfileActivity.class);
-                intent.putExtra("groupname", mDataset[position]);
-                intent.putExtra("groupid", mKeys[position]);
+//                intent.putExtra("groupname", mDataset[position]);
+//                intent.putExtra("groupid", mKeys[position]);
                 intent.putExtra("coordinates", coordinates);
+                intent.putExtra("groupname", item.getValue());
+                intent.putExtra("groupid", item.getKey());
                 context.startActivity(intent);
             }
         });
-        holder.leave_link.setOnClickListener(new View.OnClickListener(){
+        holder.leave_link.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -108,7 +127,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (coordinates) {
                             //delete document
-                            mFirestore.collection("Groups").document(mKeys[position])
+                            mFirestore.collection("Groups").document(item.getKey())
                                     .delete()
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
@@ -122,20 +141,20 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                                     .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                                         @Override
                                                         public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                            User currentUser = documentSnapshot.toObject(User.class);
+                                                            final User currentUser = documentSnapshot.toObject(User.class);
                                                             assert currentUser != null;
                                                             final HashMap coordinates = currentUser.getCoordinates();
-                                                            if (coordinates != null)
-                                                                coordinates.remove(mKeys[position]);
+                                                            if (coordinates != null) {
+                                                                coordinates.remove(item.getKey());
+                                                                mData.remove(position);
+                                                            }
                                                             currentUser.setCoordinates(coordinates);
                                                             userRef.set(currentUser).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                 @Override
                                                                 public void onComplete(@NonNull Task<Void> task) {
                                                                     Log.d(TAG, "group deleted from user collection!");
-                                                                    myDataset.remove(position);
                                                                     notifyItemRemoved(position);
-                                                                    Log.d(TAG, "position:"+position);
-                                                                    notifyItemRangeChanged(position, getItemCount()+1);
+                                                                    notifyItemRangeChanged(position, getItemCount());
                                                                 }
                                                             });
                                                         }
@@ -168,14 +187,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                                             User currentUser = documentSnapshot.toObject(User.class);
                                                             assert currentUser != null;
                                                             HashMap member = currentUser.getIsMemberOf();
-                                                            if (member != null)
-                                                                member.remove(mKeys[position]);
+                                                            if (member != null) {
+                                                                member.remove(item.getKey());
+                                                                mData.remove(position);
+                                                            }
                                                             currentUser.setCoordinates(member);
                                                             userRef.set(currentUser).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                 @Override
                                                                 public void onComplete(@NonNull Task<Void> task) {
                                                                     Log.d(TAG, "user successfully leave group from user collection!");
-
+                                                                    notifyItemRemoved(position);
+                                                                    notifyItemRangeChanged(position, getItemCount());
                                                                 }
                                                             });
                                                         }
@@ -188,9 +210,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     Log.d(TAG, "user successfully leave group from group collection!");
-//                                                    notifyItemRemoved(position);
-//                                                    notifyItemRangeChanged(position, getItemCount());
-                                                    notifyDataSetChanged();
                                                 }
                                             });
                                         }
@@ -211,6 +230,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mDataset.length;
+//        return mDataset.length;
+        return mData.size();
     }
+
 }
