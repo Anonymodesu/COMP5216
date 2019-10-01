@@ -2,8 +2,10 @@ package sydney.edu.au.teammeet;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 
+import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,15 +22,20 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.google.gson.Gson;
+
 import org.litepal.LitePal;
+
+import static android.widget.Toast.LENGTH_SHORT;
 
 public class PersonalTimetableAdapter extends TimetableAdapter {
 
-
-    private TimetableBean mTimetableBean;
+    private Context context;
 
     public PersonalTimetableAdapter(final Context context, final Timetable timetable, int cellSize) {
         super(context, timetable, cellSize);
+        this.context = context;
+        loadSavedData();
         setupClickListeners(context, timetable);
     }
 
@@ -53,19 +60,19 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
             int colour = Color.WHITE;
             switch(weighting) {
                 case 0:
-                    colour = Color.parseColor("#E6E6FA"); //purple
+                    colour = Color.parseColor("#FFFFFF"); //white
                     break;
 
                 case 1:
-                    colour = Color.parseColor("#F0E68C"); //yellow
+                    colour = Color.parseColor("#B0E0E6"); //blue
                     break;
 
                 case 2:
-                    colour = Color.parseColor("#FFA07A"); //aquamarine
+                    colour = Color.parseColor("#90EE90"); //green
                     break;
 
                 case 3:
-                    colour = Color.parseColor("#7FFFD4"); //light salmon
+                    colour = Color.parseColor("#FF7F50"); //orange
                     break;
             }
             textView.setBackgroundColor(colour);
@@ -141,15 +148,8 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
                                             Toast.makeText(context, "Can't associate an activity to free timeslots", Toast.LENGTH_LONG).show();
                                             mTimetable.setActivity(timetablePos, "");
                                         }
-
-
-                                        //save data to local database
-                                        mTimetableBean = new TimetableBean();
-                                        mTimetableBean.setTimetableID(timetablePos);
-                                        mTimetableBean.setActivities(inputActivity.getText().toString());
-                                        mTimetableBean.saveThrows();
-
                                         notifyItemChanged(adapterPos);
+                                        saveByPreference(timetablePos, currentActivity, currentWeighting);
                                     }
                                 })
                         .setNegativeButton("Cancel", new
@@ -170,8 +170,7 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
     public void clearTimetable() {
         mTimetable = new Timetable();
         notifyDataSetChanged();
-        //delete data from the local database
-        LitePal.deleteAll(TimetableBean.class);
+        clearByPreference();
     }
 
 
@@ -199,6 +198,51 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
                 Log.d("INCORRECT ID", "" + id);
                 return -1;
         }
+    }
+
+    /** save timetable's data to SharedPreferences in json format */
+    private void saveByPreference (int timetablePos, String activity, int weight){
+
+        mTimetable.setActivity(timetablePos, activity);
+        mTimetable.setWeighting(timetablePos, weight);
+        SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = mPref.edit();
+
+        Gson gson = new Gson();
+        String json = gson.toJson(mTimetable);
+
+        editor.putString("personal_timetable", json);
+        editor.commit();
+        Toast.makeText(context, "saved!", LENGTH_SHORT).show();
+    }
+
+    /** get json data from SharedPreferences and then restore the timetable */
+    private void loadSavedData() {
+        //removeAll();
+
+        SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(context);
+        String json = mPref.getString("personal_timetable", "");
+
+        Gson gson = new Gson();
+        mTimetable = gson.fromJson(json, Timetable.class);
+
+        //if (savedData == null && savedData.equals("")) return;
+        //load(savedData);
+    }
+
+    /** clear all data */
+    private void clearByPreference (){
+
+        mTimetable = new Timetable();
+        SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = mPref.edit();
+
+        Gson gson = new Gson();
+        String json = gson.toJson(mTimetable);
+
+        editor.putString("personal_timetable", json);
+        editor.commit();
+        Toast.makeText(context, "saved!", LENGTH_SHORT).show();
     }
 
 }

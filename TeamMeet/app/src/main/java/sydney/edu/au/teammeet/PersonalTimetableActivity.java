@@ -81,31 +81,4 @@ public class PersonalTimetableActivity extends BaseActivity {
         timetableGridAdapter = new PersonalTimetableAdapter(this, timetable, newSize);
         timetableRecyclerView.setAdapter(timetableGridAdapter);
     }
-
-
-    private void readItemsFromDatabase()
-    {
-        //Use asynchronous task to run query on the background and wait for result
-        try {
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    //read items from database
-                    List<TimetableBean> itemsFromDB = LitePal.findAll(TimetableBean.class);
-                    items = new ArrayList<String>();
-                    if (itemsFromDB != null & itemsFromDB.size() > 0) {
-                        for (TimetableBean item : itemsFromDB) {
-                                items.add(item.getActivities());
-                                Log.i("SQLite read item", "ID: " + item.getTimetableID() + " Name: " + item.getActivities());
-                        }
-                    }
-                    return null;
-                }
-            }.execute().get();
-        }
-        catch(Exception ex) {
-            Log.e("readItemsFromDatabase", ex.getStackTrace().toString());
-        }
-    }
-
 }

@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 
 import org.litepal.crud.LitePalSupport;
 
-public class Timetable extends LitePalSupport{
+public class Timetable {
 
     public static final int START_HOUR = 8;
     public static final int NUM_DAYS = 7;
@@ -23,13 +23,13 @@ public class Timetable extends LitePalSupport{
         activities = new String[NUM_CELLS];
         availabilities = new int[NUM_CELLS];
 
-        for(int i = 0; i < availabilities.length; i++) {
+        /*for(int i = 0; i < availabilities.length; i++) {
             availabilities[i] = i % 4;
         }
 
         for(int i = 0; i < activities.length; i++) {
             activities[i] = null;
-        }
+        }*/
     }
 
     public int getLength(){

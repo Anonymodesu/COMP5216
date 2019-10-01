@@ -34,7 +34,6 @@ public abstract class TimetableAdapter extends RecyclerView.Adapter<RecyclerView
     protected final int cellSize;
 
     protected Timetable mTimetable;
-    protected TimetableBean mTimetableBean;
     protected LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private ItemLongClickListener mLongClickListener;
