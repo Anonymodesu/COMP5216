@@ -83,6 +83,6 @@
         android:layout_alignParentEnd="true"
         android:contentDescription="@string/add_btn"
         android:elevation="@dimen/elevation"
-        app:backgroundTint="@color/colorPrimaryLight"
+        app:backgroundTint="@color/colorAccent"
         app:icon="@drawable/ic_add_white_24dp" />
 </RelativeLayout>

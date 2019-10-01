@@ -22,12 +22,13 @@ public class UserViewAdapter extends RecyclerView.Adapter<UserViewAdapter.MyView
     // you provide access to all the views for a data item in a view holder
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         public CardView mCardView;
-        public TextView mtextView;
+        public TextView mtextView, leave_link;
 
         public MyViewHolder(View v) {
             super(v);
             mCardView = v.findViewById(R.id.group_item);
             mtextView = v.findViewById(R.id.group_name);
+            leave_link = v.findViewById(R.id.link_leave);
         }
     }
 
@@ -51,6 +52,7 @@ public class UserViewAdapter extends RecyclerView.Adapter<UserViewAdapter.MyView
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.mtextView.setText(mDataset[position]);
+        holder.leave_link.setVisibility(View.GONE);
         holder.mtextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
