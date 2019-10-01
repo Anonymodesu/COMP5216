@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryLight"
+    android:id="@+id/register_form"
+    tools:context=".RegisterActivity">
+    <include
+        android:id="@+id/global_header"
+        layout="@layout/global_header">
+    </include>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/profile"
+        app:civ_border_width="2dp"
+        app:civ_border_color="@color/colorPrimary"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/global_header"
+        android:layout_marginTop="@dimen/field_margin"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profile_image"
+        android:layout_margin="@dimen/field_margin_small"
+        android:elevation="5dp">
+    <EditText
+        android:id="@+id/Siginup_Username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint=" user name"
+        android:ems="10"
+        android:background="@color/grey_100"
+        android:padding="5dp"
+        android:layout_margin="5dp"
+        android:drawableLeft="@drawable/ic_person_grey_24dp"/>
+
+    <EditText
+        android:id="@+id/Siginup_Email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint=" email"
+        android:inputType="textEmailAddress"
+        android:background="@color/grey_100"
+        android:padding="5dp"
+        android:layout_margin="5dp"
+        android:drawableLeft="@drawable/ic_email_grey_24dp"/>
+
+    <EditText
+        android:id="@+id/Signup_Password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint=" password"
+        android:inputType="textPassword"
+        android:background="@color/grey_100"
+        android:layout_margin="5dp"
+        android:padding="5dp"
+        android:drawableLeft="@drawable/ic_password_grey_24dp"/>
+
+    <EditText
+        android:id="@+id/Signup_Confirmpw"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_margin="5dp"
+        android:hint=" confirm password"
+        android:inputType="textPassword"
+        android:background="@color/grey_100"
+        android:padding="5dp"
+        android:drawableLeft="@drawable/ic_password_grey_24dp"/>
+
+    <Button
+        android:id="@+id/Signup_Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/button_text_size"
+        android:layout_margin="@dimen/field_margin_small"
+        android:text="Create Account" />
+    </LinearLayout>
+</RelativeLayout>

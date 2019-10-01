@@ -1,0 +1,78 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.1"
+    defaultConfig {
+        applicationId "sydney.edu.au.teammeet"
+        minSdkVersion 23
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.vectordrawable:vectordrawable-animated:1.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'com.google.android.material:material:1.1.0-alpha10'
+    implementation 'org.litepal.android:java:3.0.0'
+    //support for global navigation drawer see https://github.com/mikepenz/MaterialDrawer
+    implementation("com.mikepenz:materialdrawer:6.0.9@aar") {
+        transitive = true
+    }
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    // add the Firebase SDK for Google Analytics
+    implementation 'com.google.firebase:firebase-analytics:17.0.1'
+
+    // Firebase Authentication
+    implementation 'com.google.firebase:firebase-core:17.2.0'
+    implementation 'com.google.firebase:firebase-auth:19.0.0'
+
+    // Google Sign In SDK (only required for Google Sign In)
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
+// FirebaseUI (for authentication)
+    implementation 'com.firebaseui:firebase-ui-auth:4.3.2'
+// Required only if Facebook login support is required
+// Find the latest Facebook SDK releases here: https://goo.gl/Ce5L94 implementation 'com.facebook.android:facebook-android-sdk:5.0.0'
+    implementation 'com.facebook.android:facebook-android-sdk:5.0.0'
+    implementation 'androidx.browser:browser:1.0.0'
+    //for circle image view, see https://github.com/hdodenhof/CircleImageView
+    implementation 'de.hdodenhof:circleimageview:3.0.1'
+
+    // Firebase UI
+    // Used in FirebaseUIActivity.
+    implementation 'com.firebaseui:firebase-ui-auth:4.3.2'
+
+    implementation 'com.google.firebase:firebase-firestore:21.1.1'
+    implementation 'com.google.firebase:firebase-storage:19.0.1'
+
+    //lib for display profile images see https://github.com/square/picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    //for profile image cropping see https://github.com/ArthurHub/Android-Image-Cropper
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
+    dependencies {
+        api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+    }
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    implementation 'android.arch.persistence.room:runtime:1.1.1'
+    annotationProcessor 'android.arch.persistence.room:compiler:1.1.1'
+    implementation 'org.litepal.android:core:2.0.0'
+
+    implementation 'androidx.recyclerview:recyclerview:1.1.0-beta04'
+}
+apply plugin: 'com.google.gms.google-services'

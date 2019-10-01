@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EditProfileActivity"
+    android:background="@color/grey_100">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <include
+        android:id="@+id/global_header"
+        layout="@layout/global_header">
+    </include>
+
+<LinearLayout
+    android:id="@+id/edit_field"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="@dimen/field_margin"
+    android:background="@color/colorWhite">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="save"
+        android:textSize="16dp"
+        android:textColor="@color/grey_500"
+        android:layout_gravity="end"
+        android:layout_marginRight="@dimen/field_margin"/>
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/edit_profile_image"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/field_margin_small"
+        android:src="@drawable/profile"
+        app:civ_border_color="@color/colorPrimary"
+        app:civ_border_width="2dp" />
+    <TextView
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/field_margin_small"
+        android:textSize="18dp"
+        android:textColor="@color/grey_500"/>
+
+    <EditText
+        android:id="@+id/edit_screen_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/field_margin_small"
+        android:hint="Screen Name"
+        android:inputType="textEmailAddress" />
+
+    <EditText
+        android:id="@+id/edit_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/field_margin_small"
+        android:hint="Phone Number"
+        android:inputType="textPhonetic" />
+
+    <TextView android:id="@+id/link_resetpw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/field_margin_small"
+        android:layout_gravity="center"
+        android:textColor="@color/textSecondary"
+        android:text="Reset password"
+        android:textSize="18dp"/>
+</LinearLayout>
+    </LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/save"
+        android:contentDescription="@string/save"
+        app:backgroundTint="@color/colorPrimary"
+        app:srcCompat="@drawable/ic_save_white_24dp"
+        app:layout_anchor="@id/edit_field"
+        app:layout_anchorGravity="top|right|end"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+

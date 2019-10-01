@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+    <include
+        android:id="@+id/global_header"
+        layout="@layout/global_header">
+    </include>
+
+
+    <!--<Button-->
+        <!--android:id="@+id/create_new_group"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignLeft="@id/global_header"-->
+        <!--android:layout_alignRight="@id/global_header"-->
+        <!--android:layout_below="@id/global_header"-->
+        <!--android:text="Create New Group"-->
+        <!--android:layout_marginBottom="20dp"/>-->
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:orientation="vertical"-->
+        <!--android:layout_below="@+id/create_new_group">-->
+
+        <!--<TextView-->
+            <!--android:id = "@+id/txt"-->
+            <!--android:textSize="24dp"-->
+            <!--android:text="Groups You Coordinate"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--/>-->
+
+
+        <!--<androidx.recyclerview.widget.RecyclerView-->
+            <!--android:id="@+id/list_of_coord_groups"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_below="@+id/txt"-->
+            <!--android:layout_weight="1"-->
+            <!--android:scrollbars="vertical" />-->
+
+        <!--<TextView-->
+            <!--android:id = "@+id/txt2"-->
+            <!--android:text="Groups You Are In"-->
+            <!--android:textSize="24dp"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@+id/list_of_coord_groups"-->
+            <!--/>-->
+
+        <!--<androidx.recyclerview.widget.RecyclerView-->
+            <!--android:id = "@+id/list_of_member_groups"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_below="@+id/txt2"-->
+            <!--android:layout_weight="1"-->
+            <!--android:scrollbars = "vertical"-->
+            <!--/>-->
+    <!--</LinearLayout>-->
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/global_header">
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    </androidx.viewpager.widget.ViewPager>
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/create_new_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_btn"
+        android:layout_margin="1dp"
+        android:layout_alignBottom="@id/pager"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="@string/add_btn"
+        android:elevation="@dimen/elevation"
+        app:backgroundTint="@color/colorPrimaryLight"
+        app:icon="@drawable/ic_add_white_24dp" />
+</RelativeLayout>
