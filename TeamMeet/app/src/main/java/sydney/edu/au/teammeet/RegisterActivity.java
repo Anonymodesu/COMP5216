@@ -20,6 +20,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class RegisterActivity extends BaseActivity {
     private static final String TAG = "Register";
     private FirebaseAuth mAuth;
@@ -28,6 +30,7 @@ public class RegisterActivity extends BaseActivity {
     private EditText UserEmail, UserPassword, UserConfirmPassword,UserName;
     private Button CreateAccountButton;
     private TextView pageName;
+    private CircleImageView ProfileImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +60,6 @@ public class RegisterActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-        FirebaseUser currentUser = mAuth.getCurrentUser();
 
     }
 
