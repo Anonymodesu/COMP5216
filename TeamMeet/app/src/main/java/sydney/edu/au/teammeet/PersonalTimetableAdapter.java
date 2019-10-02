@@ -224,7 +224,10 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
         String json = mPref.getString("personal_timetable", "");
 
         Gson gson = new Gson();
-        mTimetable = gson.fromJson(json, Timetable.class);
+        Timetable newTimetable = gson.fromJson(json, Timetable.class);
+        if(newTimetable != null) {
+            mTimetable = newTimetable;
+        }
 
         //if (savedData == null && savedData.equals("")) return;
         //load(savedData);

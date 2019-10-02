@@ -81,4 +81,6 @@ public class PersonalTimetableActivity extends BaseActivity {
         timetableGridAdapter = new PersonalTimetableAdapter(this, timetable, newSize);
         timetableRecyclerView.setAdapter(timetableGridAdapter);
     }
+
+
 }
