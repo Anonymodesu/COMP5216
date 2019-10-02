@@ -200,7 +200,7 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
         }
     }
 
-    /* save timetable's data to SharedPreferences in json format
+    /* save timetable's data to SharedPreferences in json format*/
     private void saveByPreference (int timetablePos, String activity, int weight){
 
         mTimetable.setActivity(timetablePos, activity);
