@@ -35,7 +35,6 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
     public PersonalTimetableAdapter(final Context context, final Timetable timetable, int cellSize) {
         super(context, timetable, cellSize);
         this.context = context;
-        loadSavedData();
         setupClickListeners(context, timetable);
     }
 
@@ -149,7 +148,6 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
                                             mTimetable.setActivity(timetablePos, "");
                                         }
                                         notifyItemChanged(adapterPos);
-                                        saveByPreference(timetablePos, currentActivity, currentWeighting);
                                     }
                                 })
                         .setNegativeButton("Cancel", new
@@ -170,7 +168,6 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
     public void clearTimetable() {
         mTimetable = new Timetable();
         notifyDataSetChanged();
-        clearByPreference();
     }
 
 
@@ -200,52 +197,6 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
         }
     }
 
-    /* save timetable's data to SharedPreferences in json format*/
-    private void saveByPreference (int timetablePos, String activity, int weight){
 
-        mTimetable.setActivity(timetablePos, activity);
-        mTimetable.setWeighting(timetablePos, weight);
-        SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = mPref.edit();
-
-        Gson gson = new Gson();
-        String json = gson.toJson(mTimetable);
-
-        editor.putString("personal_timetable", json);
-        editor.commit();
-        Toast.makeText(context, "saved!", LENGTH_SHORT).show();
-    }
-
-    /** get json data from SharedPreferences and then restore the timetable */
-    private void loadSavedData() {
-        //removeAll();
-
-        SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(context);
-        String json = mPref.getString("personal_timetable", "");
-
-        Gson gson = new Gson();
-        Timetable newTimetable = gson.fromJson(json, Timetable.class);
-        if(newTimetable != null) {
-            mTimetable = newTimetable;
-        }
-
-        //if (savedData == null && savedData.equals("")) return;
-        //load(savedData);
-    }
-
-    /** clear all data */
-    private void clearByPreference (){
-
-        mTimetable = new Timetable();
-        SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = mPref.edit();
-
-        Gson gson = new Gson();
-        String json = gson.toJson(mTimetable);
-
-        editor.putString("personal_timetable", json);
-        editor.commit();
-        Toast.makeText(context, "saved!", LENGTH_SHORT).show();
-    }
 
 }

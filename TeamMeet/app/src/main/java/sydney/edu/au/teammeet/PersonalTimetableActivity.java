@@ -6,21 +6,27 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.gson.Gson;
 
 import org.litepal.LitePal;
 
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.widget.Toast.LENGTH_SHORT;
 
 public class PersonalTimetableActivity extends BaseActivity {
     //Variables for global navigation
@@ -58,7 +64,10 @@ public class PersonalTimetableActivity extends BaseActivity {
         DrawerUtil.getDrawer(this, toolbar, userName, userEmail);
         //[END_of setup page header and navigation]
 
-        timetable = new Timetable();
+        timetable = loadSavedData();
+        if(timetable == null) {
+            timetable = new Timetable();
+        }
         standardZoom = true;
 
         findViewById(R.id.timetable_scroll_view).setNestedScrollingEnabled(true);
@@ -82,5 +91,54 @@ public class PersonalTimetableActivity extends BaseActivity {
         timetableRecyclerView.setAdapter(timetableGridAdapter);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        saveByPreference();
+    }
 
+    /* save timetable's data to SharedPreferences in json format*/
+    private void saveByPreference (){
+
+
+        SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = mPref.edit();
+
+        Gson gson = new Gson();
+        String json = gson.toJson(timetable);
+
+        editor.putString("personal_timetable", json);
+        editor.commit();
+        //Toast.makeText(this, "saved!", LENGTH_SHORT).show();
+    }
+
+    /** get json data from SharedPreferences and then restore the timetable */
+    private Timetable loadSavedData() {
+        //removeAll();
+
+        SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String json = mPref.getString("personal_timetable", "");
+
+        Gson gson = new Gson();
+        Timetable savedTimetable = gson.fromJson(json, Timetable.class);
+
+        return savedTimetable;
+        //if (savedData == null && savedData.equals("")) return;
+        //load(savedData);
+    }
+
+    /** clear all data */
+    private void clearByPreference (){
+
+        timetable = new Timetable();
+        SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = mPref.edit();
+
+        Gson gson = new Gson();
+        String json = gson.toJson(timetable);
+
+        editor.putString("personal_timetable", json);
+        editor.commit();
+        //Toast.makeText(this, "saved!", LENGTH_SHORT).show();
+    }
 }
