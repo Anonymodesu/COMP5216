@@ -16,8 +16,8 @@
     <color name="grey_300">#E0E0E0</color>
     <color name="grey_500">#9E9E9E</color>
 
-    <color name="free_priority_colour">#E6E6FA</color>
-    <color name="low_priority_colour">#F0E68C</color>
-    <color name="medium_priority_colour">#FFA07A</color>
-    <color name="high_priority_colour">#7FFFD4</color>
+    <color name="free_priority_colour">#FFFFFF</color>
+    <color name="low_priority_colour">#B0E0E6</color>
+    <color name="medium_priority_colour">#90EE90</color>
+    <color name="high_priority_colour">#FF7F50</color>
 </resources>

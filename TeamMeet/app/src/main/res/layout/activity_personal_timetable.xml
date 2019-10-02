@@ -17,7 +17,7 @@
         android:layout_below="@id/global_header"
         android:layout_gravity="center"
         android:onClick="onClear"
-        android:text="Clear Timetable" />
+        android:text="Clear" />
 
     <sydney.edu.au.teammeet.LockableScrollView
         android:id="@+id/timetable_scroll_view"
