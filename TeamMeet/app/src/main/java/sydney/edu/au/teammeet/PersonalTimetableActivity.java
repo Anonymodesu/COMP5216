@@ -18,13 +18,18 @@ import android.widget.Toast;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 
 import org.litepal.LitePal;
 
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
@@ -35,7 +40,6 @@ public class PersonalTimetableActivity extends BaseActivity {
     private ActionBarDrawerToggle actionBarDrawerToggle;
     public Toolbar toolbar;
     private TextView pageName;
-    private FirebaseAuth mAuth;
     private String userName, userEmail;
 
     //Variables for Time table page
@@ -44,6 +48,9 @@ public class PersonalTimetableActivity extends BaseActivity {
     ArrayList<String> items;
     private Timetable timetable;
     private boolean standardZoom;
+
+    FirebaseFirestore mFirestore;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +88,7 @@ public class PersonalTimetableActivity extends BaseActivity {
 
     public void onClear(View view) {
         timetableGridAdapter.clearTimetable();
+        clearByPreference ();
     }
 
     //swaps between two zoom levels
@@ -98,7 +106,7 @@ public class PersonalTimetableActivity extends BaseActivity {
     }
 
     /* save timetable's data to SharedPreferences in json format*/
-    private void saveByPreference (){
+    private void saveByPreference(){
 
 
         SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -110,6 +118,11 @@ public class PersonalTimetableActivity extends BaseActivity {
         editor.putString("personal_timetable", json);
         editor.commit();
         //Toast.makeText(this, "saved!", LENGTH_SHORT).show();
+
+        //upload data to firebase
+        mFirestore = FirebaseFirestore.getInstance();
+        DocumentReference newPTId = mFirestore.collection("PersonalTimetables").document();
+        newPTId.set(mPref);
     }
 
     /** get json data from SharedPreferences and then restore the timetable */
@@ -141,4 +154,5 @@ public class PersonalTimetableActivity extends BaseActivity {
         editor.commit();
         //Toast.makeText(this, "saved!", LENGTH_SHORT).show();
     }
+    
 }
