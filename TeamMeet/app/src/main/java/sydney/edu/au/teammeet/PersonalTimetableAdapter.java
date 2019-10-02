@@ -7,7 +7,9 @@ import android.graphics.Color;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 
 import android.widget.RadioGroup;
@@ -17,19 +19,47 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 
 import org.litepal.LitePal;
 
 public class PersonalTimetableAdapter extends TimetableAdapter {
-
-
     private TimetableBean mTimetableBean;
+    private ItemTouchListener mItemTouchListener;
+    private RecyclerView parentRecyclerView;
 
     public PersonalTimetableAdapter(final Context context, final Timetable timetable, int cellSize) {
         super(context, timetable, cellSize);
-        setupClickListeners(context, timetable);
+        setupClickListeners(context);
+        setOnTouchListener(null);
+    }
+
+
+    // inflates the cell layout from xml when needed
+    @Override
+    @NonNull
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = mInflater.inflate(R.layout.timetable_cell, parent, false);
+
+        //view.setMinimumHeight(cellSize);
+        //view.setMinimumWidth(cellSize);
+        //set cell size
+
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        params.height = cellSize;
+        params.width = cellSize;
+        view.setLayoutParams(params);
+
+        switch(viewType) {
+            case TIMESLOT_VIEW_TYPE: return new PersonalTimetableAdapter.TimeslotViewHolder(view);
+
+            case DAY_VIEW_TYPE: case HOUR_VIEW_TYPE: return new DescriptorViewHolder(view);
+
+            default:
+                throw new RuntimeException("Wrong viewType in PersonalTimetableAdapter.onCreateViewHolder()");
+        }
     }
 
 
@@ -50,35 +80,76 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
 
             //cell changes colour depending on weighting
             int weighting = mTimetable.getWeighting(timetablePos);
-            int colour = Color.WHITE;
-            switch(weighting) {
-                case 0:
-                    colour = Color.parseColor("#E6E6FA"); //purple
-                    break;
-
-                case 1:
-                    colour = Color.parseColor("#F0E68C"); //yellow
-                    break;
-
-                case 2:
-                    colour = Color.parseColor("#FFA07A"); //aquamarine
-                    break;
-
-                case 3:
-                    colour = Color.parseColor("#7FFFD4"); //light salmon
-                    break;
-            }
+            int colour = weightingToColour(weighting);
             textView.setBackgroundColor(colour);
 
         } else { //let super class handle descriptor cells
             super.onBindViewHolder(holder, adapterPos);
         }
-
-
-
     }
 
-    private void setupClickListeners(final Context context, final Timetable timetable) {
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        parentRecyclerView = recyclerView;
+    }
+
+    //non standard mode fill up cells on touch
+    public void switchMode(PersonalTimetableActivity.Mode mode) {
+        if(mode == PersonalTimetableActivity.Mode.STANDARD) {
+            setupClickListeners(mContext);
+            setOnTouchListener(null);
+        } else {
+
+            setupTouchListener(mContext, mode);
+            setClickListener(null);
+            setLongClickListener(null);
+        }
+    }
+
+    //touching timeslots in nonstandard mode sets them to the specified colour automagically
+    private void setupTouchListener(final Context context, final PersonalTimetableActivity.Mode mode) {
+
+        setOnTouchListener(new ItemTouchListener() {
+            @Override
+            public boolean onItemTouch(View view, int adapterPos) {
+
+                int timetablePos = adapterPosToTimetablePos(adapterPos);
+                int weighting = 0;
+                int oldWeighting = mTimetable.getWeighting(timetablePos);
+
+                switch(mode) {
+                    case FREE:
+                        weighting = 0;
+                        break;
+                    case LOW:
+                        weighting = 1;
+                        break;
+
+                    case MEDIUM:
+                        weighting = 2;
+                        break;
+
+                    case HIGH:
+                        weighting = 3;
+                        break;
+
+                    case STANDARD:
+                        throw new IllegalArgumentException("can't use standard mode for touch listeners");
+                }
+
+                if(weighting == oldWeighting) {
+                    return false;
+                }
+
+                mTimetable.setWeighting(timetablePos, weighting);
+                notifyItemChanged(adapterPos);
+                return true;
+            }
+        });
+    }
+
+    private void setupClickListeners(final Context context) {
         //simple touches alternates colour
         setClickListener(new ItemClickListener() {
             @Override
@@ -166,12 +237,36 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
         });
     }
 
-
     public void clearTimetable() {
         mTimetable = new Timetable();
         notifyDataSetChanged();
         //delete data from the local database
         LitePal.deleteAll(TimetableBean.class);
+    }
+
+    private int weightingToColour(int weighting) {
+        int colour;
+        switch(weighting) {
+            case 0:
+                colour = ContextCompat.getColor(mContext, R.color.free_priority_colour);
+                break;
+
+            case 1:
+                colour = ContextCompat.getColor(mContext, R.color.low_priority_colour);
+                break;
+
+            case 2:
+                colour = ContextCompat.getColor(mContext, R.color.medium_priority_colour);
+                break;
+
+            case 3:
+                colour = ContextCompat.getColor(mContext, R.color.high_priority_colour);
+                break;
+
+            default:
+                throw new IllegalArgumentException("cant find colour for weighting " + weighting);
+        }
+        return colour;
     }
 
 
@@ -199,6 +294,61 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
                 Log.d("INCORRECT ID", "" + id);
                 return -1;
         }
+    }
+
+    public class TimeslotViewHolder extends TimetableAdapter.TimeslotViewHolder implements View.OnTouchListener {
+        TimeslotViewHolder(View itemView) {
+            super(itemView);
+            itemView.setOnTouchListener(this);
+        }
+
+        @Override
+        public boolean onTouch(View view, MotionEvent me) {
+
+            if(mItemTouchListener == null) {
+                return false;
+            }
+
+            int[] parentCoords = new int[2];
+            parentRecyclerView.getLocationOnScreen(parentCoords);
+            float relativeX = me.getRawX() - parentCoords[0] + parentRecyclerView.getLeft();
+            float relativeY = me.getRawY() - parentCoords[1] + parentRecyclerView.getTop();
+
+            View touchedView = parentRecyclerView.findChildViewUnder(relativeX, relativeY);
+
+            if(touchedView == null) {
+                return false;
+            }
+
+            else if(view == touchedView) {
+                return mItemTouchListener.onItemTouch(view, getAdapterPosition());
+
+            } else {
+                RecyclerView.ViewHolder touchedHolder = parentRecyclerView.findContainingViewHolder(touchedView);
+
+                if(touchedHolder == null) {
+                    return false;
+                } else {
+
+                    Log.d("qwert", parentCoords[0] + " " + parentCoords[1]);
+                    //Log.d("qwert", ""  + (touchedHolder.getAdapterPosition() - getAdapterPosition()));
+                    return mItemTouchListener.onItemTouch(touchedView, touchedHolder.getAdapterPosition());
+                }
+
+            }
+
+        }
+
+    }
+
+    public void setOnTouchListener(ItemTouchListener itemTouchListener) {
+        mItemTouchListener = itemTouchListener;
+    }
+
+
+
+    public interface ItemTouchListener {
+        boolean onItemTouch(View view, int position);
     }
 
 }

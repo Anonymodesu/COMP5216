@@ -20,19 +20,19 @@
         android:onClick="onClear"
         android:text="Clear Timetable" />
 
-    <HorizontalScrollView
+    <sydney.edu.au.teammeet.LockableScrollView
         android:id="@+id/timetable_scroll_view"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/clear_timetable_button"
         android:fillViewport="false">
 
-        <androidx.recyclerview.widget.RecyclerView
+        <sydney.edu.au.teammeet.LockableRecyclerView
             android:id="@+id/timetablegridview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="true" />
-    </HorizontalScrollView>
+    </sydney.edu.au.teammeet.LockableScrollView>
 
     <Button
         android:id="@+id/zoom_button"
@@ -43,5 +43,49 @@
         android:layout_toRightOf="@id/clear_timetable_button"
         android:onClick="onZoom"
         android:text="Zoom" />
+
+    <RadioGroup
+        android:id="@+id/mode_selector"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/global_header"
+        android:layout_toRightOf="@id/zoom_button"
+        android:checkedButton="@id/standard_mode_radio"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/free_priority_mode_radio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:buttonTint="@color/free_priority_colour" />
+
+        <RadioButton
+            android:id="@+id/low_priority_mode_radio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:buttonTint="@color/low_priority_colour" />
+
+        <RadioButton
+            android:id="@+id/medium_priority_mode_radio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:buttonTint="@color/medium_priority_colour" />
+
+        <RadioButton
+            android:id="@+id/high_priority_mode_radio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:buttonTint="@color/high_priority_colour" />
+
+        <RadioButton
+            android:id="@+id/standard_mode_radio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RadioGroup>
 
 </RelativeLayout>

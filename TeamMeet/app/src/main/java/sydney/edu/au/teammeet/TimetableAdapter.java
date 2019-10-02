@@ -62,29 +62,6 @@ public abstract class TimetableAdapter extends RecyclerView.Adapter<RecyclerView
         }
     }
 
-
-    // inflates the cell layout from xml when needed
-    @Override
-    @NonNull
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.timetable_cell, parent, false);
-
-        //set cell size
-        ViewGroup.LayoutParams params = view.getLayoutParams();
-        params.height = cellSize;
-        params.width = cellSize;
-        view.setLayoutParams(params);
-
-        switch(viewType) {
-            case TIMESLOT_VIEW_TYPE: return new TimeslotViewHolder(view);
-
-            case DAY_VIEW_TYPE: case HOUR_VIEW_TYPE: return new DescriptorViewHolder(view);
-
-            default:
-                throw new RuntimeException("Wrong viewType in TimetableAdapter.onCreateViewHolder()");
-        }
-    }
-
     // binds the data to View of each descriptor cell
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int adapterPos) {
@@ -155,7 +132,7 @@ public abstract class TimetableAdapter extends RecyclerView.Adapter<RecyclerView
             if (mLongClickListener != null) {
                 return mLongClickListener.onItemLongClick(view, getAdapterPosition());
             }
-            return true;
+            return false;
         }
     }
 
