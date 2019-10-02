@@ -8,22 +8,33 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.gson.Gson;
 
 import org.litepal.LitePal;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static android.widget.Toast.LENGTH_SHORT;
 
 public class PersonalTimetableActivity extends BaseActivity {
     public enum Mode {
@@ -36,7 +47,6 @@ public class PersonalTimetableActivity extends BaseActivity {
     private ActionBarDrawerToggle actionBarDrawerToggle;
     public Toolbar toolbar;
     private TextView pageName;
-    private FirebaseAuth mAuth;
     private String userName, userEmail;
 
     //Variables for Time table page
@@ -48,34 +58,10 @@ public class PersonalTimetableActivity extends BaseActivity {
     private boolean standardZoom; //whether the timetable is zoomed at standard level
     private Mode currentMode;
 
-    /*
-    private RecyclerView.OnItemTouchListener recyclerViewTouchListener = new RecyclerView.OnItemTouchListener() {
-        @Override
-        public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-            boolean fired = currentMode != Mode.STANDARD;
 
-            Log.d("intercept", "" + fired);
+    FirebaseFirestore mFirestore;
+    private FirebaseAuth mAuth;
 
-
-            if(fired) {
-                return true;
-            }
-
-            return false;
-        }
-
-        @Override
-        public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-            Log.d("touch", "" + e.getActionMasked());
-            rv.findChildViewUnder(e.getX(), e.getY()).dispatchTouchEvent(e);
-        }
-
-        @Override
-        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-        }
-    };
-    */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,7 +81,10 @@ public class PersonalTimetableActivity extends BaseActivity {
         DrawerUtil.getDrawer(this, toolbar, userName, userEmail);
         //[END_of setup page header and navigation]
 
-        timetable = new Timetable();
+        timetable = loadSavedData();
+        if(timetable == null) {
+            timetable = new Timetable();
+        }
         standardZoom = true;
         currentMode = Mode.STANDARD;
         setupTimetable();
@@ -156,6 +145,7 @@ public class PersonalTimetableActivity extends BaseActivity {
 
     public void onClear(View view) {
         timetableGridAdapter.clearTimetable();
+        clearByPreference ();
     }
 
     //swaps between two zoom levels
@@ -169,31 +159,62 @@ public class PersonalTimetableActivity extends BaseActivity {
 
     }
 
-
-    private void readItemsFromDatabase()
-    {
-        //Use asynchronous task to run query on the background and wait for result
-        try {
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    //read items from database
-                    List<TimetableBean> itemsFromDB = LitePal.findAll(TimetableBean.class);
-                    items = new ArrayList<String>();
-                    if (itemsFromDB != null & itemsFromDB.size() > 0) {
-                        for (TimetableBean item : itemsFromDB) {
-                                items.add(item.getActivities());
-                                Log.i("SQLite read item", "ID: " + item.getTimetableID() + " Name: " + item.getActivities());
-                        }
-                    }
-                    return null;
-                }
-            }.execute().get();
-        }
-        catch(Exception ex) {
-            Log.e("readItemsFromDatabase", ex.getStackTrace().toString());
-        }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        saveByPreference();
     }
 
+    /* save timetable's data to SharedPreferences in json format*/
+    private void saveByPreference(){
+
+
+        SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = mPref.edit();
+
+        Gson gson = new Gson();
+        String json = gson.toJson(timetable);
+
+        editor.putString("personal_timetable", json);
+        editor.commit();
+        //Toast.makeText(this, "saved!", LENGTH_SHORT).show();
+
+        //upload data to firebase
+        mFirestore = FirebaseFirestore.getInstance();
+        DocumentReference newPTId = mFirestore.collection("PersonalTimetables").document();
+        newPTId.set(mPref);
+    }
+
+    /** get json data from SharedPreferences and then restore the timetable */
+    private Timetable loadSavedData() {
+        //removeAll();
+
+        SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String json = mPref.getString("personal_timetable", "");
+
+        Gson gson = new Gson();
+        Timetable savedTimetable = gson.fromJson(json, Timetable.class);
+
+        return savedTimetable;
+        //if (savedData == null && savedData.equals("")) return;
+        //load(savedData);
+    }
+
+
+    /** clear all data */
+    private void clearByPreference (){
+
+        timetable = new Timetable();
+        SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = mPref.edit();
+
+        Gson gson = new Gson();
+        String json = gson.toJson(timetable);
+
+        editor.putString("personal_timetable", json);
+        editor.commit();
+        //Toast.makeText(this, "saved!", LENGTH_SHORT).show();
+    }
+    
 
 }

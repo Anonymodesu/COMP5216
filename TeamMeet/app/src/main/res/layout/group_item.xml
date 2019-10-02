@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:layout_gravity="center"
+    app:cardUseCompatPadding="true">
+        <androidx.cardview.widget.CardView
+            android:id="@+id/group_item"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:backgroundTint="@color/colorPrimary"
+            app:cardCornerRadius="@dimen/field_margin_small"
+            app:cardElevation="@dimen/elevation">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="2dp">
+            <TextView
+                android:id="@+id/group_name"
+                android:text=""
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/link_leave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/field_margin_small"
+                android:text="@string/leave"
+                android:textColor="@color/textSecondary"
+                android:layout_gravity="end"
+                style="@style/TextAppearance.MaterialComponents.Body2"/>
+        </LinearLayout>
+        </androidx.cardview.widget.CardView>
+</RelativeLayout>

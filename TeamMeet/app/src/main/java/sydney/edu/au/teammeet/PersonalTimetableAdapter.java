@@ -2,8 +2,10 @@ package sydney.edu.au.teammeet;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 
+import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,10 +25,12 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+
 import org.litepal.LitePal;
+import static android.widget.Toast.LENGTH_SHORT;
+
 
 public class PersonalTimetableAdapter extends TimetableAdapter {
-    private TimetableBean mTimetableBean;
     private ItemTouchListener mItemTouchListener;
     private RecyclerView parentRecyclerView;
 
@@ -43,25 +47,24 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.timetable_cell, parent, false);
 
-        //view.setMinimumHeight(cellSize);
-        //view.setMinimumWidth(cellSize);
         //set cell size
-
         ViewGroup.LayoutParams params = view.getLayoutParams();
         params.height = cellSize;
         params.width = cellSize;
         view.setLayoutParams(params);
 
-        switch(viewType) {
-            case TIMESLOT_VIEW_TYPE: return new PersonalTimetableAdapter.TimeslotViewHolder(view);
+        switch (viewType) {
+            case TIMESLOT_VIEW_TYPE:
+                return new PersonalTimetableAdapter.TimeslotViewHolder(view);
 
-            case DAY_VIEW_TYPE: case HOUR_VIEW_TYPE: return new DescriptorViewHolder(view);
+            case DAY_VIEW_TYPE:
+            case HOUR_VIEW_TYPE:
+                return new DescriptorViewHolder(view);
 
             default:
                 throw new RuntimeException("Wrong viewType in PersonalTimetableAdapter.onCreateViewHolder()");
         }
     }
-
 
     // binds the data to View of each cell
     @Override
@@ -138,12 +141,12 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
                         throw new IllegalArgumentException("can't use standard mode for touch listeners");
                 }
 
-                if(weighting == oldWeighting) {
-                    return false;
+                if(weighting != oldWeighting) {
+                    mTimetable.setWeighting(timetablePos, weighting);
+                    notifyItemChanged(adapterPos);
                 }
 
-                mTimetable.setWeighting(timetablePos, weighting);
-                notifyItemChanged(adapterPos);
+
                 return true;
             }
         });
@@ -212,14 +215,6 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
                                             Toast.makeText(context, "Can't associate an activity to free timeslots", Toast.LENGTH_LONG).show();
                                             mTimetable.setActivity(timetablePos, "");
                                         }
-
-
-                                        //save data to local database
-                                        mTimetableBean = new TimetableBean();
-                                        mTimetableBean.setTimetableID(timetablePos);
-                                        mTimetableBean.setActivities(inputActivity.getText().toString());
-                                        mTimetableBean.saveThrows();
-
                                         notifyItemChanged(adapterPos);
                                     }
                                 })
@@ -240,8 +235,6 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
     public void clearTimetable() {
         mTimetable = new Timetable();
         notifyDataSetChanged();
-        //delete data from the local database
-        LitePal.deleteAll(TimetableBean.class);
     }
 
     private int weightingToColour(int weighting) {

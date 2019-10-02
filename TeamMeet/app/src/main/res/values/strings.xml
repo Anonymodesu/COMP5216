@@ -9,7 +9,7 @@
     <string name="profile">My Profile</string>
     <string name="sign_out">Sign Out</string>
     <string name="time_table">My Timetable</string>
-    <string name="group">My Group</string>
+    <string name="group">My Groups</string>
 
     <string name="signed_out">Signed Out</string>
     <string name="sign_in">Sign In</string>
@@ -26,4 +26,16 @@
     <string name="draw_open">Drawer Open</string>
     <string name="draw_close">Drawer Close</string>
     <string name="pageName_Login">Log In</string>
+    <string name="save">save</string>
+    <!--groups-->
+    <string name="title_activity_individual_groups">individual_groups</string>
+    <string name="title_activity_individual_group">IndividualGroupActivity</string>
+    <string name="tab2">Groups You Are In</string>
+    <string name="tab1">Groups You Coordinate</string>
+    <string name="add_btn">New Group</string>
+    <string name="leave">leave</string>
+    <string name="dialog_delete_title">Leave group</string>
+    <string name="dialog_delete_msg">Are you sure to leave this group?</string>
+    <string name="dialog_delete_btn">Leave</string>
+    <string name="cancel">Cancel</string>
 </resources>

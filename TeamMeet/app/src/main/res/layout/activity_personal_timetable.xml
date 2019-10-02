@@ -12,7 +12,6 @@
 
     <Button
         android:id="@+id/clear_timetable_button"
-        style="@style/ThemeOverlay.MyDarkButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/global_header"
@@ -36,7 +35,6 @@
 
     <Button
         android:id="@+id/zoom_button"
-        style="@style/ThemeOverlay.MyDarkButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/global_header"

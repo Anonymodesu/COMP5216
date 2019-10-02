@@ -21,11 +21,11 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.vectordrawable:vectordrawable-animated:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.google.android.material:material:1.1.0-alpha10'
     implementation 'org.litepal.android:java:3.0.0'
     //support for global navigation drawer see https://github.com/mikepenz/MaterialDrawer
     implementation("com.mikepenz:materialdrawer:6.0.9@aar") {
@@ -54,6 +54,16 @@ dependencies {
     // Used in FirebaseUIActivity.
     implementation 'com.firebaseui:firebase-ui-auth:4.3.2'
 
+    implementation 'com.google.firebase:firebase-firestore:21.1.1'
+    implementation 'com.google.firebase:firebase-storage:19.0.1'
+
+    //lib for display profile images see https://github.com/square/picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    //for profile image cropping see https://github.com/ArthurHub/Android-Image-Cropper
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
+    dependencies {
+        api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+    }
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
@@ -62,5 +72,7 @@ dependencies {
     implementation 'android.arch.persistence.room:runtime:1.1.1'
     annotationProcessor 'android.arch.persistence.room:compiler:1.1.1'
     implementation 'org.litepal.android:core:2.0.0'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0-beta04'
 }
 apply plugin: 'com.google.gms.google-services'

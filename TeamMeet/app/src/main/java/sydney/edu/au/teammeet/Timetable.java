@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 
 import org.litepal.crud.LitePalSupport;
 
-public class Timetable extends LitePalSupport{
+public class Timetable {
 
     public static final int START_HOUR = 8;
     public static final int NUM_DAYS = 7;

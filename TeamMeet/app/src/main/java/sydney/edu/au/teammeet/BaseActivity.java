@@ -81,8 +81,18 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void hideSoftKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+        InputMethodManager inputManager = (InputMethodManager) activity.getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        View focusedView = activity.getCurrentFocus();
+        /*
+         * If no view is focused, an NPE will be thrown
+         *
+         * Maxim Dmitriev
+         */
+        if (focusedView != null) {
+            inputManager.hideSoftInputFromWindow(focusedView.getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 
     @Override
@@ -142,6 +152,15 @@ public class BaseActivity extends AppCompatActivity {
                             } else if (drawerItem.getIdentifier() == TIMETABLE_ID && !(activity instanceof PersonalTimetableActivity))  {
                                 Intent intent = new Intent(activity, PersonalTimetableActivity.class);
                                 view.getContext().startActivity(intent);
+                            } else if (drawerItem.getIdentifier() == PROFILE_ID && !(activity instanceof EditProfileActivity))  {
+                                Intent intent = new Intent(activity, EditProfileActivity.class);
+                                view.getContext().startActivity(intent);
+                            } else if (drawerItem.getIdentifier() == HOME_ID && !(activity instanceof MainActivity))  {
+                                Intent intent = new Intent(activity, MainActivity.class);
+                                view.getContext().startActivity(intent);
+                            } else if (drawerItem.getIdentifier() == GROUP_ID && !(activity instanceof GroupsActivity))  {
+                                Intent intent = new Intent(activity, GroupsActivity.class);
+                                view.getContext().startActivity(intent);
                             }
                             return true;
                         }
@@ -150,4 +169,5 @@ public class BaseActivity extends AppCompatActivity {
         }
 
     }
+
 }
