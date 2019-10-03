@@ -28,7 +28,7 @@ public class Timetable {
         }
 
         for(int i = 0; i < activities.length; i++) {
-            activities[i] = null;
+            activities[i] = "";
         }
     }
 
@@ -57,6 +57,9 @@ public class Timetable {
     }
 
     public void setActivity(int index, String activity) {
+        if(activity == null) {
+            activity = "";
+        }
         activities[index] = activity;
     }
 
