@@ -63,11 +63,13 @@ public class MainActivity extends BaseActivity {
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         assert user != null;
+
         userName = user.getDisplayName();
         userEmail = user.getEmail();
         userId = user.getUid();
         userPhoto = null;
         userPhone = null;
+
 
         for(UserInfo userInfo: user.getProviderData()) {
             if (userInfo.getProviderId().equals("facebook.com")) {
@@ -91,7 +93,7 @@ public class MainActivity extends BaseActivity {
                  DocumentSnapshot document = task.getResult();
                 if(!document.exists())
                 {
-                    newUser = new User(userName, userEmail.toLowerCase(), userPhone, userPhoto, null, null);
+                    newUser = new User(userName, userEmail.toLowerCase(), userPhone, userPhoto, null, null, null);
                     currentUser.set(newUser);
                 }else{
                     newUser = document.toObject(User.class);

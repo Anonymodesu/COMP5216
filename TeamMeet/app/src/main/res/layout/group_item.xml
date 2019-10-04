@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="80dp"
     android:layout_gravity="center"
+    android:orientation="horizontal"
     app:cardUseCompatPadding="true">
+
         <androidx.cardview.widget.CardView
             android:id="@+id/group_item"
             android:layout_width="match_parent"
@@ -38,4 +40,5 @@
                 style="@style/TextAppearance.MaterialComponents.Body2"/>
         </LinearLayout>
         </androidx.cardview.widget.CardView>
+
 </RelativeLayout>

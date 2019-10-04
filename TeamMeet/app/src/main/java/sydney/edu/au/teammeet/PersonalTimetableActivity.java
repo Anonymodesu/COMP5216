@@ -36,7 +36,7 @@ import java.util.Map;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
-public class PersonalTimetableActivity extends BaseActivity {
+public class  PersonalTimetableActivity extends BaseActivity {
     public enum Mode {
         FREE, LOW, MEDIUM, HIGH, STANDARD
     }
@@ -47,7 +47,7 @@ public class PersonalTimetableActivity extends BaseActivity {
     private ActionBarDrawerToggle actionBarDrawerToggle;
     public Toolbar toolbar;
     private TextView pageName;
-    private String userName, userEmail;
+    private String userId, userName, userEmail;
 
     //Variables for Time table page
     private LockableRecyclerView timetableRecyclerView;
@@ -70,10 +70,12 @@ public class PersonalTimetableActivity extends BaseActivity {
         //set up page name
         pageName=findViewById(R.id.page_name);
         pageName.setText("Time Table");
+
         //get current user information
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         assert user != null;
+        userId = user.getUid();
         userName = user.getDisplayName();
         userEmail = user.getEmail();
         //set up global nav drawer
@@ -107,6 +109,7 @@ public class PersonalTimetableActivity extends BaseActivity {
         timetableGridAdapter = new PersonalTimetableAdapter(this, timetable, TimetableAdapter.SMALL_CELL_SIZE);
         timetableRecyclerView.setAdapter(timetableGridAdapter);
         //timetableRecyclerView.addOnItemTouchListener(recyclerViewTouchListener);
+
     }
 
     //switch between mass assignment of weightings or standard mode
@@ -182,7 +185,11 @@ public class PersonalTimetableActivity extends BaseActivity {
         //upload data to firebase
         mFirestore = FirebaseFirestore.getInstance();
         DocumentReference newPTId = mFirestore.collection("PersonalTimetables").document();
-        newPTId.set(mPref);
+        //newPTId.set(json);
+
+        //update timetable to users
+        DocumentReference currentUser = mFirestore.collection("Users").document(userId);
+        currentUser.update("timetable", json);
     }
 
     /** get json data from SharedPreferences and then restore the timetable */

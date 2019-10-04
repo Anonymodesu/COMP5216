@@ -9,15 +9,17 @@ public class User {
     private String photo;
     private HashMap<String, String> coordinates;
     private HashMap<String, String> isMemberOf;
+    private String timetable;
 
     public User(){}
-    public User(String username, String email, String phone, String photo, HashMap<String, String> coordinates, HashMap<String, String> isMemberOf ){
+    public User(String username, String email, String phone, String photo, HashMap<String, String> coordinates, HashMap<String, String> isMemberOf, String timetable ){
         this.username = username;
         this.email = email;
         this.phone = phone;
         this.photo = photo;
         this.coordinates = coordinates;
         this.isMemberOf = isMemberOf;
+        this.timetable = timetable;
     }
 
     public String getUsername() {
@@ -82,5 +84,13 @@ public class User {
         }
 
         isMemberOf.put(groupId, groupName);
+    }
+
+    public String getTimetable() {
+        return timetable;
+    }
+
+    public void setTimetable(String timetable) {
+        this.timetable = timetable;
     }
 }

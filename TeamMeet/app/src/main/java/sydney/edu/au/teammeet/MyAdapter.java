@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,7 +20,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -30,9 +28,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static androidx.viewpager.widget.PagerAdapter.POSITION_NONE;
-import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private static final String TAG="MyAdapter";
@@ -43,14 +38,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
     FirebaseAuth mAuth= FirebaseAuth.getInstance();
 
-
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder{
         // each data item is just a string in this case
         public CardView mCardView;
         public TextView groupName,leave_link;
+
         public MyViewHolder(View v) {
             super(v);
             mCardView = v.findViewById(R.id.group_item);
@@ -62,17 +57,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     // Provide a suitable constructor (depends on the kind of dataset)
     public MyAdapter(HashMap<String, String> map, boolean coordinates) {
         mData = new ArrayList<>(map.entrySet());
-//        ArrayList<String> myDataset = new ArrayList<String>();
-//        ArrayList<String> myKeys = new ArrayList<String>();
-//
-//
-//        for (Map.Entry<String, String> entry : map.entrySet()) {
-//            myDataset.add(entry.getValue());
-//            myKeys.add(entry.getKey());
-//        }
-//
-//        mDataset = myDataset.toArray(new String[myDataset.size()]);
-//        mKeys = myKeys.toArray(new String[myKeys.size()]);
         this.coordinates = coordinates;
     }
 
@@ -100,15 +84,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         final Map.Entry<String, String> item = getItem(position);
-//        holder.groupName.setText(mDataset[position]);
+
         holder.groupName.setText(item.getValue());
         holder.groupName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Context context = view.getContext();
                 Intent intent = new Intent(context, GroupProfileActivity.class);
-//                intent.putExtra("groupname", mDataset[position]);
-//                intent.putExtra("groupid", mKeys[position]);
                 intent.putExtra("coordinates", coordinates);
                 intent.putExtra("groupname", item.getValue());
                 intent.putExtra("groupid", item.getKey());
@@ -125,6 +107,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 builder.setMessage(R.string.dialog_delete_msg);
                 builder.setPositiveButton(R.string.dialog_delete_btn, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogInterface, int i) {
+
                         if (coordinates) {
                             //delete document
                             mFirestore.collection("Groups").document(item.getKey())
@@ -143,11 +126,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                                                             final User currentUser = documentSnapshot.toObject(User.class);
                                                             assert currentUser != null;
+
                                                             final HashMap coordinates = currentUser.getCoordinates();
                                                             if (coordinates != null) {
                                                                 coordinates.remove(item.getKey());
                                                                 mData.remove(position);
                                                             }
+
                                                             currentUser.setCoordinates(coordinates);
                                                             userRef.set(currentUser).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                 @Override
@@ -168,7 +153,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                         }
                                     });
                         } else {
-                            //delete user from group
+                            //a user deletes himself/herself from a group
                             final DocumentReference docRef = mFirestore.collection("Groups").document(mKeys[position]);
                             docRef.get()
                                     .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -242,6 +227,58 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public int getItemCount() {
 //        return mDataset.length;
         return mData.size();
+    }
+
+    public void deleteGroupCard(final int position){
+
+        final Map.Entry<String, String> item = getItem(position);
+
+        if (coordinates) {
+            //delete document
+            mFirestore.collection("Groups").document(item.getKey())
+                    .delete()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(TAG, "Group successfully deleted!");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            assert user != null;
+                            String userId = user.getUid();
+                            final DocumentReference userRef = mFirestore.collection("Users").document(userId);
+                            userRef.get()
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            final User currentUser = documentSnapshot.toObject(User.class);
+                                            assert currentUser != null;
+
+                                            final HashMap coordinates = currentUser.getCoordinates();
+                                            if (coordinates != null) {
+                                                coordinates.remove(item.getKey());
+                                                mData.remove(position);
+                                            }
+                                            currentUser.setCoordinates(coordinates);
+                                            //更新数据
+                                            userRef.set(currentUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    Log.d(TAG, "group deleted from user collection!");
+                                                    notifyItemRemoved(position);
+                                                    notifyItemRangeChanged(position, getItemCount());
+                                                }
+                                            });
+                                        }
+                                    });
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error deleting group", e);
+                        }
+                    });
+        }
+
     }
 
 }
