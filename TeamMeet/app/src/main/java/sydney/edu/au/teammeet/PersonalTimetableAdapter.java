@@ -33,11 +33,13 @@ import static android.widget.Toast.LENGTH_SHORT;
 public class PersonalTimetableAdapter extends TimetableAdapter {
     private ItemTouchListener mItemTouchListener;
     private RecyclerView parentRecyclerView;
+    private String fillActivity;
 
     public PersonalTimetableAdapter(final Context context, final Timetable timetable, int cellSize) {
         super(context, timetable, cellSize);
         setupClickListeners(context);
         setOnTouchListener(null);
+        fillActivity = "";
     }
 
 
@@ -120,6 +122,7 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
                 int timetablePos = adapterPosToTimetablePos(adapterPos);
                 int weighting = 0;
                 int oldWeighting = mTimetable.getWeighting(timetablePos);
+                String oldActivity = mTimetable.getActivity(timetablePos);
 
                 switch(mode) {
                     case FREE:
@@ -141,8 +144,14 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
                         throw new IllegalArgumentException("can't use standard mode for touch listeners");
                 }
 
-                if(weighting != oldWeighting) {
+
+                if(weighting != oldWeighting || !fillActivity.equals(oldActivity)) {
                     mTimetable.setWeighting(timetablePos, weighting);
+                    if(weighting == 0) {
+                        mTimetable.setActivity(timetablePos, "");
+                    } else {
+                        mTimetable.setActivity(timetablePos, fillActivity);
+                    }
                     notifyItemChanged(adapterPos);
                 }
 
@@ -186,10 +195,7 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
                 // Specify the type of input expected; this, for example, sets the input as plaintext
                 inputActivity.setInputType(InputType.TYPE_CLASS_TEXT);
                 // Restore existing activity notes
-                String activity = mTimetable.getActivity(timetablePos);
-                if(activity != null) {
-                    inputActivity.setText(mTimetable.getActivity(timetablePos));
-                }
+                inputActivity.setText(mTimetable.getActivity(timetablePos));
 
                 //Set up radio button weighting input
                 final RadioGroup weightingSelection  = editFields.findViewById(R.id.timeslot_weighting_selection);
@@ -230,6 +236,14 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
                 return true;
             }
         });
+    }
+
+    public void setFillActivity(String activity) {
+        if(activity == null) {
+            fillActivity = "";
+        } else {
+            fillActivity = activity;
+        }
     }
 
     public void clearTimetable() {

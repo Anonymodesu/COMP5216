@@ -12,9 +12,12 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,11 +33,6 @@ import com.google.gson.Gson;
 import org.litepal.LitePal;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static android.widget.Toast.LENGTH_SHORT;
 
 public class  PersonalTimetableActivity extends BaseActivity {
     public enum Mode {
@@ -90,7 +88,7 @@ public class  PersonalTimetableActivity extends BaseActivity {
         standardZoom = true;
         currentMode = Mode.STANDARD;
         setupTimetable();
-        setupModeSelector();
+        setupMassFill();
     }
 
     private void setupTimetable() {
@@ -112,8 +110,8 @@ public class  PersonalTimetableActivity extends BaseActivity {
 
     }
 
-    //switch between mass assignment of weightings or standard mode
-    private void setupModeSelector() {
+    //allows switch to mass assignment of weightings and activities
+    private void setupMassFill() {
         RadioGroup modeSelector = findViewById(R.id.mode_selector);
         modeSelector.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -142,6 +140,25 @@ public class  PersonalTimetableActivity extends BaseActivity {
                 timetableGridAdapter.switchMode(currentMode);
                 timetableRecyclerView.setScrollable(currentMode == Mode.STANDARD);
                 timetableHorizontalScroll.setScrollable(currentMode == Mode.STANDARD);
+            }
+        });
+
+        //update filling activity when focus leaves the EditText
+        final EditText activityFill = findViewById(R.id.fillTextView);
+        activityFill.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                timetableGridAdapter.setFillActivity(activityFill.getText().toString());
             }
         });
     }
