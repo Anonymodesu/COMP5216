@@ -60,7 +60,7 @@ public class GroupFragment extends Fragment {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         User user = documentSnapshot.toObject(User.class);
                         HashMap<String, String> map = user.getIsMemberOf() != null ? user.getIsMemberOf() : new HashMap<String, String>();
-                        MyAdapter adapter = new MyAdapter(map, true);
+                        MyAdapter adapter = new MyAdapter(map, false);
                         rv.setAdapter(adapter);
 
                         LinearLayoutManager llm = new LinearLayoutManager(getActivity());

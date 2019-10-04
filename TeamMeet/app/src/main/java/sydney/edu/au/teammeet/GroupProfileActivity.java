@@ -151,7 +151,7 @@ public class GroupProfileActivity extends BaseActivity {
                                     User user = documentSnapshot.toObject(User.class);
                                     userName = user.getUsername();
                                     usernames.add(userName);
-                                    Log.e("TAGGING THIS SHIT", "The size is " + usernames.size());
+//                                    Log.e("TAGGING THIS SHIT", "The size is " + usernames.size());
 
                                     if (usernames.size() == userIDs.size()) {
                                         userAdapter = new sydney.edu.au.teammeet.UserViewAdapter(usernames.toArray(new String[usernames.size()]));

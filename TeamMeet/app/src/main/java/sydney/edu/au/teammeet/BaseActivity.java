@@ -131,7 +131,7 @@ public class BaseActivity extends AppCompatActivity {
                     .withActionBarDrawerToggleAnimated(true)
                     .withCloseOnClick(true)
                     .withSelectedItem(-1)
-                    .withDrawerGravity(Gravity.END)
+                    .withDrawerGravity(Gravity.START)
                     .addDrawerItems(
                             profileItem,
                             drawerItemHome,

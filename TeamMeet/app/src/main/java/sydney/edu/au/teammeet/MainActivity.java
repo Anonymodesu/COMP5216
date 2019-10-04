@@ -35,6 +35,8 @@ import com.google.firebase.storage.FirebaseStorage;
 
 import org.json.JSONObject;
 
+import java.util.Objects;
+
 public class MainActivity extends BaseActivity {
     //Variables for global navigation
     private String TAG = "";
@@ -123,6 +125,7 @@ public class MainActivity extends BaseActivity {
 
         //set up global nav drawer
         setSupportActionBar(toolbar);
+
         DrawerUtil.getDrawer(this, toolbar, userName, userEmail);
         //[END_of setup page header and navigation]
     }
