@@ -4,23 +4,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".MainActivity">
     <include
         android:id="@+id/global_header"
         layout="@layout/global_header">
     </include>
 
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:layout_below="@+id/global_header"
         android:layout_margin="@dimen/field_margin"
-        android:layout_centerHorizontal="true"
-        android:text="Swipe left to open menu and Sign out"
-        tools:layout_editor_absoluteX="119dp"
-        tools:layout_editor_absoluteY="318dp" />
+        android:layout_gravity="center"
+        android:text="@string/welcome_message"
+        style="@style/TextAppearance.MaterialComponents.Headline5"/>
+    <ImageView
+        android:id="@+id/home_background"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_below="@+id/textView"
+        android:background="@drawable/meeting"
+        android:scaleType="centerCrop">
+    </ImageView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/home_background"
+        android:layout_margin="@dimen/field_margin_small"
+        android:layout_gravity="center"
+        android:text="Start setting up your group from global menu"
+        style="@style/TextAppearance.MaterialComponents.Body1"/>
 
 
 </RelativeLayout>

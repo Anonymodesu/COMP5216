@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,7 +20,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -30,9 +28,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static androidx.viewpager.widget.PagerAdapter.POSITION_NONE;
-import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private static final String TAG="MyAdapter";
@@ -186,7 +181,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                                                             User currentUser = documentSnapshot.toObject(User.class);
                                                             assert currentUser != null;
-                                                            HashMap member = currentUser.getIsMemberOf();
+                                                            HashMap<String, String> member = currentUser.getIsMemberOf();
                                                             if (member != null) {
                                                                 member.remove(item.getKey());
                                                                 mData.remove(position);
@@ -203,7 +198,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                                         }
                                                     });
 
-                                            ArrayList oldList = group.getMembers();
+                                            ArrayList<String> oldList = group.getMembers();
                                             oldList.remove(userId);
                                             if(oldList.size()==0){
                                                 mFirestore.collection("Groups").document(item.getKey())

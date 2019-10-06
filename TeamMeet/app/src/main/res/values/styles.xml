@@ -7,65 +7,42 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColorPrimary">@color/textPrimary</item>
         <item name="android:textColor">@color/textSecondary</item>
-
-        <!--<item name="android:buttonStyle">@style/ThemeOverlay.MyDarkButton</item>-->
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
     </style>
 
-    <!-- Activity with no Title -->
-    <style name="ThemeOverlay.MyNoTitleActivity" parent="AppTheme">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <!-- Action Bar-->
+    <style name="MyActionBar" parent="AppTheme">
+        <item name="android:textColor">@color/grey_100</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:logo">@drawable/logo</item>
     </style>
 
-    <!-- My Dark Button -->
-    <!--<style name="ThemeOverlay.MyDarkButton" parent="android:Widget.Button">-->
-    <!--<item name="android:layout_margin">4dp</item>-->
-    <!--<item name="android:textColor">@android:color/white</item>-->
-    <!--<item name="android:elevation">2dp</item>-->
-    <!--<item name="android:translationZ">2dp</item>-->
-    <!--<item name="android:background">@drawable/rounded_shape</item>-->
-    <!--<item name="android:padding">5dp</item>-->
+    <!--<style name="ThemeOverlay.TeamMeetIcon" parent="AppTheme">-->
+        <!--<item name="android:layout_marginTop">@dimen/icon_top_margin</item>-->
+        <!--<item name="android:layout_marginBottom">@dimen/icon_bottom_margin</item>-->
     <!--</style>-->
 
-    <!-- Light EditTexts -->
-    <!--<style name="ThemeOverlay.MyLightEditText" parent="ThemeOverlay.AppCompat.Dark" />-->
-
-    <!--<style name="ThemeOverlay.MyTextDetail" parent="AppTheme">-->
-    <!--<item name="android:layout_width">wrap_content</item>-->
-    <!--<item name="android:layout_height">wrap_content</item>-->
-    <!--<item name="android:fadeScrollbars">true</item>-->
-    <!--<item name="android:gravity">center</item>-->
-    <!--<item name="android:maxLines">5</item>-->
-    <!--<item name="android:padding">4dp</item>-->
-    <!--<item name="android:scrollbars">vertical</item>-->
-    <!--<item name="android:textSize">14sp</item>-->
+    <!--<style name="ThemeOverlay.MyTitleText" parent="AppTheme">-->
+        <!--<item name="android:gravity">center</item>-->
+        <!--<item name="android:textSize">36sp</item>-->
     <!--</style>-->
 
-    <style name="ThemeOverlay.TeamMeetIcon" parent="AppTheme">
-        <item name="android:layout_marginTop">@dimen/icon_top_margin</item>
-        <item name="android:layout_marginBottom">@dimen/icon_bottom_margin</item>
-    </style>
+    <!--<style name="NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">-->
+        <!--<item name="windowActionBar">false</item>-->
+        <!--<item name="windowNoTitle">true</item>-->
+    <!--</style>-->
 
-    <style name="ThemeOverlay.MyTitleText" parent="AppTheme">
-        <item name="android:gravity">center</item>
-        <item name="android:textSize">36sp</item>
-    </style>
+    <!--<style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />-->
 
-    <style name="NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
+    <!--<style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />-->
 
-    <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <!--<style name="AppTheme.NoActionBar">-->
+        <!--<item name="windowActionBar">false</item>-->
+        <!--<item name="windowNoTitle">true</item>-->
+    <!--</style>-->
 
-    <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <!--<style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />-->
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <!--<style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />-->
 </resources>

@@ -40,9 +40,7 @@ public class RegisterActivity extends BaseActivity {
         setupUI(findViewById(R.id.register_form), RegisterActivity.this);
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-        pageName = findViewById(R.id.page_name);
-        //set page title
-        pageName.setText("Register");
+        setUpGlobalNav(RegisterActivity.this, "Register");
         UserEmail = (EditText) findViewById(R.id.Siginup_Email);
         UserPassword = (EditText) findViewById(R.id.Signup_Password);
         UserConfirmPassword = (EditText) findViewById(R.id.Signup_Confirmpw);

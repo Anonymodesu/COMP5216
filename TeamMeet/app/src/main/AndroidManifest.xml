@@ -23,25 +23,30 @@
         <activity
             android:name=".GroupProfileActivity"
             android:resizeableActivity="true"
+            android:label="Group Profile"
             android:windowSoftInputMode="adjustResize">
         </activity>
-        <activity android:name=".AddNewMemberActivity" />
-        <activity android:name=".PersonalTimetableActivity" /> <!-- android:theme="@style/AppTheme" -->
-        <activity android:name=".CreateNewGroupActivity" />
+        <activity android:name=".AddNewMemberActivity"
+            android:label="Add Member"/>
+        <activity android:name=".PersonalTimetableActivity"
+            android:label="Personal Timetable"/>
+        <activity android:name=".CreateNewGroupActivity"
+            android:label="Create New Group"/>
         <activity android:name=".GroupsActivity" />
-        <activity android:name=".EditProfileActivity" />
-        <activity android:name=".ChangePasswordActivity" />
-        <activity android:name=".MainActivity" />
-        <activity android:name=".RegisterActivity" />
+        <activity android:name=".EditProfileActivity"
+            android:label="Edit Profile"/>
+        <activity android:name=".ChangePasswordActivity"
+            android:label="Change Password"/>
+        <activity android:name=".MainActivity"
+            android:label="Home"/>
+        <activity android:name=".RegisterActivity"
+            android:label="Register"/>
         <activity
-            android:name=".BaseActivity"
-            android:label="@string/title_activity_base"
-            android:resizeableActivity="true"
-            android:theme="@style/NoActionBar" /> <!-- android:theme="@style/AppTheme" -->
+            android:name=".BaseActivity" />
         <activity
             android:name=".LoginActivity"
-            android:resizeableActivity="true"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:label="Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

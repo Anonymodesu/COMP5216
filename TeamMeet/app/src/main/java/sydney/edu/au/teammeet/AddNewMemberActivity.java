@@ -52,6 +52,7 @@ public class AddNewMemberActivity extends BaseActivity {
         groupDocId = getIntent().getStringExtra("groupDocId");
 
         setContentView(R.layout.activity_add_new_member);
+        setUpGlobalNav(AddNewMemberActivity.this, "Add Member");
 
         txtMemberEmail = (EditText) findViewById(R.id.new_member);
         backToGroupProfile = (Button) findViewById(R.id.back_to_group_profile);

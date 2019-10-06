@@ -65,19 +65,7 @@ public class PersonalTimetableActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_timetable);
         //[START_of setup page header and navigation
-        //set up page name
-        pageName=findViewById(R.id.page_name);
-        pageName.setText("Time Table");
-        //get current user information
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
-        assert user != null;
-        userName = user.getDisplayName();
-        userEmail = user.getEmail();
-        //set up global nav drawer
-        setSupportActionBar(toolbar);
-        DrawerUtil.getDrawer(this, toolbar, userName, userEmail);
-        //[END_of setup page header and navigation]
+        setUpGlobalNav(PersonalTimetableActivity.this, "Timetable");
 
         timetable = loadSavedData();
         if(timetable == null) {

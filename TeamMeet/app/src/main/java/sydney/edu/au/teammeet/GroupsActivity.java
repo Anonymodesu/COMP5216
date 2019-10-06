@@ -55,12 +55,7 @@ public class GroupsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_groups);
-        pageName = findViewById(R.id.page_name);
-        //set page title
-        pageName.setText("My Groups");
-
-        //set up global nav drawer
-        setSupportActionBar(toolbar);
+        setUpGlobalNav(GroupsActivity.this, "Groups");
 
         mFirestore = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -206,4 +201,5 @@ public class GroupsActivity extends BaseActivity {
         }
 
     }
+
 }

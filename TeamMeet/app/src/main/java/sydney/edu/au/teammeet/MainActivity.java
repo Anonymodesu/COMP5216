@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -43,7 +44,7 @@ public class MainActivity extends BaseActivity {
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
-    public Toolbar toolbar;
+    public MaterialToolbar toolbar;
     private TextView pageName;
     private FirebaseAuth mAuth;
     private String userName, userEmail, userId, userPhoto, userPhone;
@@ -56,10 +57,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //[START_of setup page header and navigation
-        //set up page name
-        pageName = findViewById(R.id.page_name);
-        pageName.setText("Home");
+        setUpGlobalNav(MainActivity.this, "Home");
 
         //get current user information
         mAuth = FirebaseAuth.getInstance();
@@ -99,35 +97,10 @@ public class MainActivity extends BaseActivity {
                     newUser = document.toObject(User.class);
                 }
                  ((UserClient)(getApplicationContext())).setUser(newUser);
+                 setUpGlobalNav(MainActivity.this, "Home");
             }
          }
         });
-        //find all users with the same UID as the currently logged in user
-//        final Query query = users.whereEqualTo("uid", userId);
-
-
-//        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    //if no user exists in the collection, add their details to the database and continue
-//                    if (task.getResult().isEmpty()) {
-//                        User newUser = new User(userName, userEmail, null, null, null, null);
-//                        users.document(userId).set(newUser);
-//                    } else {
-//                        Toast.makeText(MainActivity.this, "Fucking work you piece of shit", Toast.LENGTH_SHORT).show();
-//                    }
-//                }else{
-//                    Log.d(TAG, "error fetching query");
-//                }
-//            }
-//        });
-
-        //set up global nav drawer
-        setSupportActionBar(toolbar);
-
-        DrawerUtil.getDrawer(this, toolbar, userName, userEmail);
-        //[END_of setup page header and navigation]
     }
 
 }

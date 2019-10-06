@@ -10,6 +10,7 @@
     <dimen name="field_width_standard">160dp</dimen>
     <dimen name="field_margin">30dp</dimen>
     <dimen name="field_margin_small">10dp</dimen>
+    <dimen name="header_padding">5dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
     <dimen name="button_text_size">20dp</dimen>

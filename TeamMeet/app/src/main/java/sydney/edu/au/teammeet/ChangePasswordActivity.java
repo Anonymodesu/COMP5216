@@ -30,10 +30,8 @@ public class ChangePasswordActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
-        //views
-        pageName = findViewById(R.id.page_name);
-        //set page title
-        pageName.setText("Update Password");
+        //Global nav
+        setUpGlobalNav(ChangePasswordActivity.this, "Change Password");
 
         mAuth = FirebaseAuth.getInstance();
 

@@ -37,6 +37,7 @@ public class CreateNewGroupActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_group);
+        setUpGlobalNav(CreateNewGroupActivity.this, "Create Group");
 
         editText = (EditText) findViewById(R.id.new_group);
         backToGroups = (Button) findViewById(R.id.back_to_groups);

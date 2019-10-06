@@ -1,24 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/global_header"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimary"
-    android:elevation="5dp">
-    <ImageView
-        android:id="@+id/Logo"
-        android:layout_width="100dp"
-        android:layout_height="80dp"
-        android:elevation="5dp"
-        android:background="@drawable/logo" />
+    android:minHeight="?attr/actionBarSize"
+    android:theme="@style/MyActionBar"
+    app:popupTheme="@style/MyActionBar"
+    android:paddingTop="@dimen/header_padding"
+    android:paddingBottom="@dimen/header_padding">
     <TextView
         android:id="@+id/page_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/field_margin"
         android:layout_gravity="center"
         android:text=""
-        android:textColor="@color/textPrimary"
+        android:textColor="@color/colorWhite"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
         android:textSize="24sp" />
-</LinearLayout>
+</androidx.appcompat.widget.Toolbar>

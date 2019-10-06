@@ -73,11 +73,9 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        //set up page name
-        pageName=findViewById(R.id.page_name);
-        pageName.setText("Log In");
        //setup soft keyboard setting for login
         setupUI(findViewById(R.id.signin_form), LoginActivity.this);
+        setUpGlobalNav(LoginActivity.this, "Log In");
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();

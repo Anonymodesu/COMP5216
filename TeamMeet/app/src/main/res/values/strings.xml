@@ -38,4 +38,5 @@
     <string name="dialog_delete_msg">Are you sure to leave this group?</string>
     <string name="dialog_delete_btn">Leave</string>
     <string name="cancel">Cancel</string>
+    <string name="welcome_message">Welcome to Team Meet!</string>
 </resources>
