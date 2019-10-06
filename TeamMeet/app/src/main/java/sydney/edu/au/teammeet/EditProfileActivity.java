@@ -116,7 +116,7 @@ public class EditProfileActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 String phoneNo = userPhone.getText().toString();
-                if (!phoneNo.matches("^[0-9]+$")) {
+                if (!phoneNo.equals("") &&!phoneNo.matches("^[0-9]+$")) {
                     userPhone.setError("Phone number must only consist of digits");
                 } else if (userName.getText().toString().trim().length() == 0){
                     userName.setError("You must enter a username");
