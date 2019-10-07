@@ -98,7 +98,9 @@ public class MainActivity extends BaseActivity {
                 }else{
                     newUser = document.toObject(User.class);
                 }
+                //set up User value for other pages
                  ((UserClient)(getApplicationContext())).setUser(newUser);
+                //update user information into nav menu
                  setUpGlobalNav(MainActivity.this, "Home");
             }
          }

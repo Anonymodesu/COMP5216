@@ -58,6 +58,8 @@ public class GroupProfileActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_individual_group);
+        //set up global nav drawer
+        setUpGlobalNav(GroupProfileActivity.this,"Group Profile");
 
         groupName = (TextView) findViewById(R.id.group_name);
 
@@ -72,34 +74,12 @@ public class GroupProfileActivity extends BaseActivity {
         userRecyclerView.setLayoutManager(userLayoutManager);
 
 
-        //set up global nav drawer
-        setSupportActionBar(toolbar);
 
+        //fetch details of the user who is currently logged in
         mFirestore = FirebaseFirestore.getInstance();
         CollectionReference groups = mFirestore.collection("Groups");
         groupDoc = groups.document(groupID);
         users = mFirestore.collection("Users");
-
-
-        //fetch details of the user who is currently logged in
-
-
-
-        /*
-        mAuth = FirebaseAuth.getInstance();
-
-        currentUser = mAuth.getCurrentUser();
-        assert currentUser != null;
-        currentUserID = currentUser.getUid();
-        userDoc = users.document(currentUserID);
-        */
-
-        /*
-        String[] moreStrings = {"What", "How we doin"};
-        memberAdapter = new MyAdapter(moreStrings);
-
-        memberRecyclerView.setAdapter(memberAdapter);
-        */
 
         boolean coordinates = getIntent().getBooleanExtra("coordinates", false);
         showUsers();

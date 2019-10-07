@@ -32,16 +32,9 @@ import java.util.HashMap;
 
 public class GroupsActivity extends BaseActivity {
 
-    private Toolbar toolbar;
-    private RecyclerView coordinatedRecyclerView;
-    private RecyclerView memberRecyclerView;
-    private RecyclerView.LayoutManager coordLayoutManager;
-    private RecyclerView.LayoutManager memberLayoutManager;
-    private MyAdapter coordAdapter;
-    private MyAdapter memberAdapter;
     private ExtendedFloatingActionButton createGroupsBtn;
-    private String currentUserID, userName, userEmail;
-    private TextView pageName, leaveGroup;
+    private String currentUserID;
+    private String leave_groupID;
 
     FirebaseFirestore mFirestore;
     FirebaseAuth mAuth;
@@ -66,33 +59,15 @@ public class GroupsActivity extends BaseActivity {
         currentUserID = currentUser.getUid();
         userDoc = users.document(currentUserID);
 
-
-        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        //set up tab page view
+        ViewPager viewPager =  findViewById(R.id.pager);
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), GroupsActivity.this);
         viewPager.setAdapter(pagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
- //This part of code moved to groupFragment and CoordinateFragment
-//        coordinatedRecyclerView = (RecyclerView) findViewById(R.id.list_of_coord_groups);
-//        memberRecyclerView = (RecyclerView) findViewById(R.id.list_of_member_groups);
-//        coordinatedRecyclerView.setHasFixedSize(true);
-//        memberRecyclerView.setHasFixedSize(true);
-//
-//        coordLayoutManager = new LinearLayoutManager(this);
-//        coordinatedRecyclerView.setLayoutManager(coordLayoutManager);
-//
-//        memberLayoutManager = new LinearLayoutManager(this);
-//        memberRecyclerView.setLayoutManager(memberLayoutManager);
-//        leaveGroup = findViewById(R.id.link_leave);
-//        leaveGroup.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
-
+        //create new group for create button
         createGroupsBtn = findViewById(R.id.create_new_group);
         createGroupsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,13 +77,13 @@ public class GroupsActivity extends BaseActivity {
             }
         });
 
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null && resultCode == RESULT_OK) {
-//            showCoordinatorGroups();
             new CoordinateFragment();
         }
     }
@@ -116,53 +91,10 @@ public class GroupsActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        new CoordinateFragment();
-//        showCoordinatorGroups();
+
     }
 
 
-//    private void showMemberGroups() {
-//        //fetch all groups (names) the user is currently in
-//        userDoc.get()
-//                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                        user = documentSnapshot.toObject(User.class);
-//                        userName = user.getUsername();
-//                        userEmail = user.getEmail();
-//
-//                        DrawerUtil.getDrawer(GroupsActivity.this, toolbar, userName, userEmail);
-//
-//                        HashMap<String, String> map = user.getIsMemberOf() != null ? user.getIsMemberOf() : new HashMap<String, String>();
-//
-//                        memberAdapter = new MyAdapter(map, true);
-//                        memberRecyclerView.setAdapter(memberAdapter);
-//                    }
-//                });
-//    }
-//
-//
-//    //there will be an equivalent for member groups when we distinguish further between coordinators and members
-//    //PROBLEM IS THAT GROUPS MAY NOT BE LOADED IN ORDER OF CREATION DATE (????)
-//    private void showCoordinatorGroups() {
-//
-//        //fetch all groups (names) the user is currently in
-//        userDoc.get()
-//                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                        user = documentSnapshot.toObject(User.class);
-//                        userName = user.getUsername();
-//                        userEmail = user.getEmail();
-//
-//                        DrawerUtil.getDrawer(GroupsActivity.this, toolbar, userName, userEmail);
-//
-//                        HashMap<String, String> map = user.getCoordinates() != null ? user.getCoordinates() : new HashMap<String, String>();
-//                        coordAdapter = new MyAdapter(map, true);
-//                        coordinatedRecyclerView.setAdapter(coordAdapter);
-//                    }
-//                });
-//    }
     class PagerAdapter extends FragmentPagerAdapter {
 
         Context context;
@@ -171,11 +103,12 @@ public class GroupsActivity extends BaseActivity {
             super(fm);
             this.context = context;
         }
-
+        //set tab count
         @Override
         public int getCount() {
             return 2;
         }
+        //set tab title name
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
@@ -186,6 +119,7 @@ public class GroupsActivity extends BaseActivity {
                 }
                 return null;
     }
+    //inflate coordinate groups and member of groups into layout 2 tabs
         @Override
         public Fragment getItem(int position) {
 
@@ -196,7 +130,6 @@ public class GroupsActivity extends BaseActivity {
                     return new GroupFragment();
 
             }
-
             return null;
         }
 
