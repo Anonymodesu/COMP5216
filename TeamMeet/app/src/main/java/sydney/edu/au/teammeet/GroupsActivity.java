@@ -34,7 +34,6 @@ public class GroupsActivity extends BaseActivity {
 
     private ExtendedFloatingActionButton createGroupsBtn;
     private String currentUserID;
-    private String leave_groupID;
 
     FirebaseFirestore mFirestore;
     FirebaseAuth mAuth;

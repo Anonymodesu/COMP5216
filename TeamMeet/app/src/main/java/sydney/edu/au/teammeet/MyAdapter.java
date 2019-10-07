@@ -118,8 +118,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         builder.setMessage(R.string.dialog_delete_msg);
         builder.setPositiveButton(R.string.dialog_delete_btn, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
-                deleteUserFromGroupInFirestore(groupId, context);
-                deleteGroupFromUserInFirestore(groupId, context);
+                deleteUserFromGroupInFirestore(groupId);
+                deleteGroupFromUserInFirestore(groupId);
                 //remove data item from list
                 mData.remove(position);
                 //update recycle view
@@ -135,7 +135,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         builder.create().show();
     }
 
-    public void deleteUserFromGroupInFirestore(String groupId, final Context context){
+    public void deleteUserFromGroupInFirestore(String groupId){
         final DocumentReference groupRef = mFirestore.collection("Groups").document(groupId);
         groupRef.get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -161,7 +161,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 });
     }
 
-    public void deleteGroupFromUserInFirestore(final String groupId, Context context){
+    public void deleteGroupFromUserInFirestore(final String groupId){
         //get current user object
         FirebaseUser user = mAuth.getCurrentUser();
         assert user != null;
