@@ -32,6 +32,7 @@ public class GroupProfileActivity extends BaseActivity {
     //private RecyclerView.LayoutManager memberLayoutManager;
 
     private Button addMemberBtn;
+    private Button memberNameBtn;
     private String currentUserID, userName, userEmail;
     private User user;
     private TextView groupName;
@@ -62,6 +63,9 @@ public class GroupProfileActivity extends BaseActivity {
 
         userRecyclerView = (RecyclerView) findViewById(R.id.list_of_users);
         userRecyclerView.setHasFixedSize(true);
+
+
+
 
         userLayoutManager = new LinearLayoutManager(this);
         userRecyclerView.setLayoutManager(userLayoutManager);
@@ -95,6 +99,8 @@ public class GroupProfileActivity extends BaseActivity {
 
         memberRecyclerView.setAdapter(memberAdapter);
         */
+
+
 
         boolean coordinates = getIntent().getBooleanExtra("coordinates", false);
         showUsers();
@@ -154,7 +160,7 @@ public class GroupProfileActivity extends BaseActivity {
                                     Log.e("TAGGING THIS SHIT", "The size is " + usernames.size());
 
                                     if (usernames.size() == userIDs.size()) {
-                                        userAdapter = new sydney.edu.au.teammeet.UserViewAdapter(usernames.toArray(new String[usernames.size()]));
+                                        userAdapter = new sydney.edu.au.teammeet.UserViewAdapter(usernames.toArray(new String[usernames.size()]), userIDs.toArray(new String[userIDs.size()]));
                                         userRecyclerView.setAdapter(userAdapter);
                                         return;
                                     }

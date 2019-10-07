@@ -1,6 +1,8 @@
 package sydney.edu.au.teammeet;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,7 @@ import java.util.Map;
 
 public class UserViewAdapter extends RecyclerView.Adapter<UserViewAdapter.MyViewHolder> {
     private String[] mDataset;
+    private String[] mUserids;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -33,8 +36,9 @@ public class UserViewAdapter extends RecyclerView.Adapter<UserViewAdapter.MyView
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public UserViewAdapter(String[] dataset) {
+    public UserViewAdapter(String[] dataset, String[] userIds) {
         mDataset = dataset;
+        mUserids = userIds;
     }
 
     // Create new views (invoked by the layout manager)
@@ -53,6 +57,22 @@ public class UserViewAdapter extends RecyclerView.Adapter<UserViewAdapter.MyView
         // - replace the contents of the view with that element
         holder.mtextView.setText(mDataset[position]);
         holder.leave_link.setVisibility(View.GONE);
+        holder.mtextView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Context context = view.getContext();
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Make " + mDataset[position] + " a coordinator?");
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //on clicking yes do something here
+                    }
+                });
+                builder.create().show();
+                return true;
+            }
+        });
         holder.mtextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
