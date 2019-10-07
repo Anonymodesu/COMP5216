@@ -34,7 +34,7 @@ import org.litepal.LitePal;
 
 import java.util.ArrayList;
 
-public class PersonalTimetableActivity extends BaseActivity {
+public class  PersonalTimetableActivity extends BaseActivity {
     public enum Mode {
         FREE, LOW, MEDIUM, HIGH, STANDARD
     }
@@ -45,7 +45,7 @@ public class PersonalTimetableActivity extends BaseActivity {
     private ActionBarDrawerToggle actionBarDrawerToggle;
     public Toolbar toolbar;
     private TextView pageName;
-    private String userName, userEmail;
+    private String userId, userName, userEmail;
 
     //Variables for Time table page
     private LockableRecyclerView timetableRecyclerView;
@@ -66,6 +66,8 @@ public class PersonalTimetableActivity extends BaseActivity {
         setContentView(R.layout.activity_personal_timetable);
         //[START_of setup page header and navigation
         setUpGlobalNav(PersonalTimetableActivity.this, "Timetable");
+
+        //[END_of setup page header and navigation]
 
         timetable = loadSavedData();
         if(timetable == null) {
@@ -93,6 +95,7 @@ public class PersonalTimetableActivity extends BaseActivity {
         timetableGridAdapter = new PersonalTimetableAdapter(this, timetable, TimetableAdapter.SMALL_CELL_SIZE);
         timetableRecyclerView.setAdapter(timetableGridAdapter);
         //timetableRecyclerView.addOnItemTouchListener(recyclerViewTouchListener);
+
     }
 
     //allows switch to mass assignment of weightings and activities
@@ -187,7 +190,11 @@ public class PersonalTimetableActivity extends BaseActivity {
         //upload data to firebase
         mFirestore = FirebaseFirestore.getInstance();
         DocumentReference newPTId = mFirestore.collection("PersonalTimetables").document();
-        newPTId.set(mPref);
+        //newPTId.set(json);
+
+        //update timetable to users
+        DocumentReference currentUser = mFirestore.collection("Users").document(userId);
+        currentUser.update("timetable", json);
     }
 
     /** get json data from SharedPreferences and then restore the timetable */
