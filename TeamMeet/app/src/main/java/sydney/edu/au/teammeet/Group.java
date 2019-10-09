@@ -37,6 +37,8 @@ public class Group {
         coordinators.add(coordinator);
     }
 
+    public void removeMember(String member) { members.remove(member); }
+
     public void addMember(String member) {
         members.add(member);
     }
@@ -52,4 +54,5 @@ public class Group {
     private void setTimetable(Timetable timetable) {
         this.timetable = timetable;
     }
+
 }

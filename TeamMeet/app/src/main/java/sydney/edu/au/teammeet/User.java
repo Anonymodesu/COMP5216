@@ -83,4 +83,10 @@ public class User {
 
         isMemberOf.put(groupId, groupName);
     }
+
+    public void removeFromMembers(String groupID) {
+        if (isMemberOf != null) {
+            isMemberOf.remove(groupID);
+        }
+    }
 }

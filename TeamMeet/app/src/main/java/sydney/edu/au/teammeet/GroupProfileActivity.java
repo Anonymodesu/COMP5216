@@ -48,6 +48,8 @@ public class GroupProfileActivity extends BaseActivity {
     DocumentReference groupDoc;
     // private String documentId = "z5N4PPcb2UCm6zuVDZBG";
     private Group group;
+    private boolean coordinates;
+    private String groupID;
     private final int ADD_MEMBER = 205;
 
     @Override
@@ -58,7 +60,7 @@ public class GroupProfileActivity extends BaseActivity {
         groupName = (TextView) findViewById(R.id.group_name);
 
         String groupname = getIntent().getStringExtra("groupname");
-        final String groupID = getIntent().getStringExtra("groupid");
+        groupID = getIntent().getStringExtra("groupid");
         groupName.setText(groupname);
 
         userRecyclerView = (RecyclerView) findViewById(R.id.list_of_users);
@@ -102,7 +104,7 @@ public class GroupProfileActivity extends BaseActivity {
 
 
 
-        boolean coordinates = getIntent().getBooleanExtra("coordinates", false);
+        coordinates = getIntent().getBooleanExtra("coordinates", false);
         showUsers();
 
         addMemberBtn = (Button) findViewById(R.id.add_new_member);
@@ -146,21 +148,24 @@ public class GroupProfileActivity extends BaseActivity {
 
                         final ArrayList<String> userIDs = new ArrayList<String>();
                         final ArrayList<String> usernames = new ArrayList<String>();
+
+                        final HashMap<String, String> idsToNames = new HashMap<>();
                         userIDs.addAll(group.getCoordinators());
                         userIDs.addAll(group.getMembers());
 
-                        for (String user: userIDs) {
-                            DocumentReference userDoc = users.document(user);
+                        for (final String userID: userIDs) {
+                            DocumentReference userDoc = users.document(userID);
                             userDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                 @Override
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                     User user = documentSnapshot.toObject(User.class);
                                     userName = user.getUsername();
                                     usernames.add(userName);
-                                    Log.e("TAGGING THIS SHIT", "The size is " + usernames.size());
+
+                                    idsToNames.put(userID, userName);
 
                                     if (usernames.size() == userIDs.size()) {
-                                        userAdapter = new sydney.edu.au.teammeet.UserViewAdapter(usernames.toArray(new String[usernames.size()]), userIDs.toArray(new String[userIDs.size()]));
+                                        userAdapter = new sydney.edu.au.teammeet.UserViewAdapter(idsToNames, coordinates, groupID);
                                         userRecyclerView.setAdapter(userAdapter);
                                         return;
                                     }
