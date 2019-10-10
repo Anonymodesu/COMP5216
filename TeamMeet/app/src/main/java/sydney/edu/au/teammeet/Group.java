@@ -33,8 +33,13 @@ public class Group {
         return members;
     }
 
-    public void addCoordinator(String coordinator) {
-        coordinators.add(coordinator);
+    public boolean addCoordinator(String coordinator) {
+        if (!coordinators.contains(coordinator)) {
+            coordinators.add(coordinator);
+            return true;
+        }
+
+        return false;
     }
 
     public void removeMember(String member) { members.remove(member); }

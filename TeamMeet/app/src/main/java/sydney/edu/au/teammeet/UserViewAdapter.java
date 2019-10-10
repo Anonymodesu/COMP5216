@@ -101,33 +101,41 @@ public class UserViewAdapter extends RecyclerView.Adapter<UserViewAdapter.MyView
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                     Group group = documentSnapshot.toObject(Group.class);
                                     group.removeMember(getItem(position).getKey());
-                                    group.addCoordinator(getItem(position).getKey());
-                                    groupName = group.getGroupName();
+                                    boolean addedCoordinator = group.addCoordinator(getItem(position).getKey());
+                                    if (addedCoordinator) {
+                                        groupName = group.getGroupName();
 
 
-                                    groupDoc.set(group).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
+                                        groupDoc.set(group).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
 
-                                            final DocumentReference userDoc = mFirestore.collection("Users").document(getItem(position).getKey());
-                                            userDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                @Override
-                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                    User user = documentSnapshot.toObject(User.class);
+                                                final DocumentReference userDoc = mFirestore.collection("Users").document(getItem(position).getKey());
+                                                userDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                        User user = documentSnapshot.toObject(User.class);
 
-                                                    user.removeFromMembers(groupID);
-                                                    user.addToCoordinates(groupID, groupName);
+                                                        user.removeFromMembers(groupID);
+                                                        boolean updatedUser = user.addToCoordinates(groupID, groupName);
 
-                                                    userDoc.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                        @Override
-                                                        public void onSuccess(Void aVoid) {
-                                                            Toast.makeText(context, "Success!", Toast.LENGTH_LONG).show();
+                                                        if (updatedUser) {
+                                                            userDoc.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    Toast.makeText(context, "Success!", Toast.LENGTH_LONG).show();
+                                                                }
+                                                            });
+                                                        } else {
+                                                            Toast.makeText(context, getItem(position).getValue() + " is already a coordinator!", Toast.LENGTH_LONG).show();
                                                         }
-                                                    });
-                                                }
-                                            });
-                                        }
-                                    });
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    } else {
+                                        Toast.makeText(context, getItem(position).getValue() + " is already a coordinator!", Toast.LENGTH_LONG).show();
+                                    }
                                 }
                             });
                         }
