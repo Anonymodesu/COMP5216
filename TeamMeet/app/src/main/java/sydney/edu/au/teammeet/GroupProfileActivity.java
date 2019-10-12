@@ -1,7 +1,9 @@
 package sydney.edu.au.teammeet;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -27,6 +29,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class GroupProfileActivity extends BaseActivity {
 
@@ -38,13 +42,16 @@ public class GroupProfileActivity extends BaseActivity {
 
     private Button addMemberBtn;
     private String currentUserID, userName, userEmail;
+    private String memberEmail;
     private User user;
     private TextView groupName;
     private sydney.edu.au.teammeet.UserViewAdapter userAdapter;
+    private GroupProfilerAdapter groupProfilerAdapter;
 
     FirebaseFirestore mFirestore;
     FirebaseAuth mAuth;
     CollectionReference users;
+    CollectionReference groups;
     FirebaseUser currentUser;
     DocumentReference userDoc;
 
@@ -66,6 +73,7 @@ public class GroupProfileActivity extends BaseActivity {
         String groupname = getIntent().getStringExtra("groupname");
         final String groupID = getIntent().getStringExtra("groupid");
         groupName.setText(groupname);
+        saveGroupId();
 
         userRecyclerView = (RecyclerView) findViewById(R.id.list_of_users);
         userRecyclerView.setHasFixedSize(true);
@@ -73,11 +81,12 @@ public class GroupProfileActivity extends BaseActivity {
         userLayoutManager = new LinearLayoutManager(this);
         userRecyclerView.setLayoutManager(userLayoutManager);
 
-
+        //set up global nav drawer
+        setSupportActionBar(toolbar);
 
         //fetch details of the user who is currently logged in
         mFirestore = FirebaseFirestore.getInstance();
-        CollectionReference groups = mFirestore.collection("Groups");
+        groups = mFirestore.collection("Groups");
         groupDoc = groups.document(groupID);
         users = mFirestore.collection("Users");
 
@@ -99,6 +108,8 @@ public class GroupProfileActivity extends BaseActivity {
             });
         }
 
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(userRecyclerView);
+
     }
 
     @Override
@@ -112,7 +123,7 @@ public class GroupProfileActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        showUsers();
+        //showUsers();
     }
 
     private void showUsers() {
@@ -125,30 +136,65 @@ public class GroupProfileActivity extends BaseActivity {
 
                         final ArrayList<String> userIDs = new ArrayList<String>();
                         final ArrayList<String> usernames = new ArrayList<String>();
-                        userIDs.addAll(group.getCoordinators());
+                        final ArrayList<String> groupMemberIDs = new ArrayList<String>();
+                        //userIDs.addAll(group.getCoordinators());
                         userIDs.addAll(group.getMembers());
 
-                        for (String user: userIDs) {
-                            DocumentReference userDoc = users.document(user);
-                            userDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                @Override
-                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                    User user = documentSnapshot.toObject(User.class);
-                                    userName = user.getUsername();
-                                    usernames.add(userName);
-//                                    Log.e("TAGGING THIS SHIT", "The size is " + usernames.size());
+                       for (String user: userIDs) {
 
-                                    if (usernames.size() == userIDs.size()) {
-                                        userAdapter = new sydney.edu.au.teammeet.UserViewAdapter(usernames.toArray(new String[usernames.size()]));
-                                        userRecyclerView.setAdapter(userAdapter);
-                                        return;
-                                    }
-                                }
-                            });
-                        }
+                           //final DocumentReference userDoc = users.document(memberId);
+                           final DocumentReference userDoc = mFirestore.collection("Users").document(user);
+                           userDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                               @Override
+                               public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                   User user = documentSnapshot.toObject(User.class);
+                                   userName = user.getUsername();
+                                   String userId = userDoc.getId();
 
+                                   usernames.add(userName);
+                                   groupMemberIDs.add(userId);
+//                                 Log.e("TAGGING THIS SHIT", "The size is " + usernames.size());
 
+                                   if (usernames.size() == userIDs.size()) {
+
+                                       //userAdapter = new sydney.edu.au.teammeet.UserViewAdapter(usernames.toArray(new String[usernames.size()]),groupMember, GroupProfileActivity.this);
+                                       userAdapter = new UserViewAdapter(usernames, groupMemberIDs, GroupProfileActivity.this);
+                                       userRecyclerView.setAdapter(userAdapter);
+                                       }
+                                   }
+                               });
+                       }
                     }
                 });
     }
+
+    //save 'groupID' to SharePreference
+   public void saveGroupId(){
+       final String groupID = getIntent().getStringExtra("groupid");
+       SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(this);
+       SharedPreferences.Editor editor = mPref.edit();
+       editor.putString("groupId", groupID);
+       editor.commit();
+   }
+
+    //deletes a group by swiping left
+    ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT)
+    {
+
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
+            position = viewHolder.getAdapterPosition();
+            userAdapter.deleteGroupMember(GroupProfileActivity.this, position);
+            //showUsers();
+
+        }
+
+    };
+
+
 }

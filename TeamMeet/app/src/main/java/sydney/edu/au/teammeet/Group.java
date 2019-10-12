@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Group {
     private ArrayList<String> coordinators;
-    private ArrayList<String> members;
+    public ArrayList<String> members;
     private String groupName;
     private Timetable timetable;
 
@@ -51,5 +51,9 @@ public class Group {
 
     private void setTimetable(Timetable timetable) {
         this.timetable = timetable;
+    }
+
+    public void removeAll(ArrayList<String> stringArrayList){
+
     }
 }

@@ -34,9 +34,12 @@
     <string name="tab1">Groups You Coordinate</string>
     <string name="add_btn">New Group</string>
     <string name="leave">leave</string>
-    <string name="dialog_delete_title">Leave group</string>
-    <string name="dialog_delete_msg">Are you sure to leave this group?</string>
-    <string name="dialog_delete_btn">Leave</string>
+    <string name="dialog_leave_title">Leave group</string>
+    <string name="dialog_leave_msg">Are you sure to leave this group?</string>
+    <string name="dialog_leave_btn">Leave</string>
+    <string name="dialog_delete_title">Delete group</string>
+    <string name="dialog_delete_msg">Are you sure to delete this group?</string>
+    <string name="dialog_delete_btn">Delete</string>
     <string name="cancel">Cancel</string>
     <string name="welcome_message">Welcome to Team Meet!</string>
 </resources>

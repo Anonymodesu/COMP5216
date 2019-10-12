@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -32,6 +33,7 @@ import java.util.Map;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private static final String TAG="MyAdapter";
     private final List<Map.Entry<String, String>> mData;
+    private ArrayList<String> membersList;
     private boolean coordinates;
     FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
     FirebaseAuth mAuth= FirebaseAuth.getInstance();
@@ -42,13 +44,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public static class MyViewHolder extends RecyclerView.ViewHolder{
         // each data item is just a string in this case
         public CardView mCardView;
-        public TextView groupName,leave_link;
+        public TextView groupName,leave_link, delete_link;
 
         public MyViewHolder(View v) {
             super(v);
             mCardView = v.findViewById(R.id.group_item);
             groupName = v.findViewById(R.id.group_name);
             leave_link = v.findViewById(R.id.link_leave);
+            delete_link = v.findViewById(R.id.link_delete);
         }
     }
 
@@ -109,14 +112,28 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 }
             });
         }
+        //delete a group
+        if(coordinates){
+            holder.delete_link.setVisibility(View.VISIBLE);
+            //handle leave action
+            holder.delete_link.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Context context = v.getContext();
+                    deleteGroup(context, position, item.getKey());
+        }
+            });
+        }else {
+            holder.delete_link.setVisibility(View.GONE);
+        }
     }
 
     public void leaveGroup(final Context context, final int position, final String groupId){
         //confirm to leave dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(R.string.dialog_delete_title);
-        builder.setMessage(R.string.dialog_delete_msg);
-        builder.setPositiveButton(R.string.dialog_delete_btn, new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.dialog_leave_title);
+        builder.setMessage(R.string.dialog_leave_msg);
+        builder.setPositiveButton(R.string.dialog_leave_btn, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
                 deleteUserFromGroupInFirestore(groupId);
                 deleteGroupFromUserInFirestore(groupId);
@@ -190,56 +207,112 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         return mData.size();
     }
 
-    public void deleteGroupCard(final int position){
+    public void deleteGroup(final Context context, final int position, final String groupId){
+        //confirm to leave dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(R.string.dialog_delete_title);
+        builder.setMessage(R.string.dialog_delete_msg);
+        builder.setPositiveButton(R.string.dialog_delete_btn, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int i) {
+                deleteGroupFromMembers(groupId, position);
+                //remove data item from list
+                mData.remove(position);
+                //update recycle view
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, getItemCount());
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int i) { // User cancelled the dialog
+// Nothing happens
+            }
+        });
+        builder.create().show();
+    }
 
-        final Map.Entry<String, String> item = getItem(position);
+    public void deleteGroupFromMembers(final String groupId, final int position){
 
-        if (coordinates) {
-            //delete document
-            mFirestore.collection("Groups").document(item.getKey())
-                    .delete()
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d(TAG, "Group successfully deleted!");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            assert user != null;
-                            String userId = user.getUid();
-                            final DocumentReference userRef = mFirestore.collection("Users").document(userId);
-                            userRef.get()
-                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        final DocumentReference groupRef = mFirestore.collection("Groups").document(groupId);
+        groupRef.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Group group= documentSnapshot.toObject(Group.class);
+                        ArrayList<String> membersList = group.getMembers() != null ? group.getMembers() : new ArrayList<String>();
+
+                        //get every group member info by their ID
+                        for (String memberId : membersList) {
+                            Log.i("The memberId is: ", memberId);
+
+                            final DocumentReference memberRef = mFirestore.collection("Users").document(memberId);
+                            memberRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    User user = documentSnapshot.toObject(User.class);
+                                    HashMap<String, String> isMemberOf = user.getIsMemberOf();
+                                    isMemberOf.remove(groupId);
+
+                                    user.setIsMemberOf(isMemberOf);
+
+                                    memberRef.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
-                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                            final User currentUser = documentSnapshot.toObject(User.class);
-                                            assert currentUser != null;
-
-                                            final HashMap coordinates = currentUser.getCoordinates();
-                                            if (coordinates != null) {
-                                                coordinates.remove(item.getKey());
-                                                mData.remove(position);
-                                            }
-                                            currentUser.setCoordinates(coordinates);
-                                            //更新数据
-                                            userRef.set(currentUser).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    Log.d(TAG, "group deleted from user collection!");
-                                                    notifyItemRemoved(position);
-                                                    notifyItemRangeChanged(position, getItemCount());
-                                                }
-                                            });
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            deleteGroupFromCoordinators(groupId, position);
+                                            Log.d(TAG, "group deleted from members!");
                                         }
                                     });
+                                }
+                            });
                         }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.w(TAG, "Error deleting group", e);
-                        }
-                    });
-        }
-
+                    }
+                });
     }
+
+    public void deleteGroupFromCoordinators(final String groupId, final int position){
+
+        final DocumentReference groupRef = mFirestore.collection("Groups").document(groupId);
+        groupRef.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Group group= documentSnapshot.toObject(Group.class);
+                        ArrayList<String> coordinatorsList = group.getCoordinators() != null ? group.getCoordinators() : new ArrayList<String>();
+
+                        //get every group coordinator info by their ID
+                        for (String coordinatorId : coordinatorsList) {
+                            Log.i("The memberId is:", coordinatorId);
+
+                            final DocumentReference memberRef = mFirestore.collection("Users").document(coordinatorId);
+                            memberRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    User user = documentSnapshot.toObject(User.class);
+                                    HashMap<String, String> coordinates = user.getCoordinates();
+                                    coordinates.remove(groupId);
+
+                                    user.setIsMemberOf(coordinates);
+
+                                    memberRef.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            deleteTheGroupFromFirebase(groupId);
+                                            Log.d(TAG, "group deleted from members!");
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    }
+                });
+    }
+
+    public void deleteTheGroupFromFirebase(final String groupId){
+
+        mFirestore.collection("Groups").document(groupId)
+                .delete();
+    }
+
+
+
 
 }

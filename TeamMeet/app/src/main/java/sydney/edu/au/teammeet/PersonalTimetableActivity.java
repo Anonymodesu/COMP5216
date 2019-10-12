@@ -176,7 +176,7 @@ public class  PersonalTimetableActivity extends BaseActivity {
     /* save timetable's data to SharedPreferences in json format*/
     private void saveByPreference(){
 
-
+       //TODO:retrieve data from server if local database is empty
         SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = mPref.edit();
 

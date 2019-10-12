@@ -45,7 +45,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        mAdapter.deleteGroupCard(viewHolder.getAdapterPosition());
+        //mAdapter.deleteGroupCard(viewHolder.getAdapterPosition());
     }
 
     @Override

@@ -122,6 +122,7 @@ public class AddNewMemberActivity extends BaseActivity {
                                                     assert group != null;
                                                     //group.addMember(txtMemberEmail.getText().toString());
 
+                                                    //TODO:添加Name
                                                     if (!group.getCoordinators().contains(newMemberDoc.getId()) && !group.getMembers().contains((newMemberDoc.getId()))) {
                                                         group.addMember(newMemberDoc.getId().toString());
 

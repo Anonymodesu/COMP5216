@@ -9,6 +9,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +33,12 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class CoordinateFragment extends Fragment {
     FirebaseFirestore mFirestore;
@@ -78,8 +83,6 @@ public class CoordinateFragment extends Fragment {
                         User user = documentSnapshot.toObject(User.class);
                         HashMap<String, String> coordinateMap = user.getCoordinates() != null ? user.getCoordinates() : new HashMap<String, String>();
 
-                        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(rv);
-
                         myAdapter = new MyAdapter(coordinateMap, true);
                         rv.setAdapter(myAdapter);
 
@@ -91,39 +94,5 @@ public class CoordinateFragment extends Fragment {
         return rootView;
     }
 
-    //deletes a group by swiping left
-    ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-        @Override
-        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-            return false;
-        }
-
-        @Override
-        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
-
-            myAdapter.deleteGroupCard(viewHolder.getAdapterPosition());
-        }
-
-        @Override
-        public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-
-            Bitmap icon;
-            if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
-
-                View itemView = viewHolder.itemView;
-                float height = (float) itemView.getBottom() - (float) itemView.getTop();
-                float width = height / 3;
-
-                    p.setColor(Color.parseColor("#FFFFFF"));
-                    RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight(), (float) itemView.getBottom());
-                    c.drawRect(background,p);
-                    icon = BitmapFactory.decodeResource(getResources(), R.drawable.delete);
-                    RectF icon_dest = new RectF((float) itemView.getRight() - 2*width ,(float) itemView.getTop() + width,(float) itemView.getRight() - width,(float)itemView.getBottom() - width);
-                    c.drawBitmap(icon,null,icon_dest,p);
-
-            }
-            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-        }
-
-    };
 }
+
