@@ -18,6 +18,24 @@
         <item name="android:logo">@drawable/logo</item>
     </style>
 
+    <!--Button-->
+    <style name="MyButton" parent="AppTheme">
+        <item name="android:background">#DCDCDC</item>
+    </style>
+
+
+
+    <!--自定义dialog背景全透明无边框theme -->
+    <style name="MyDialog" parent="android:style/Theme.Dialog">
+
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:button">@style/MyButton</item>
+    </style>
+
     <!--<style name="ThemeOverlay.TeamMeetIcon" parent="AppTheme">-->
         <!--<item name="android:layout_marginTop">@dimen/icon_top_margin</item>-->
         <!--<item name="android:layout_marginBottom">@dimen/icon_bottom_margin</item>-->

@@ -7,8 +7,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
@@ -16,9 +16,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -26,18 +25,16 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 public class GroupProfileActivity extends BaseActivity {
 
     private Toolbar toolbar;
-    private RecyclerView userRecyclerView;
-    //private RecyclerView memberRecyclerView;
-    private RecyclerView.LayoutManager userLayoutManager;
+    //private RecyclerView userRecyclerView
+    private RecyclerView coordinatorRecycleView, memberRecycleView;
+    //private RecyclerView.LayoutManager userLayoutManager;
+    private RecyclerView.LayoutManager memberLayoutManager;
+    //private LinearLayoutManager coordinatorLayoutManager;
     //private RecyclerView.LayoutManager memberLayoutManager;
 
     private Button addMemberBtn;
@@ -45,8 +42,10 @@ public class GroupProfileActivity extends BaseActivity {
     private String memberEmail;
     private User user;
     private TextView groupName;
-    private sydney.edu.au.teammeet.UserViewAdapter userAdapter;
-    private GroupProfilerAdapter groupProfilerAdapter;
+    //private sydney.edu.au.teammeet.UserViewAdapter userAdapter;
+    private sydney.edu.au.teammeet.GroupProfilerCoordinatorAdapter coordinatorAdapter;
+    private sydney.edu.au.teammeet.GroupProfileMemberAdapter membersAdapter;
+    //private GroupProfilerCoordinatorAdapter groupProfilerAdapter;
 
     FirebaseFirestore mFirestore;
     FirebaseAuth mAuth;
@@ -65,6 +64,7 @@ public class GroupProfileActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_individual_group);
+
         //set up global nav drawer
         setUpGlobalNav(GroupProfileActivity.this,"Group Profile");
 
@@ -75,11 +75,21 @@ public class GroupProfileActivity extends BaseActivity {
         groupName.setText(groupname);
         saveGroupId();
 
-        userRecyclerView = (RecyclerView) findViewById(R.id.list_of_users);
-        userRecyclerView.setHasFixedSize(true);
+        //userRecyclerView = (RecyclerView) findViewById(R.id.list_of_users);
+        coordinatorRecycleView = (RecyclerView) findViewById(R.id.list_of_coordinator);
+        memberRecycleView = (RecyclerView) findViewById(R.id.list_of_members);
+        //userRecyclerView.setHasFixedSize(true);
+        coordinatorRecycleView.setHasFixedSize(true);
+        memberRecycleView.setHasFixedSize(true);
 
-        userLayoutManager = new LinearLayoutManager(this);
-        userRecyclerView.setLayoutManager(userLayoutManager);
+        //userLayoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager coordinatorLayoutManager = new LinearLayoutManager(this);
+        memberLayoutManager = new LinearLayoutManager(this);
+        coordinatorLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+
+        //userRecyclerView.setLayoutManager(userLayoutManager);
+        coordinatorRecycleView.setLayoutManager(coordinatorLayoutManager);
+        memberRecycleView.setLayoutManager(memberLayoutManager);
 
         //set up global nav drawer
         setSupportActionBar(toolbar);
@@ -108,7 +118,7 @@ public class GroupProfileActivity extends BaseActivity {
             });
         }
 
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(userRecyclerView);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(memberRecycleView);
 
     }
 
@@ -123,7 +133,7 @@ public class GroupProfileActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //showUsers();
+        showUsers();
     }
 
     private void showUsers() {
@@ -137,7 +147,10 @@ public class GroupProfileActivity extends BaseActivity {
                         final ArrayList<String> userIDs = new ArrayList<String>();
                         final ArrayList<String> usernames = new ArrayList<String>();
                         final ArrayList<String> groupMemberIDs = new ArrayList<String>();
-                        //userIDs.addAll(group.getCoordinators());
+                        final ArrayList<String> coordinatorIDs = new ArrayList<String>();
+                        final ArrayList<String> coordinatorName = new ArrayList<String>();
+
+                        coordinatorIDs.addAll(group.getCoordinators());
                         userIDs.addAll(group.getMembers());
 
                        for (String user: userIDs) {
@@ -158,12 +171,31 @@ public class GroupProfileActivity extends BaseActivity {
                                    if (usernames.size() == userIDs.size()) {
 
                                        //userAdapter = new sydney.edu.au.teammeet.UserViewAdapter(usernames.toArray(new String[usernames.size()]),groupMember, GroupProfileActivity.this);
-                                       userAdapter = new UserViewAdapter(usernames, groupMemberIDs, GroupProfileActivity.this);
-                                       userRecyclerView.setAdapter(userAdapter);
+                                       membersAdapter = new GroupProfileMemberAdapter(usernames, groupMemberIDs, GroupProfileActivity.this);
+                                       memberRecycleView.setAdapter(membersAdapter);
                                        }
                                    }
                                });
                        }
+
+                       //TODO: 遍历循环group里的coordinator
+                        for(String coordinator : coordinatorIDs){
+
+                            final DocumentReference coordinatorDoc = mFirestore.collection("Users").document(coordinator);
+                            coordinatorDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    User user = documentSnapshot.toObject(User.class);
+                                    userName = user.getUsername();
+                                    coordinatorName.add(userName);
+
+                                    if(coordinatorName.size() == coordinatorIDs.size()){
+                                        coordinatorAdapter = new GroupProfilerCoordinatorAdapter(coordinatorName, GroupProfileActivity.this);
+                                        coordinatorRecycleView.setAdapter(coordinatorAdapter);
+                                    }
+                                }
+                            });
+                        }
                     }
                 });
     }
@@ -177,6 +209,14 @@ public class GroupProfileActivity extends BaseActivity {
        editor.commit();
    }
 
+    //retrieve deleted memberName from sharepreference
+    public String getDeletedMemberName(){
+
+        SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String deletedMemberName = mPref.getString("deletedMemberName", "" );
+        return deletedMemberName;
+    }
+
     //deletes a group by swiping left
     ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT)
     {
@@ -187,11 +227,18 @@ public class GroupProfileActivity extends BaseActivity {
         }
 
         @Override
-        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
-            position = viewHolder.getAdapterPosition();
-            userAdapter.deleteGroupMember(GroupProfileActivity.this, position);
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            final int position = viewHolder.getAdapterPosition();
+            membersAdapter.deleteGroupMember(GroupProfileActivity.this, position);
+            //membersAdapter.removeDeletedMember(position);
             //showUsers();
-
+            Snackbar.make(memberRecycleView, getDeletedMemberName(), Snackbar.LENGTH_LONG)
+                    .setAction("Undo", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            membersAdapter.insertDeletedMember(position);
+                        }
+                    }).show();
         }
 
     };

@@ -4,10 +4,16 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,11 +36,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.security.AccessController.getContext;
+
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private static final String TAG="MyAdapter";
     private final List<Map.Entry<String, String>> mData;
     private ArrayList<String> membersList;
     private boolean coordinates;
+
+    private GroupSelfDialog selfDialog;
+
     FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
     FirebaseAuth mAuth= FirebaseAuth.getInstance();
 
@@ -209,25 +220,73 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     public void deleteGroup(final Context context, final int position, final String groupId){
         //confirm to leave dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        /*AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(R.string.dialog_delete_title);
         builder.setMessage(R.string.dialog_delete_msg);
         builder.setPositiveButton(R.string.dialog_delete_btn, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
-                deleteGroupFromMembers(groupId, position);
-                //remove data item from list
-                mData.remove(position);
-                //update recycle view
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, getItemCount());
+                final DocumentReference groupRef = mFirestore.collection("Groups").document(groupId);
+                groupRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Group group= documentSnapshot.toObject(Group.class);
+                        ArrayList<String> membersList = group.getMembers();
+
+                        if(membersList.size() == 0){
+                            deleteGroupFromCoordinators(groupId, position);
+                        }else {
+                            deleteGroupFromMembers(groupId, position);
+                        }
+                        //remove data item from list
+                        mData.remove(position);
+                        //update recycle view
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, getItemCount());
+                    }
+                });
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int i) { // User cancelled the dialog
-// Nothing happens
+            public void onClick(DialogInterface dialogInterface, int i) { // User cancelled the dialog Nothing happens
             }
         });
-        builder.create().show();
+        builder.create().show();*/
+
+        selfDialog = new GroupSelfDialog(context);
+        selfDialog.setTitle("Delete Group");
+        selfDialog.setMessage("Are you sure to delete the group?");
+        selfDialog.setYesOnclickListener("Yes", new GroupSelfDialog.onYesOnclickListener() {
+            @Override
+            public void onYesClick() {
+                final DocumentReference groupRef = mFirestore.collection("Groups").document(groupId);
+                groupRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Group group= documentSnapshot.toObject(Group.class);
+                        ArrayList<String> membersList = group.getMembers();
+
+                        if(membersList.size() == 0){
+                            deleteGroupFromCoordinators(groupId, position);
+                        }else {
+                            deleteGroupFromMembers(groupId, position);
+                        }
+                        //remove data item from list
+                        mData.remove(position);
+                        //update recycle view
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, getItemCount());
+                    }
+                });
+                selfDialog.dismiss();
+            }
+        });
+        selfDialog.setNoOnclickListener("No", new GroupSelfDialog.onNoOnclickListener() {
+            @Override
+            public void onNoClick() {
+                selfDialog.dismiss();
+            }
+        });
+        selfDialog.show();
     }
 
     public void deleteGroupFromMembers(final String groupId, final int position){
@@ -238,7 +297,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         Group group= documentSnapshot.toObject(Group.class);
-                        ArrayList<String> membersList = group.getMembers() != null ? group.getMembers() : new ArrayList<String>();
+                        ArrayList<String> membersList = group.getMembers();
 
                         //get every group member info by their ID
                         for (String memberId : membersList) {
@@ -311,6 +370,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         mFirestore.collection("Groups").document(groupId)
                 .delete();
     }
+
 
 
 

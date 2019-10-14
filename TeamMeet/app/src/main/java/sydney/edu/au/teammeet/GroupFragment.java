@@ -46,6 +46,7 @@ public class GroupFragment extends Fragment {
 
         final RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.list_of_member_groups);
         rv.setHasFixedSize(true);
+
         mFirestore = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         users = mFirestore.collection("Users");
