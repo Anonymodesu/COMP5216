@@ -235,6 +235,7 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
                 User user = documentSnapshot.toObject(User.class);
                 HashMap<String, String> isMemberOfList = user.getIsMemberOf();
 
+                //TODO: pur the group name later
                 isMemberOfList.put(groupId, "");
 
                 user.setIsMemberOf(isMemberOfList);
