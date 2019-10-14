@@ -70,12 +70,18 @@ public class User {
         this.isMemberOf = isMemberOf;
     }
 
-    public void addToCoordinates(String groupId, String groupName) {
+    public boolean addToCoordinates(String groupId, String groupName) {
         if (coordinates == null) {
             setCoordinates(new HashMap<String, String>());
         }
 
         coordinates.put(groupId, groupName);
+        if (!coordinates.containsKey(groupId)) {
+            coordinates.put(groupId, groupName);
+            return true;
+        }
+
+        return false;
     }
 
     public void addToMemberOf(String groupId, String groupName) {
@@ -85,6 +91,19 @@ public class User {
 
         isMemberOf.put(groupId, groupName);
     }
+
+    public void removeFromMembers(String groupID) {
+        if (isMemberOf != null) {
+            isMemberOf.remove(groupID);
+        }
+    }
+
+    public void removeFromCoordinates(String groupID) {
+        if (coordinates != null) {
+            coordinates.remove(groupID);
+        }
+    }
+
 
     public String getTimetable() {
         return timetable;

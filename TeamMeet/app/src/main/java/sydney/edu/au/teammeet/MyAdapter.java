@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -144,7 +145,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(R.string.dialog_leave_title);
         builder.setMessage(R.string.dialog_leave_msg);
-        builder.setPositiveButton(R.string.dialog_leave_btn, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Leave", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
                 deleteUserFromGroupInFirestore(groupId);
                 deleteGroupFromUserInFirestore(groupId);
@@ -155,12 +156,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 notifyItemRangeChanged(position, getItemCount());
             }
         });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) { // User cancelled the dialog
 // Nothing happens
             }
         });
-        builder.create().show();
+
+        AlertDialog alert = builder.create();
+        alert.show();
+
+        Button nbutton = alert.getButton(DialogInterface.BUTTON_NEGATIVE);
+        nbutton.setTextColor(Color.WHITE);
+        Button pbutton = alert.getButton(DialogInterface.BUTTON_POSITIVE);
+        pbutton.setTextColor(Color.WHITE);
     }
 
     public void deleteUserFromGroupInFirestore(String groupId){
@@ -176,8 +184,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                         assert user != null;
                         String userId = user.getUid();
                         //remove user from members
-                        members.remove(userId);
-                        group.setMembers(members);
+                        group.removeMember(userId);
                         groupRef.set(group)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
@@ -200,9 +207,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         User userObject = documentSnapshot.toObject(User.class);
-                        HashMap<String, String> memberofGroups = userObject.getIsMemberOf();
-                        memberofGroups.remove(groupId);
-                        userObject.setIsMemberOf(memberofGroups);
+                        userObject.removeFromMembers(groupId);
                         userRef.set(userObject).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
@@ -308,10 +313,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                 @Override
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                     User user = documentSnapshot.toObject(User.class);
-                                    HashMap<String, String> isMemberOf = user.getIsMemberOf();
-                                    isMemberOf.remove(groupId);
-
-                                    user.setIsMemberOf(isMemberOf);
+                                    user.removeFromMembers(groupId);
 
                                     memberRef.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
@@ -346,10 +348,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                                 @Override
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                     User user = documentSnapshot.toObject(User.class);
-                                    HashMap<String, String> coordinates = user.getCoordinates();
-                                    coordinates.remove(groupId);
-
-                                    user.setIsMemberOf(coordinates);
+                                    user.removeFromCoordinates(groupId);
 
                                     memberRef.set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override

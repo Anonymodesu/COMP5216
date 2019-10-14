@@ -94,6 +94,7 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
         return groupId;
     }
 
+
     public void deleteGroupMember(final Context context, final int position){
 
         deleteGroupFromMember(position);
@@ -149,10 +150,8 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         User userObject = documentSnapshot.toObject(User.class);
-                        HashMap<String, String> memberofGroups = userObject.getIsMemberOf();
-                        memberofGroups.remove(getGroupId());
+                        userObject.removeFromMembers(getGroupId());
 
-                        userObject.setIsMemberOf(memberofGroups);
                         userRef.set(userObject).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {

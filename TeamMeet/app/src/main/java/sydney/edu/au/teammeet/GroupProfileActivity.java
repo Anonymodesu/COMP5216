@@ -54,8 +54,9 @@ public class GroupProfileActivity extends BaseActivity {
     FirebaseUser currentUser;
     DocumentReference userDoc;
 
-
+    private boolean coordinates;
     DocumentReference groupDoc;
+
     // private String documentId = "z5N4PPcb2UCm6zuVDZBG";
     private Group group;
     private final int ADD_MEMBER = 205;
@@ -100,7 +101,7 @@ public class GroupProfileActivity extends BaseActivity {
         groupDoc = groups.document(groupID);
         users = mFirestore.collection("Users");
 
-        boolean coordinates = getIntent().getBooleanExtra("coordinates", false);
+        coordinates = getIntent().getBooleanExtra("coordinates", false);
         showUsers();
 
         addMemberBtn = (Button) findViewById(R.id.add_new_member);
@@ -229,19 +230,34 @@ public class GroupProfileActivity extends BaseActivity {
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             final int position = viewHolder.getAdapterPosition();
-            membersAdapter.deleteGroupMember(GroupProfileActivity.this, position);
-            //membersAdapter.removeDeletedMember(position);
-            //showUsers();
-            Snackbar.make(memberRecycleView, getDeletedMemberName(), Snackbar.LENGTH_LONG)
-                    .setAction("Undo", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            membersAdapter.insertDeletedMember(position);
-                        }
-                    }).show();
+            if (coordinates) {
+                membersAdapter.deleteGroupMember(GroupProfileActivity.this, position);
+                //membersAdapter.removeDeletedMember(position);
+                //showUsers();
+                Snackbar.make(memberRecycleView, getDeletedMemberName(), Snackbar.LENGTH_LONG)
+                        .setAction("Undo", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                membersAdapter.insertDeletedMember(position);
+                            }
+                        }).show();
+            }
+
+        }
+
+        @Override
+        public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+            int dragFlags = 0 | 0;
+            int swipeFlags = -1;
+
+            if (coordinates) {
+                swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+            } else {
+                swipeFlags = 0 | 0;
+            }
+            return makeMovementFlags(dragFlags, swipeFlags);
         }
 
     };
-
 
 }
