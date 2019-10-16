@@ -8,6 +8,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,11 +23,15 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 
@@ -39,19 +44,17 @@ public class  PersonalTimetableActivity extends BaseActivity {
         FREE, LOW, MEDIUM, HIGH, STANDARD
     }
 
+    private static final String SHARED_PREF_ID = "personal_timetable_activity";
+    private static final String SHARED_PREF_TIMETABLE = "personal_timetable_data";
+    private static final String SHARED_PREF_USER = "personal_timetable_user";
+
     //Variables for global navigation
-    private NavigationView navigationView;
-    private DrawerLayout drawerLayout;
-    private ActionBarDrawerToggle actionBarDrawerToggle;
-    public Toolbar toolbar;
-    private TextView pageName;
-    private String userId, userName, userEmail;
+    private String userId;
 
     //Variables for Time table page
     private LockableRecyclerView timetableRecyclerView;
     private PersonalTimetableAdapter timetableGridAdapter;
     private LockableScrollView timetableHorizontalScroll;
-    ArrayList<String> items;
     private Timetable timetable;
     private boolean standardZoom; //whether the timetable is zoomed at standard level
     private Mode currentMode;
@@ -68,19 +71,16 @@ public class  PersonalTimetableActivity extends BaseActivity {
         setUpGlobalNav(PersonalTimetableActivity.this, "Timetable");
 
         //[END_of setup page header and navigation]
+        mFirestore = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser userAuth = mAuth.getCurrentUser();
         userId = userAuth.getUid();
 
 
-        timetable = loadSavedData();
-        if(timetable == null) {
-            timetable = new Timetable();
-        }
         standardZoom = true;
         currentMode = Mode.STANDARD;
-        setupTimetable();
-        setupMassFill();
+
+        loadSavedData();
     }
 
     private void setupTimetable() {
@@ -157,7 +157,6 @@ public class  PersonalTimetableActivity extends BaseActivity {
 
     public void onClear(View view) {
         timetableGridAdapter.clearTimetable();
-        clearByPreference ();
     }
 
     //swaps between two zoom levels
@@ -180,57 +179,68 @@ public class  PersonalTimetableActivity extends BaseActivity {
     /* save timetable's data to SharedPreferences in json format*/
     private void saveByPreference(){
 
-       //TODO:retrieve data from server if local database is empty
-        SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(this);
+        //update timetable locally
+        SharedPreferences mPref = getSharedPreferences(SHARED_PREF_ID, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mPref.edit();
 
         Gson gson = new Gson();
         String json = gson.toJson(timetable);
 
-        editor.putString("personal_timetable", json);
-        editor.commit();
-        //Toast.makeText(this, "saved!", LENGTH_SHORT).show();
+        editor.putString(SHARED_PREF_TIMETABLE, json);
+        editor.putString(SHARED_PREF_USER, userId);
 
-        //upload data to firebase
-        mFirestore = FirebaseFirestore.getInstance();
-        DocumentReference newPTId = mFirestore.collection("PersonalTimetables").document();
-        //newPTId.set(json);
+        editor.apply();
 
-        //update timetable to users
+        //update timetable to database
         DocumentReference currentUser = mFirestore.collection("Users").document(userId);
         currentUser.update("timetable", json);
     }
 
     /** get json data from SharedPreferences and then restore the timetable */
-    private Timetable loadSavedData() {
-        //removeAll();
+    private void loadSavedData() {
 
-        SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String json = mPref.getString("personal_timetable", "");
+        final Gson gson = new Gson();
 
-        Gson gson = new Gson();
-        Timetable savedTimetable = gson.fromJson(json, Timetable.class);
+        SharedPreferences mPref = getSharedPreferences(SHARED_PREF_ID, Context.MODE_PRIVATE);
+        String jsonTimetable = mPref.getString(SHARED_PREF_TIMETABLE, null);
+        String storedUser = mPref.getString(SHARED_PREF_USER, "");
 
-        return savedTimetable;
-        //if (savedData == null && savedData.equals("")) return;
-        //load(savedData);
+        //check if the locally stored user timetable is same as current user
+        if(userId.equals(storedUser)) {
+            this.timetable = gson.fromJson(jsonTimetable, Timetable.class);
+
+
+            setupTimetable();
+            setupMassFill();
+
+        } else {
+            
+            //check if firebase-stored timetable exists
+            DocumentReference userReference = mFirestore.collection("Users").document(userId);
+            userReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                    if(task.isSuccessful()) {
+                        String timetableJson = task.getResult().getString("timetable");
+                        timetable = gson.fromJson(timetableJson, Timetable.class);
+
+                    } else {
+                        Log.e("timetable failed", task.getException().getMessage());
+
+                        timetable = new Timetable();
+                    }
+
+                    setupTimetable();
+                    setupMassFill();
+                }
+            });
+
+        }
+
     }
 
 
-    /** clear all data */
-    private void clearByPreference (){
-
-        timetable = new Timetable();
-        SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = mPref.edit();
-
-        Gson gson = new Gson();
-        String json = gson.toJson(timetable);
-
-        editor.putString("personal_timetable", json);
-        editor.commit();
-        //Toast.makeText(this, "saved!", LENGTH_SHORT).show();
-    }
     
 
 }
