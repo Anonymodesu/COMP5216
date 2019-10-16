@@ -48,11 +48,9 @@ public class AddNewMemberActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        groupDocId = getIntent().getStringExtra("groupDocId");
-
         setContentView(R.layout.activity_add_new_member);
         setUpGlobalNav(AddNewMemberActivity.this, "Add Member");
+        groupDocId = getIntent().getStringExtra("groupDocId");
 
         txtMemberEmail = (EditText) findViewById(R.id.new_member);
         backToGroupProfile = (Button) findViewById(R.id.back_to_group_profile);
@@ -72,114 +70,74 @@ public class AddNewMemberActivity extends BaseActivity {
         addToGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                groupDocId = getIntent().getStringExtra("groupDocId");
+                updateGroupWithNewMember(groupDocId);
+            }
+        });
+    }
 
-
-                FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
-                CollectionReference groups = mFirestore.collection("Groups");
-                final DocumentReference groupDoc = groups.document(groupDocId);
-
-
-                final CollectionReference users = mFirestore.collection("Users");
-                /*
-                FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                currentUser = mAuth.getCurrentUser();
-                assert currentUser != null;
-                currentUserID = currentUser.getUid();
-                */
-                //users.whereEqualTo("email",txtMemberEmail.getText().toString()).get();
-                //final DocumentReference newMemberDoc = users.whereEqualTo("email",txtMemberEmail.getText().toString()).get().getResult().getDocumentChanges().get(0).getDocument().getReference();
-
-                users
-                        .whereEqualTo("email", txtMemberEmail.getText().toString().toLowerCase())
-                        .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                            @Override
-                            public void onEvent(@Nullable QuerySnapshot snapshot, @Nullable FirebaseFirestoreException e) {
-
-                                if(e!=null || snapshot.size()==0){
-                                    Toast.makeText(AddNewMemberActivity.this, "User not found", Toast.LENGTH_SHORT).show();
-                                } else {
-
-                                    for (DocumentChange userDoc : snapshot.getDocumentChanges()) {
-                                        User user = userDoc.getDocument().toObject(User.class);
-                                        //System.out.println("======== user: " + user.getEmail());
-                                        if (user.getEmail() != null) {
-                                            //group.addMember(userDoc.getDocument().getId());
-                                            if (userDoc.getType() == DocumentChange.Type.ADDED || userDoc.getType() == DocumentChange.Type.MODIFIED) {
-                                                //user.addToMemberOf(groupDoc.getId(), group.getGroupName());
-                                                newMemberDoc = userDoc.getDocument().getReference();
-                                                System.out.println("========= user email docuemnt ID: " + userDoc.getDocument().getId());
-                                                break;
-                                            }
-                                        }
+    private DocumentReference GetUserDocByEmail() {
+        CollectionReference users = FirebaseFirestore.getInstance().collection("Users");
+        users.whereEqualTo("email", txtMemberEmail.getText().toString().toLowerCase())
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null || snapshots.size() == 0) {
+                            Toast.makeText(AddNewMemberActivity.this, "User not found", Toast.LENGTH_SHORT).show();
+                        } else {
+                            for (DocumentChange userDoc : snapshots.getDocumentChanges()) {
+                                User user = userDoc.getDocument().toObject(User.class);
+                                if (user.getEmail() != null) {
+                                    if (userDoc.getType() == DocumentChange.Type.ADDED
+                                            || userDoc.getType() == DocumentChange.Type.MODIFIED) {
+                                        newMemberDoc = userDoc.getDocument().getReference();
+                                        System.out.println("========= user email docuemnt ID: " + userDoc.getDocument().getId());
+                                        break;
                                     }
-
-                                    //fetch details of the user who is currently logged in
-                                    groupDoc.get()
-                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                @Override
-                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                    final Group group = documentSnapshot.toObject(Group.class);
-                                                    assert group != null;
-                                                    //group.addMember(txtMemberEmail.getText().toString());
-
-                                                    //TODO:添加Name
-                                                    if (!group.getCoordinators().contains(newMemberDoc.getId()) && !group.getMembers().contains((newMemberDoc.getId()))) {
-                                                        group.addMember(newMemberDoc.getId().toString());
-
-                                                        showSnackbar("Member has been added successfully", AddNewMemberActivity.this);
-
-                                                        //add user details to the database
-                                                        groupDoc.set(group).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                Intent intent = new Intent();
-                                                                setResult(RESULT_OK, intent);
-                                                                finish();
-                                                            }
-                                                        });
-
-                                                        newMemberDoc.get()
-                                                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                                    @Override
-                                                                    public void onSuccess(DocumentSnapshot memberDocumentSnapshot) {
-                                                                        User newMemberUser = memberDocumentSnapshot.toObject(User.class);
-                                                                        assert newMemberUser != null;
-
-                                                                        newMemberUser.addToMemberOf(groupDoc.getId(), group.getGroupName());
-
-
-                                                                        // add to the database
-                                                                        newMemberDoc.set(newMemberUser).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                            @Override
-                                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                                Intent intent = new Intent();
-                                                                                setResult(RESULT_OK, intent);
-                                                                                finish();
-                                                                            }
-                                                                        });
-
-
-                                                                    }
-                                                                }).addOnFailureListener(new OnFailureListener() {
-                                                            @Override
-                                                            public void onFailure(@NonNull Exception e) {
-                                                                showSnackbar("Error in add new member", AddNewMemberActivity.this);
-                                                            }
-                                                        });
-                                                    } else {
-                                                        Toast.makeText(AddNewMemberActivity.this, "User is already in the group", Toast.LENGTH_SHORT).show();
-                                                    }
-                                                }
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            showSnackbar("Error in add new member", AddNewMemberActivity.this);
-                                        }
-                                    });
                                 }
                             }
-                        });
+                        }
+                    }
+                });
+        return newMemberDoc;
+    }
+    private void updateGroupWithNewMember(String groupId){
+        newMemberDoc = GetUserDocByEmail();
+        final DocumentReference groupDoc = FirebaseFirestore.getInstance()
+                                        .collection("Groups")
+                                        .document(groupId);
+        groupDoc.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Group group = documentSnapshot.toObject(Group.class);
+                        //group.addMember(txtMemberEmail.getText().toString());
 
+                        //TODO:添加Name
+                        if (!group.getCoordinators().contains(newMemberDoc.getId())
+                                && !group.getMembers().contains((newMemberDoc.getId())))
+                        {
+                            group.addMember(newMemberDoc.getId().toString());
+
+                            showSnackbar("Member has been added successfully", AddNewMemberActivity.this);
+
+                            //add user details to the database
+                            groupDoc.set(group).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    Intent intent = new Intent();
+                                    setResult(RESULT_OK, intent);
+                                    finish();
+                                }
+                            });
+                        }else {
+                            Toast.makeText(AddNewMemberActivity.this, "User is already in the group", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                showSnackbar("Error in add new member", AddNewMemberActivity.this);
             }
         });
     }
