@@ -31,6 +31,8 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
     private ArrayList<String> memberIdList;
     private ArrayList<String> memberNameList;
 
+    private OnItemClicked onClick;
+
     FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
     FirebaseAuth mAuth= FirebaseAuth.getInstance();
 
@@ -74,6 +76,12 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.groupMemberName.setText(memberNameList.get(position));
+        holder.groupMemberIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClick.onItemClick(position);
+            }
+        });
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -84,6 +92,10 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
 
     public String getMemberList(int position){
         return memberIdList.get(position);
+    }
+
+    public String getMemberNameList(int position){
+        return memberNameList.get(position);
     }
 
     //retrieve groupId from sharepreference
@@ -102,12 +114,15 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
         //save member name to sharepreference
         saveDeletedMemberName(memberNameList.get(position));
 
+    }
+
+    public void deleteMemberFromList(final Context context, final int position) {
         //remove data item from list
         memberNameList.remove(position);
+        memberIdList.remove(position);
         //update recycle view
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, getItemCount());
-
     }
 
     public void deleteMemberFromGroup(final int position){
@@ -133,6 +148,7 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
+                                        deleteMemberFromList(context, position);
                                         Log.d(TAG, "User deleted from group");
                                     }
                                 });
@@ -256,6 +272,11 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
         memberNameList.add(position,getDeletedMemberName());
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, getItemCount());
+    }
+
+    public void setOnClick(OnItemClicked onClick)
+    {
+        this.onClick = onClick;
     }
 
 }

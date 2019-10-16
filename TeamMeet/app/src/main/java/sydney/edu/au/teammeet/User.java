@@ -75,7 +75,6 @@ public class User {
             setCoordinates(new HashMap<String, String>());
         }
 
-        coordinates.put(groupId, groupName);
         if (!coordinates.containsKey(groupId)) {
             coordinates.put(groupId, groupName);
             return true;

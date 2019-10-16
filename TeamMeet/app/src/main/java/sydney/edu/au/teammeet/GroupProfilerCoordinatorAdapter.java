@@ -74,4 +74,9 @@ public class GroupProfilerCoordinatorAdapter extends RecyclerView.Adapter<GroupP
         return coordinatorList.size();
     }
 
+    public void addMemberToAdapter(final Context context, String coordinator) {
+        coordinatorList.add(coordinator);
+        notifyDataSetChanged();
+    }
+
 }
