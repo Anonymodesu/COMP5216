@@ -58,6 +58,10 @@ public class Group {
         this.timetable = timetable;
     }
 
+    private Timetable getTimetable(Timetable timetable) {
+        return timetable;
+    }
+
     public void removeMember(String member) { members.remove(member); }
 
 }

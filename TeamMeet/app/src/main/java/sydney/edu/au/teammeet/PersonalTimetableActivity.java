@@ -196,7 +196,7 @@ public class  PersonalTimetableActivity extends BaseActivity {
         currentUser.update("timetable", json);
     }
 
-    /** get json data from SharedPreferences and then restore the timetable */
+    /** get json data from SharedPreferences or Firebase and then restore the timetable */
     private void loadSavedData() {
 
         final Gson gson = new Gson();
@@ -214,7 +214,7 @@ public class  PersonalTimetableActivity extends BaseActivity {
             setupMassFill();
 
         } else {
-            
+
             //check if firebase-stored timetable exists
             DocumentReference userReference = mFirestore.collection("Users").document(userId);
             userReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
