@@ -68,6 +68,10 @@ public class  PersonalTimetableActivity extends BaseActivity {
         setUpGlobalNav(PersonalTimetableActivity.this, "Timetable");
 
         //[END_of setup page header and navigation]
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser userAuth = mAuth.getCurrentUser();
+        userId = userAuth.getUid();
+
 
         timetable = loadSavedData();
         if(timetable == null) {
