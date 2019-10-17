@@ -1,5 +1,9 @@
 package sydney.edu.au.teammeet;
 
+import android.app.NotificationManager;
+import android.app.RemoteInput;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -110,7 +115,7 @@ public class AddNewMemberActivity extends BaseActivity {
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        Group group = documentSnapshot.toObject(Group.class);
+                        final Group group = documentSnapshot.toObject(Group.class);
                         //group.addMember(txtMemberEmail.getText().toString());
 
                         //TODO:添加Name
@@ -130,6 +135,35 @@ public class AddNewMemberActivity extends BaseActivity {
                                     finish();
                                 }
                             });
+                            newMemberDoc.get()
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot memberDocumentSnapshot) {
+                                            User newMemberUser = memberDocumentSnapshot.toObject(User.class);
+                                            assert newMemberUser != null;
+
+                                            newMemberUser.addToMemberOf(groupDoc.getId(), group.getGroupName());
+
+
+                                            // add to the database
+                                            newMemberDoc.set(newMemberUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    Intent intent = new Intent();
+                                                    setResult(RESULT_OK, intent);
+                                                    finish();
+                                                }
+                                            });
+
+
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    showSnackbar("Error in add new member", AddNewMemberActivity.this);
+                                }
+                            });
+
                         }else {
                             Toast.makeText(AddNewMemberActivity.this, "User is already in the group", Toast.LENGTH_SHORT).show();
                         }
@@ -140,6 +174,41 @@ public class AddNewMemberActivity extends BaseActivity {
                 showSnackbar("Error in add new member", AddNewMemberActivity.this);
             }
         });
+    }
+
+
+    public static class NotificationReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //getting the remote input bundle from intent
+            Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
+
+            //if there is some input
+            if (remoteInput != null) {
+
+                //getting the input value
+                CharSequence name = remoteInput.getCharSequence(MainActivity.NOTIFICATION_REPLY);
+
+                //updating the notification with the input value
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, MainActivity.CHANNNEL_ID)
+                        .setSmallIcon(android.R.drawable.ic_menu_info_details)
+                        .setContentTitle("Hey Thanks, " + name);
+                NotificationManager notificationManager = (NotificationManager) context.
+                        getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.notify(MainActivity.NOTIFICATION_ID, mBuilder.build());
+            }
+
+            //if help button is clicked
+            if (intent.getIntExtra(MainActivity.KEY_INTENT_ACCEPT, -1) == MainActivity.REQUEST_CODE_ACCEPT) {
+                Toast.makeText(context, "You Clicked ACCEPT", Toast.LENGTH_LONG).show();
+            }
+
+            //if more button is clicked
+            if (intent.getIntExtra(MainActivity.KEY_INTENT_DECLINE, -1) == MainActivity.REQUEST_CODE_DECLINE) {
+                Toast.makeText(context, "You Clicked DECLINE", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }
 
