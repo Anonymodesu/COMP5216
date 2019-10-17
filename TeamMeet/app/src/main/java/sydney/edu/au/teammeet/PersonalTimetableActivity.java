@@ -55,7 +55,6 @@ public class  PersonalTimetableActivity extends BaseActivity {
     private LockableRecyclerView timetableRecyclerView;
     private PersonalTimetableAdapter timetableGridAdapter;
     private LockableScrollView timetableHorizontalScroll;
-    private Timetable timetable;
     private boolean standardZoom; //whether the timetable is zoomed at standard level
     private Mode currentMode;
 
@@ -83,7 +82,7 @@ public class  PersonalTimetableActivity extends BaseActivity {
         loadSavedData();
     }
 
-    private void setupTimetable() {
+    private void setupTimetable(Timetable timetable) {
         timetableHorizontalScroll = findViewById(R.id.timetable_scroll_view);
         timetableHorizontalScroll.setNestedScrollingEnabled(false);
 
@@ -164,7 +163,9 @@ public class  PersonalTimetableActivity extends BaseActivity {
         int newSize = standardZoom ? TimetableAdapter.LARGE_CELL_SIZE : TimetableAdapter.SMALL_CELL_SIZE;
         standardZoom = !standardZoom;
 
-        timetableGridAdapter = new PersonalTimetableAdapter(this, timetable, newSize);
+        Timetable temp = timetableGridAdapter.getTimetable();
+
+        timetableGridAdapter = new PersonalTimetableAdapter(this, temp, newSize);
         timetableGridAdapter.switchMode(currentMode);
         timetableRecyclerView.setAdapter(timetableGridAdapter);
 
@@ -184,7 +185,7 @@ public class  PersonalTimetableActivity extends BaseActivity {
         SharedPreferences.Editor editor = mPref.edit();
 
         Gson gson = new Gson();
-        String json = gson.toJson(timetable);
+        String json = gson.toJson(timetableGridAdapter.getTimetable());
 
         editor.putString(SHARED_PREF_TIMETABLE, json);
         editor.putString(SHARED_PREF_USER, userId);
@@ -207,10 +208,10 @@ public class  PersonalTimetableActivity extends BaseActivity {
 
         //check if the locally stored user timetable is same as current user
         if(userId.equals(storedUser)) {
-            this.timetable = gson.fromJson(jsonTimetable, Timetable.class);
+            Timetable timetable = gson.fromJson(jsonTimetable, Timetable.class);
 
 
-            setupTimetable();
+            setupTimetable(timetable);
             setupMassFill();
 
         } else {
@@ -220,6 +221,8 @@ public class  PersonalTimetableActivity extends BaseActivity {
             userReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                    Timetable timetable;
 
                     if(task.isSuccessful()) {
                         String timetableJson = task.getResult().getString("timetable");
@@ -231,7 +234,7 @@ public class  PersonalTimetableActivity extends BaseActivity {
                         timetable = new Timetable();
                     }
 
-                    setupTimetable();
+                    setupTimetable(timetable);
                     setupMassFill();
                 }
             });

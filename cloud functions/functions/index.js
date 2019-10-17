@@ -11,6 +11,7 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
 
+/*
 // Take the text parameter passed to this HTTP endpoint and insert it into the
 // Realtime Database under the path /messages/:pushId/original
 exports.addMessage = functions.https.onRequest(async (req, res) => {
@@ -35,7 +36,7 @@ exports.makeUppercase = functions.database.ref('/messages/{pushId}/original')
       // Setting an "uppercase" sibling in the Realtime Database returns a Promise.
       return snapshot.ref.parent.child('uppercase').set(uppercase);
     });
-
+*/
 exports.getGroupTimes = functions.firestore
 	.document('Users/{userId}')
 	.onUpdate((change, context) => { 
@@ -51,15 +52,25 @@ exports.getGroupTimes = functions.firestore
             .then(user => {
 
             	if(user.exists) {
-            		console.log('Got coordinators: ' + user.data().coordinates);
-            		return user.data.coordinates;
+            		const coordinatedGroups = Object.keys(user.data().coordinates);
+            		const memberGroups = Object.keys(user.data().isMemberOf);
+            		const allGroups = memberGroups.concat(coordinatedGroups);
+
+            		console.log("first");
+
+            		return allGroups;
             	} else {
             		throw new Error(context.params.userId + "doesn't exist?");
             	}
 
+            }).then(allGroups => {
+            	console.log(allGroups);
+
+            	return null;
             });
 
-            console.log(coordinators);
+
+            return coordinators;
 		}
 
 		return null;
