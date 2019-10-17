@@ -44,33 +44,94 @@ exports.getGroupTimes = functions.firestore
 		const oldTable = change.before.data().timetable;
 		const newTable = change.after.data().timetable;
 
+		console.log(oldTable); //oldTable is undefined if it hasnt been created before
+
 		if(oldTable !== newTable) {
-			coordinators = admin.firestore()
+/*
+			promise = admin.firestore()
             .collection('Users')
             .doc(context.params.userId)
             .get()
             .then(user => {
 
+            	//retrieve group ids which the user is a member or coordinator of
             	if(user.exists) {
             		const coordinatedGroups = Object.keys(user.data().coordinates);
             		const memberGroups = Object.keys(user.data().isMemberOf);
             		const allGroups = memberGroups.concat(coordinatedGroups);
-
-            		console.log("first");
-
             		return allGroups;
+
             	} else {
-            		throw new Error(context.params.userId + "doesn't exist?");
+            		throw new Error(context.params.userId + " doesn't exist?");
             	}
 
-            }).then(allGroups => {
-            	console.log(allGroups);
+            }).then(groupIds => {
 
-            	return null;
+            	//retrieve groups which the user is a part of
+            	console.log(groupIds);
+
+            	
+            	for(i = 0; i < groupIds.length; i++){
+            		groupPromise = admin.firestore()
+		            .collection('Groups')
+		            .doc(groupIds[i])
+		            .get()
+		            .then(group => {
+
+		            	if(group.exists) {
+		            		print(group.data().groupName);
+
+		            		return null;
+
+		            	} else {
+		            		throw new Error(groupIds[i] + " doesn't exist?");
+		            	}
+		            });
+
+		            return groupPromise;
+            	}
+            	
+
+
+
             });
+*/
+			promise = admin.firestore()
+            .collection('Groups')
+            .where('coordinators', 'array-contains', context.params.userId)
+            .get()
+            .then(coordinatedGroups => {
+
+            	groups = [];
+
+            	coordinatedGroups.forEach(coordinatedGroup => {
+            		console.log(coordinatedGroup.data().groupName)
+            		groups.push(coordinatedGroup.data());
+            	});
 
 
-            return coordinators;
+            	return admin.firestore()
+	            .collection('Groups')
+	            .where('members', 'array-contains', context.params.userId)
+	            .get()
+	            .then(normalGroups => {
+
+	            	normalGroups.forEach(normalGroup => {
+	            		console.log(normalGroup.data().groupName)
+	            		groups.push(normalGroup.data());
+	            	});
+	            	return groups;
+
+	            });
+
+
+            }).then(groups => {
+
+            	
+            	
+            })
+
+            return promise;
 		}
 
 		return null;

@@ -6,7 +6,7 @@ public class Group {
     private ArrayList<String> coordinators;
     public ArrayList<String> members;
     private String groupName;
-    private Timetable timetable;
+    private int[] timetable;
 
     public Group(){}
 
@@ -14,7 +14,7 @@ public class Group {
         this.coordinators = coordinators;
         this.members = members;
         this.groupName = groupName;
-        this.timetable = new Timetable();
+        this.timetable = new int[Timetable.NUM_CELLS];
     }
 
     public void setCoordinators(ArrayList<String> coordinators) {
@@ -54,11 +54,11 @@ public class Group {
         this.groupName = groupName;
     }
 
-    private void setTimetable(Timetable timetable) {
+    private void setTimetable(int[] timetable) {
         this.timetable = timetable;
     }
 
-    private Timetable getTimetable(Timetable timetable) {
+    private int[] getTimetable(int[] timetable) {
         return timetable;
     }
 
