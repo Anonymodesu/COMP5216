@@ -37,116 +37,155 @@ exports.makeUppercase = functions.database.ref('/messages/{pushId}/original')
       return snapshot.ref.parent.child('uppercase').set(uppercase);
     });
 */
-exports.getGroupTimes = functions.firestore
+exports.getGroupTimes = functions.https.onCall((data, context) => {
+
+	function sortPriorities(priorities) {
+		// Create items array
+		var items = Object.keys(priorities).map(function(key) {
+		return [Number(key), priorities[key]];
+		});
+
+		// Sort the array based on the second element
+		items.sort((first, second) => {
+		return first[1] - second[1];
+		});
+
+		return items
+	}
+
+	//returns a dictionary mapping meeting start times to their weighting
+	//each personal timetable should have the same length
+	//group times indicate timeslots that should not be considered for a group meeting
+	//additionalTimes = number of total timeslots - 1
+	function timetableWeights(personalTimetables, additionalTimes) {
+		const numDays = 7;
+
+		//load database with initial values
+		var priorities = {};
+		for(var i = 0; i < personalTimetables[0].length - additionalTimes; i++) {
+			priorities[i] = 0;
+		}
+
+		//compile each personal timetable's weightings
+		for(var j = 0; j < personalTimetables.length; j++) {
+		var currentTimetable = personalTimetables[j];
+
+			for(var startTime = 0; startTime < currentTimetable.length  - additionalTimes; startTime++) {
+				for(var duration = 0; duration <= additionalTimes; duration++) {
+				priorities[startTime] += currentTimetable[startTime + duration]
+
+				}
+			}
+		}
+
+		return priorities;
+	}
+
+
+
+	const duration = data.duration;
+	const numTimes = data.numTimes;
+	const groupID = data.groupID;
+
+	var db = admin.firestore();
+
+	return db
+	.collection('Groups')
+	.doc(groupID)
+	.get()
+	.then(group => { //here we retrieve all the coordinator and member docs of the group
+
+		const memberIDs = group.data().coordinators.concat(group.data().members);
+		var memberDocs = []
+
+		function pushMember(index) { //need a double function closure here since index doesn't update properly in for loop
+			return function(user) {
+				memberDocs.push(user);
+
+				return db
+				.collection('Users')
+				.doc(memberIDs[index])
+				.get()
+			}
+		}
+
+		var promise = db
+		.collection('Users')
+		.doc(memberIDs[0])
+		.get();
+
+		for(i = 1; i < memberIDs.length; i++) { //chain promises in for loop
+			promise = promise.then(pushMember(i));
+		}
+
+		promise = promise.then(user => {
+			memberDocs.push(user);
+			return memberDocs;
+		})
+
+		return promise;
+
+	}).then(members => { //calculate timeslot priorities to return to client app
+		var personalTimetables = [];
+
+		for(i = 0; i < members.length; i++) {
+			const timetable = members[i].data().timetable;
+
+			//newly created users have an empty timetable; they can be ignored
+			if(typeof(timetable) !== "undefined" && timetable !== null) {
+				personalTimetables.push(JSON.parse(timetable).availabilities)
+			}
+		}
+
+
+		var priorities = timetableWeights(personalTimetables, duration - 1);
+		priorities = sortPriorities(priorities);
+		console.log(priorities);
+
+		var times = [];
+		var weights = [];
+		for(j = 0; j < numTimes; j++) {
+			times.push(priorities[j][0]);
+			weights.push(priorities[j][1]);
+		}
+
+
+		return {
+			times : times,
+			weights : weights
+		};
+	});
+
+});
+
+
+
+exports.timetableClash = functions.firestore
 	.document('Users/{userId}')
 	.onUpdate((change, context) => { 
 
-		const oldTable = change.before.data().timetable;
-		const newTable = change.after.data().timetable;
+		function arrayEquals(arr1, arr2) {
+			for(i = 0; i < arr1.length; i++) {
+				if(arr1[i] !== arr2[i]) {
+					return false;
+				}
+			}
 
-		console.log(oldTable); //oldTable is undefined if it hasnt been created before
+			return true;
+		}
+
+		var oldTable = change.before.data().timetable;
+		var newTable = change.after.data().timetable;
+
+		/*
+		if(typeof(oldTable) === "undefined" || oldTable === null) {
+			oldTable 
+		}
 
 		if(oldTable !== newTable) {
-/*
-			promise = admin.firestore()
-            .collection('Users')
-            .doc(context.params.userId)
-            .get()
-            .then(user => {
 
-            	//retrieve group ids which the user is a member or coordinator of
-            	if(user.exists) {
-            		const coordinatedGroups = Object.keys(user.data().coordinates);
-            		const memberGroups = Object.keys(user.data().isMemberOf);
-            		const allGroups = memberGroups.concat(coordinatedGroups);
-            		return allGroups;
-
-            	} else {
-            		throw new Error(context.params.userId + " doesn't exist?");
-            	}
-
-            }).then(groupIds => {
-
-            	//retrieve groups which the user is a part of
-            	console.log(groupIds);
-
-            	
-            	for(i = 0; i < groupIds.length; i++){
-            		groupPromise = admin.firestore()
-		            .collection('Groups')
-		            .doc(groupIds[i])
-		            .get()
-		            .then(group => {
-
-		            	if(group.exists) {
-		            		print(group.data().groupName);
-
-		            		return null;
-
-		            	} else {
-		            		throw new Error(groupIds[i] + " doesn't exist?");
-		            	}
-		            });
-
-		            return groupPromise;
-            	}
-            	
-
-
-
-            });
-*/
-			var db = admin.firestore();
-
-			promise = db
-            .collection('Groups')
-            .where('coordinators', 'array-contains', context.params.userId)
-            .get()
-            .then(coordinatedGroups => {
-
-            	groups = [];
-
-            	coordinatedGroups.forEach(coordinatedGroup => {
-            		groups.push(coordinatedGroup);
-            	});
-
-
-            	return db
-	            .collection('Groups')
-	            .where('members', 'array-contains', context.params.userId)
-	            .get()
-	            .then(normalGroups => {
-
-	            	normalGroups.forEach(normalGroup => {
-	            		groups.push(normalGroup);
-	            	});
-	            	return groups;
-
-	            });
-
-
-            }).then(groups => {
-
-            	var batch = db.batch();
-
-				for(i = 0; i < groups.length; i++) {
-					var groupRef = db.collection('Groups').doc(groups[i].id);
-					const groupTimetable = groups[i].data().timetable;
-
-					//group timetable hasnt been defined yet
-            		if(typeof groupTimetable === "undefined") { 
-            			batch.set(groupRef, {'timetable' : newTable.availabilities});
-
-            		//first time uploading personal timetable to server
-            		} 
-            	}
-
-            	return batch;
-            	
-            })
-
-            return promise;
 		}
+		*/
 
 		return null;
 	});
