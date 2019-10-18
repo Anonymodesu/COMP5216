@@ -96,7 +96,9 @@ exports.getGroupTimes = functions.firestore
 
             });
 */
-			promise = admin.firestore()
+			var db = admin.firestore();
+
+			promise = db
             .collection('Groups')
             .where('coordinators', 'array-contains', context.params.userId)
             .get()
@@ -105,20 +107,18 @@ exports.getGroupTimes = functions.firestore
             	groups = [];
 
             	coordinatedGroups.forEach(coordinatedGroup => {
-            		console.log(coordinatedGroup.data().groupName)
-            		groups.push(coordinatedGroup.data());
+            		groups.push(coordinatedGroup);
             	});
 
 
-            	return admin.firestore()
+            	return db
 	            .collection('Groups')
 	            .where('members', 'array-contains', context.params.userId)
 	            .get()
 	            .then(normalGroups => {
 
 	            	normalGroups.forEach(normalGroup => {
-	            		console.log(normalGroup.data().groupName)
-	            		groups.push(normalGroup.data());
+	            		groups.push(normalGroup);
 	            	});
 	            	return groups;
 
@@ -127,7 +127,21 @@ exports.getGroupTimes = functions.firestore
 
             }).then(groups => {
 
-            	
+            	var batch = db.batch();
+
+				for(i = 0; i < groups.length; i++) {
+					var groupRef = db.collection('Groups').doc(groups[i].id);
+					const groupTimetable = groups[i].data().timetable;
+
+					//group timetable hasnt been defined yet
+            		if(typeof groupTimetable === "undefined") { 
+            			batch.set(groupRef, {'timetable' : newTable.availabilities});
+
+            		//first time uploading personal timetable to server
+            		} 
+            	}
+
+            	return batch;
             	
             })
 
