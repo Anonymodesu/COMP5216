@@ -1,5 +1,6 @@
 package sydney.edu.au.teammeet;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,8 +10,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,7 +37,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GroupProfileActivity extends BaseActivity {
+public class GroupProfileActivity extends BaseActivity implements OnItemClicked {
 
     private Toolbar toolbar;
     //private RecyclerView userRecyclerView
@@ -48,6 +51,7 @@ public class GroupProfileActivity extends BaseActivity {
     private String currentUserID, userName, userEmail;
     private String memberEmail;
     private User user;
+    private String groupID;
     private TextView groupName;
     //private sydney.edu.au.teammeet.UserViewAdapter userAdapter;
     private sydney.edu.au.teammeet.GroupProfilerCoordinatorAdapter coordinatorAdapter;
@@ -81,7 +85,7 @@ public class GroupProfileActivity extends BaseActivity {
         groupName = (TextView) findViewById(R.id.group_name);
 
         String groupname = getIntent().getStringExtra("groupname");
-        final String groupID = getIntent().getStringExtra("groupid");
+        groupID = getIntent().getStringExtra("groupid");
         groupName.setText(groupname);
         saveGroupId();
 
@@ -183,6 +187,7 @@ public class GroupProfileActivity extends BaseActivity {
 
                                        //userAdapter = new sydney.edu.au.teammeet.UserViewAdapter(usernames.toArray(new String[usernames.size()]),groupMember, GroupProfileActivity.this);
                                        membersAdapter = new GroupProfileMemberAdapter(usernames, groupMemberIDs, GroupProfileActivity.this);
+                                       membersAdapter.setOnClick(GroupProfileActivity.this);
                                        memberRecycleView.setAdapter(membersAdapter);
                                        }
                                    }
@@ -311,5 +316,71 @@ public class GroupProfileActivity extends BaseActivity {
                         return result;
                     }
                 });
+    @Override
+    public void onItemClick(final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Make " + membersAdapter.getMemberNameList(position) + " a coordinator?");
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                final DocumentReference groupDoc = mFirestore.collection("Groups").document(groupID);
+                groupDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Group group = documentSnapshot.toObject(Group.class);
+                        group.removeMember(membersAdapter.getMemberList(position));
+                        boolean addedCoordinator = group.addCoordinator(membersAdapter.getMemberList(position));
+                        if (addedCoordinator) {
+
+                            groupDoc.set(group).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+
+                                    final DocumentReference userDoc = mFirestore.collection("Users").document(membersAdapter.getMemberList(position));
+                                    userDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            User user = documentSnapshot.toObject(User.class);
+
+                                            user.removeFromMembers(groupID);
+                                            boolean updatedUser = user.addToCoordinates(groupID, groupName.getText().toString());
+
+                                            if (updatedUser) {
+                                                userDoc.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        String savedName = membersAdapter.getMemberNameList(position);
+                                                        membersAdapter.deleteMemberFromList(GroupProfileActivity.this, position);
+                                                        coordinatorAdapter.addMemberToAdapter(GroupProfileActivity.this, savedName);
+                                                        Toast.makeText(GroupProfileActivity.this, "Success!", Toast.LENGTH_LONG).show();
+                                                    }
+                                                });
+                                            } else {
+                                                Toast.makeText(GroupProfileActivity.this, membersAdapter.getMemberNameList(position) + " is already a coordinator!", Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+
+                        } else {
+                            Toast.makeText(GroupProfileActivity.this, membersAdapter.getMemberNameList(position) + " is already a coordinator!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+        });
+
+        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        builder.create().show();
+
     }
 }
+
