@@ -270,7 +270,7 @@ public class GroupProfileActivity extends BaseActivity {
 
     };
 
-    public void timetableRefresh(View view) {
+    public void timetableQuery(View view) {
         getGroupTimes().addOnCompleteListener(new OnCompleteListener<Map<String, Object> >() {
             @Override
             public void onComplete(@NonNull Task<Map<String, Object> > task) {

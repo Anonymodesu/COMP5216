@@ -58,11 +58,12 @@ exports.getGroupTimes = functions.https.onCall((data, context) => {
 	//group times indicate timeslots that should not be considered for a group meeting
 	//additionalTimes = number of total timeslots - 1
 	function timetableWeights(personalTimetables, additionalTimes) {
-		const numDays = 7;
+		const numDays = 7; //adding numDays to an index increments the timeslot by 1 position forward in time
+		//adding 1 to an index increments the timeslot 1 day forward in time
 
 		//load database with initial values
 		var priorities = {};
-		for(var i = 0; i < personalTimetables[0].length - additionalTimes; i++) {
+		for(var i = 0; i < personalTimetables[0].length - additionalTimes * numDays; i++) {
 			priorities[i] = 0;
 		}
 
@@ -70,10 +71,9 @@ exports.getGroupTimes = functions.https.onCall((data, context) => {
 		for(var j = 0; j < personalTimetables.length; j++) {
 		var currentTimetable = personalTimetables[j];
 
-			for(var startTime = 0; startTime < currentTimetable.length  - additionalTimes; startTime++) {
-				for(var duration = 0; duration <= additionalTimes; duration++) {
-				priorities[startTime] += currentTimetable[startTime + duration]
-
+			for(var startTime = 0; startTime < currentTimetable.length  - additionalTimes * numDays; startTime++) {
+				for(var timeslot = 0; timeslot <= additionalTimes ; timeslot++) {
+					priorities[startTime] += currentTimetable[startTime + timeslot * numDays];
 				}
 			}
 		}
@@ -82,10 +82,14 @@ exports.getGroupTimes = functions.https.onCall((data, context) => {
 	}
 
 
-
 	const duration = data.duration;
 	const numTimes = data.numTimes;
 	const groupID = data.groupID;
+
+	var bestTimeslots = { //placeholder value to return to user if something fails
+		times : [-1],
+		weights : [-1]
+	};
 
 	var db = admin.firestore();
 
@@ -149,11 +153,19 @@ exports.getGroupTimes = functions.https.onCall((data, context) => {
 			weights.push(priorities[j][1]);
 		}
 
-
-		return {
+		bestTimeslots = {
 			times : times,
 			weights : weights
 		};
+
+		return db
+		.collection('Groups')
+		.doc(groupID)
+		.update({
+			bestTimes : bestTimeslots
+		})
+	}).then(() => {
+		return bestTimeslots;
 	});
 
 });

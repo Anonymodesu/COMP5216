@@ -21,124 +21,125 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/circle_button_shape" />
 
-       <LinearLayout
-           android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           android:orientation="vertical"
-           android:layout_below="@+id/add_new_member">
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
 
-           <LinearLayout
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:orientation="horizontal"
-               >
+        android:text="Button" />
 
-               <TextView
-                   android:id = "@+id/group_name_title"
-                   android:textSize="20dp"
-                   android:textStyle="bold"
-                   android:textColor="@color/colorPrimary"
-                   android:text="Current Group: "
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:layout_marginTop="10dp"
-                   android:layout_marginLeft="10dp"
-                   android:gravity="center"
-                   />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@+id/add_new_member">
 
-               <TextView
-                   android:id = "@+id/group_name"
-                   android:textSize="20dp"
-                   android:textColor="@color/colorPrimary"
-                   android:text="Group Profile"
-                   android:textStyle="bold"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:layout_marginTop="10dp"
-                   android:layout_marginLeft="15dp"
-                   android:gravity="center"
-                   />
-           </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
 
-           <TextView
-               android:id = "@+id/coordinator_list"
-               android:textSize="15dp"
-               android:textColor="@color/colorPrimary"
-               android:text="Coordinators"
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_marginTop="15dp"
-               android:layout_marginLeft="10dp"
-               android:layout_marginRight="10dp"
-               android:background="#DCDCDC"
-               />
+            <TextView
+                android:id = "@+id/group_name_title"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"
+                android:text="Current Group: "
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                />
 
-           <androidx.recyclerview.widget.RecyclerView
-               android:id="@+id/list_of_coordinator"
-               android:layout_width="match_parent"
-               android:layout_height="300dp"
-               android:layout_marginTop="5dp"
-               android:layout_below="@+id/group_name"
-               android:layout_weight="1"
-               android:scrollbars="horizontal" />
+            <TextView
+                android:id = "@+id/group_name"
+                android:textSize="20dp"
+                android:textColor="@color/colorPrimary"
+                android:text="Group Profile"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="15dp"
+                android:gravity="center"
+                />
+        </LinearLayout>
 
-           <TextView
-               android:id = "@+id/members_list"
-               android:textSize="15dp"
-               android:textColor="@color/colorPrimary"
-               android:text="Members"
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_marginTop="25dp"
-               android:layout_marginLeft="10dp"
-               android:layout_marginRight="10dp"
-               android:background="#DCDCDC"
-               />
+        <TextView
+            android:id = "@+id/coordinator_list"
+            android:textSize="15dp"
+            android:textColor="@color/colorPrimary"
+            android:text="Coordinators"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#DCDCDC"
+            />
 
-           <androidx.recyclerview.widget.RecyclerView
-               android:id="@+id/list_of_members"
-               android:layout_width="match_parent"
-               android:layout_height="match_parent"
-               android:layout_marginTop="5dp"
-               android:layout_below="@+id/list_of_coordinator"
-               android:layout_weight="1"
-               android:scrollbars="vertical" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list_of_coordinator"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/group_name"
+            android:layout_weight="1"
+            android:scrollbars="horizontal" />
 
-           <Button
-               android:id="@+id/timetable_refresh"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:onClick="timetableRefresh"
-               android:text="Refresh Timetable" />
+        <TextView
+            android:id = "@+id/members_list"
+            android:textSize="15dp"
+            android:textColor="@color/colorPrimary"
+            android:text="Members"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#DCDCDC"
+            />
 
-           <!-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list_of_members"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/list_of_coordinator"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:scrollbars="vertical" />
 
-           <androidx.recyclerview.widget.RecyclerView
-               android:id="@+id/list_of_coord_groups"
-               android:layout_width="match_parent"
-               android:layout_height="match_parent"
-               android:layout_below="@+id/group_profile"
-               android:layout_weight="1"
-               android:scrollbars="vertical" />
+        <!-->
 
-           <TextView
-               android:id = "@+id/members_in_group"
-               android:text="Members in Group"
-               android:textSize="24dp"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_below="@+id/list_of_coord_groups"
-               />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list_of_coord_groups"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/group_profile"
+            android:layout_weight="1"
+            android:scrollbars="vertical" />
 
-           <androidx.recyclerview.widget.RecyclerView
-               android:id = "@+id/list_of_members_in_group"
-               android:layout_width="match_parent"
-               android:layout_height="match_parent"
-               android:layout_below="@+id/members_in_group"
-               android:layout_weight="1"
-               android:scrollbars = "vertical"
-               />
-           <!-->
-</LinearLayout>
+        <TextView
+            android:id = "@+id/members_in_group"
+            android:text="Members in Group"
+            android:textSize="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/list_of_coord_groups"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id = "@+id/list_of_members_in_group"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/members_in_group"
+            android:layout_weight="1"
+            android:scrollbars = "vertical"
+            />
+        <!-->
+    </LinearLayout>
+
 
 </RelativeLayout>
