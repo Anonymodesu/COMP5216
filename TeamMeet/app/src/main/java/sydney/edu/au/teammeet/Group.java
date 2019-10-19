@@ -1,12 +1,18 @@
 package sydney.edu.au.teammeet;
 
+import com.google.firebase.firestore.PropertyName;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Group {
     private ArrayList<String> coordinators;
     public ArrayList<String> members;
     private String groupName;
-    private int[] timetable;
+
+    @PropertyName("bestTimes")
+    private Map<String, ArrayList<Long>> bestTimes;
 
     public Group(){}
 
@@ -14,7 +20,9 @@ public class Group {
         this.coordinators = coordinators;
         this.members = members;
         this.groupName = groupName;
-        this.timetable = new int[Timetable.NUM_CELLS];
+        this.bestTimes = new HashMap<>();
+        bestTimes.put("times", new ArrayList<Long>());
+        bestTimes.put("weights", new ArrayList<Long>());
     }
 
     public void setCoordinators(ArrayList<String> coordinators) {
@@ -54,12 +62,12 @@ public class Group {
         this.groupName = groupName;
     }
 
-    private void setTimetable(int[] timetable) {
-        this.timetable = timetable;
+    public void setBestTimes(Map<String, ArrayList<Long>> bestTimes) {
+        this.bestTimes = bestTimes;
     }
 
-    private int[] getTimetable(int[] timetable) {
-        return timetable;
+    public Map<String, ArrayList<Long>> getBestTimes() {
+        return bestTimes;
     }
 
     public void removeMember(String member) { members.remove(member); }

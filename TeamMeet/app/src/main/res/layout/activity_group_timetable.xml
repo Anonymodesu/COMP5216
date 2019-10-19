@@ -6,4 +6,39 @@
     android:layout_height="match_parent"
     tools:context=".GroupTimetableActivity">
 
+    <include
+        android:id="@+id/global_header"
+        layout="@layout/global_header">
+    </include>
+
+    <Button
+        android:id="@+id/return_to_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/global_header"
+        android:onClick="returnToMenu"
+        android:text="Return to Group" />
+
+    <Button
+        android:id="@+id/refresh_timetable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/return_to_group"
+        android:text="Refresh Timetable" />
+
+    <Button
+        android:id="@+id/query_timetable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/refresh_timetable"
+        android:layout_toEndOf="@id/refresh_timetable"
+        android:onClick="timetableQuery"
+        android:text="Query New Timetable" />
+
+    <ListView
+        android:id="@+id/meeting_times_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/refresh_timetable" />
+
 </RelativeLayout>

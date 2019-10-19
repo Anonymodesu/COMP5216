@@ -64,7 +64,6 @@ public class GroupProfileActivity extends BaseActivity implements OnItemClicked 
     CollectionReference groups;
     FirebaseUser currentUser;
     DocumentReference userDoc;
-    private FirebaseFunctions mFunctions;
 
 
     private boolean coordinates;
@@ -113,7 +112,6 @@ public class GroupProfileActivity extends BaseActivity implements OnItemClicked 
         groups = mFirestore.collection("Groups");
         groupDoc = groups.document(groupID);
         users = mFirestore.collection("Users");
-        mFunctions = FirebaseFunctions.getInstance();
 
         coordinates = getIntent().getBooleanExtra("coordinates", false);
         showUsers();
@@ -275,47 +273,12 @@ public class GroupProfileActivity extends BaseActivity implements OnItemClicked 
 
     };
 
-    public void timetableQuery(View view) {
-        getGroupTimes().addOnCompleteListener(new OnCompleteListener<Map<String, Object> >() {
-            @Override
-            public void onComplete(@NonNull Task<Map<String, Object> > task) {
-                if(task.isSuccessful()) {
-                    Map<String, Object> data = task.getResult();
-                    ArrayList<Integer> times = (ArrayList<Integer>) data.get("times");
-                    ArrayList<Integer> weights = (ArrayList<Integer>) data.get("weights");
-
-                    for(int i = 0; i < times.size(); i++) {
-                        Log.i("get group times", times.get(i) + "," + weights.get(i));
-                    }
-                    //Log.i("get group times", "" +task.getResult().size());
-                } else {
-                    Log.e("get group times", task.getException().getMessage());
-                }
-            }
-        });
+    public void gotoGroupMeetingTimes(View view) {
+        Intent intent = new Intent(GroupProfileActivity.this, GroupTimetableActivity.class);
+        intent.putExtra("groupID", groupID);
+        startActivity(intent);
     }
 
-
-    private Task<Map<String, Object> > getGroupTimes() {
-        // Create the arguments to the callable function.
-        Map<String, Object> data = new HashMap<>();
-        data.put("duration", 1);
-        data.put("numTimes", 2);
-        data.put("groupID", groupDoc.getId());
-
-        return mFunctions
-                .getHttpsCallable("getGroupTimes")
-                .call(data)
-                .continueWith(new Continuation<HttpsCallableResult, Map<String, Object> >() {
-                    @Override
-                    public Map<String, Object> then(@NonNull Task<HttpsCallableResult> task) throws Exception {
-                        // This continuation runs on either success or failure, but if the task
-                        // has failed then getResult() will throw an Exception which will be
-                        // propagated down.
-                        Map<String, Object>  result = (Map<String, Object> ) task.getResult().getData();
-                        return result;
-                    }
-                });
     @Override
     public void onItemClick(final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
