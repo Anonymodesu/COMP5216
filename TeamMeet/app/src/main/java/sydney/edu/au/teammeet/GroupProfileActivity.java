@@ -71,7 +71,7 @@ public class GroupProfileActivity extends BaseActivity implements OnItemClicked 
         setContentView(R.layout.activity_individual_group);
 
         //set up global nav drawer
-        setUpGlobalNav(GroupProfileActivity.this,"Group Profile");
+        setUpGlobalNav(GroupProfileActivity.this, "Group Profile");
 
         groupName = (TextView) findViewById(R.id.group_name);
 
@@ -158,34 +158,34 @@ public class GroupProfileActivity extends BaseActivity implements OnItemClicked 
                         coordinatorIDs.addAll(group.getCoordinators());
                         userIDs.addAll(group.getMembers());
 
-                       for (String user: userIDs) {
+                        for (String user : userIDs) {
 
-                           //final DocumentReference userDoc = users.document(memberId);
-                           final DocumentReference userDoc = mFirestore.collection("Users").document(user);
-                           userDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                               @Override
-                               public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                   User user = documentSnapshot.toObject(User.class);
-                                   userName = user.getUsername();
-                                   String userId = userDoc.getId();
+                            //final DocumentReference userDoc = users.document(memberId);
+                            final DocumentReference userDoc = mFirestore.collection("Users").document(user);
+                            userDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    User user = documentSnapshot.toObject(User.class);
+                                    userName = user.getUsername();
+                                    String userId = userDoc.getId();
 
-                                   usernames.add(userName);
-                                   groupMemberIDs.add(userId);
+                                    usernames.add(userName);
+                                    groupMemberIDs.add(userId);
 //                                 Log.e("TAGGING THIS SHIT", "The size is " + usernames.size());
 
-                                   if (usernames.size() == userIDs.size()) {
+                                    if (usernames.size() == userIDs.size()) {
 
-                                       //userAdapter = new sydney.edu.au.teammeet.UserViewAdapter(usernames.toArray(new String[usernames.size()]),groupMember, GroupProfileActivity.this);
-                                       membersAdapter = new GroupProfileMemberAdapter(usernames, groupMemberIDs, GroupProfileActivity.this);
-                                       membersAdapter.setOnClick(GroupProfileActivity.this);
-                                       memberRecycleView.setAdapter(membersAdapter);
-                                       }
-                                   }
-                               });
-                       }
+                                        //userAdapter = new sydney.edu.au.teammeet.UserViewAdapter(usernames.toArray(new String[usernames.size()]),groupMember, GroupProfileActivity.this);
+                                        membersAdapter = new GroupProfileMemberAdapter(usernames, groupMemberIDs, GroupProfileActivity.this);
+                                        membersAdapter.setOnClick(GroupProfileActivity.this);
+                                        memberRecycleView.setAdapter(membersAdapter);
+                                    }
+                                }
+                            });
+                        }
 
-                       //TODO: 遍历循环group里的coordinator
-                        for(String coordinator : coordinatorIDs){
+                        //TODO: 遍历循环group里的coordinator
+                        for (String coordinator : coordinatorIDs) {
 
                             final DocumentReference coordinatorDoc = mFirestore.collection("Users").document(coordinator);
                             coordinatorDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -195,7 +195,7 @@ public class GroupProfileActivity extends BaseActivity implements OnItemClicked 
                                     userName = user.getUsername();
                                     coordinatorName.add(userName);
 
-                                    if(coordinatorName.size() == coordinatorIDs.size()){
+                                    if (coordinatorName.size() == coordinatorIDs.size()) {
                                         coordinatorAdapter = new GroupProfilerCoordinatorAdapter(coordinatorName, GroupProfileActivity.this);
                                         coordinatorRecycleView.setAdapter(coordinatorAdapter);
                                     }
@@ -207,25 +207,24 @@ public class GroupProfileActivity extends BaseActivity implements OnItemClicked 
     }
 
     //save 'groupID' to SharePreference
-   public void saveGroupId(){
-       final String groupID = getIntent().getStringExtra("groupid");
-       SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(this);
-       SharedPreferences.Editor editor = mPref.edit();
-       editor.putString("groupId", groupID);
-       editor.commit();
-   }
+    public void saveGroupId() {
+        final String groupID = getIntent().getStringExtra("groupid");
+        SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = mPref.edit();
+        editor.putString("groupId", groupID);
+        editor.commit();
+    }
 
     //retrieve deleted memberName from sharepreference
-    public String getDeletedMemberName(){
+    public String getDeletedMemberName() {
 
         SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String deletedMemberName = mPref.getString("deletedMemberName", "" );
+        String deletedMemberName = mPref.getString("deletedMemberName", "");
         return deletedMemberName;
     }
 
     //deletes a group by swiping left
-    ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT)
-    {
+    ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -267,69 +266,73 @@ public class GroupProfileActivity extends BaseActivity implements OnItemClicked 
 
     @Override
     public void onItemClick(final int position) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Make " + membersAdapter.getMemberNameList(position) + " a coordinator?");
-        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+        if (coordinates) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Make " + membersAdapter.getMemberNameList(position) + " a coordinator?");
+            builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
 
-                final DocumentReference groupDoc = mFirestore.collection("Groups").document(groupID);
-                groupDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        Group group = documentSnapshot.toObject(Group.class);
-                        group.removeMember(membersAdapter.getMemberList(position));
-                        boolean addedCoordinator = group.addCoordinator(membersAdapter.getMemberList(position));
-                        if (addedCoordinator) {
+                    final DocumentReference groupDoc = mFirestore.collection("Groups").document(groupID);
+                    groupDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            Group group = documentSnapshot.toObject(Group.class);
+                            group.removeMember(membersAdapter.getMemberList(position));
+                            boolean addedCoordinator = group.addCoordinator(membersAdapter.getMemberList(position));
+                            if (addedCoordinator) {
 
-                            groupDoc.set(group).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
+                                groupDoc.set(group).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
 
-                                    final DocumentReference userDoc = mFirestore.collection("Users").document(membersAdapter.getMemberList(position));
-                                    userDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                            User user = documentSnapshot.toObject(User.class);
+                                        final DocumentReference userDoc = mFirestore.collection("Users").document(membersAdapter.getMemberList(position));
+                                        userDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                User user = documentSnapshot.toObject(User.class);
 
-                                            user.removeFromMembers(groupID);
-                                            boolean updatedUser = user.addToCoordinates(groupID, groupName.getText().toString());
+                                                user.removeFromMembers(groupID);
+                                                boolean updatedUser = user.addToCoordinates(groupID, groupName.getText().toString());
 
-                                            if (updatedUser) {
-                                                userDoc.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void aVoid) {
-                                                        String savedName = membersAdapter.getMemberNameList(position);
-                                                        membersAdapter.deleteMemberFromList(GroupProfileActivity.this, position);
-                                                        coordinatorAdapter.addMemberToAdapter(GroupProfileActivity.this, savedName);
-                                                        Toast.makeText(GroupProfileActivity.this, "Success!", Toast.LENGTH_LONG).show();
-                                                    }
-                                                });
-                                            } else {
-                                                Toast.makeText(GroupProfileActivity.this, membersAdapter.getMemberNameList(position) + " is already a coordinator!", Toast.LENGTH_LONG).show();
+                                                if (updatedUser) {
+                                                    userDoc.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            String savedName = membersAdapter.getMemberNameList(position);
+                                                            membersAdapter.deleteMemberFromList(GroupProfileActivity.this, position);
+                                                            coordinatorAdapter.addMemberToAdapter(GroupProfileActivity.this, savedName);
+                                                            Toast.makeText(GroupProfileActivity.this, "Success!", Toast.LENGTH_LONG).show();
+                                                        }
+                                                    });
+                                                } else {
+                                                    Toast.makeText(GroupProfileActivity.this, membersAdapter.getMemberNameList(position) + " is already a coordinator!", Toast.LENGTH_LONG).show();
+                                                }
                                             }
-                                        }
-                                    });
-                                }
-                            });
+                                        });
+                                    }
+                                });
 
-                        } else {
-                            Toast.makeText(GroupProfileActivity.this, membersAdapter.getMemberNameList(position) + " is already a coordinator!", Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(GroupProfileActivity.this, membersAdapter.getMemberNameList(position) + " is already a coordinator!", Toast.LENGTH_LONG).show();
+                            }
                         }
-                    }
-                });
-            }
-        });
+                    });
+                }
+            });
 
-        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+            builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
 
-            }
-        });
+                }
+            });
 
-        builder.create().show();
+            builder.create().show();
 
+        } else {
+
+        }
     }
 }
 
