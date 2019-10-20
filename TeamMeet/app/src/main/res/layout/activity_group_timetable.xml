@@ -24,6 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/return_to_group"
+        android:onClick="timetableRefresh"
         android:text="Refresh Timetable" />
 
     <Button
@@ -33,7 +34,8 @@
         android:layout_alignTop="@id/refresh_timetable"
         android:layout_toEndOf="@id/refresh_timetable"
         android:onClick="timetableQuery"
-        android:text="Query New Timetable" />
+        android:text="Query New Timetable"
+        android:visibility="invisible" />
 
     <ListView
         android:id="@+id/meeting_times_listview"

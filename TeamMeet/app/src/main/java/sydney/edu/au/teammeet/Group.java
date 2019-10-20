@@ -11,8 +11,9 @@ public class Group {
     public ArrayList<String> members;
     private String groupName;
 
-    @PropertyName("bestTimes")
     private Map<String, ArrayList<Long>> bestTimes;
+    private Long meetingDuration;
+    private Long selectedMeetingTime; //with reference the bestTimes array, the nth chosen meeting time
 
     public Group(){}
 
@@ -57,7 +58,6 @@ public class Group {
     public String getGroupName() {
         return groupName;
     }
-
     public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
@@ -65,9 +65,22 @@ public class Group {
     public void setBestTimes(Map<String, ArrayList<Long>> bestTimes) {
         this.bestTimes = bestTimes;
     }
-
     public Map<String, ArrayList<Long>> getBestTimes() {
         return bestTimes;
+    }
+
+    public void setMeetingDuration(Long meetingDuration) {
+        this.meetingDuration = meetingDuration;
+    }
+    public Long getMeetingDuration() {
+        return meetingDuration;
+    }
+
+    public void setSelectedMeetingTime(Long meetingTime) {
+        this.selectedMeetingTime = meetingTime;
+    }
+    public Long getSelectedMeetingTime() {
+        return selectedMeetingTime;
     }
 
     public void removeMember(String member) { members.remove(member); }

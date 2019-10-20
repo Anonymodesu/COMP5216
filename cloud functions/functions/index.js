@@ -86,11 +86,6 @@ exports.getGroupTimes = functions.https.onCall((data, context) => {
 	const numTimes = data.numTimes;
 	const groupID = data.groupID;
 
-	var bestTimeslots = { //placeholder value to return to user if something fails
-		times : [-1],
-		weights : [-1]
-	};
-
 	var db = admin.firestore();
 
 	return db
@@ -153,7 +148,7 @@ exports.getGroupTimes = functions.https.onCall((data, context) => {
 			weights.push(priorities[j][1]);
 		}
 
-		bestTimeslots = {
+		const bestTimeslots = {
 			times : times,
 			weights : weights
 		};
@@ -162,10 +157,10 @@ exports.getGroupTimes = functions.https.onCall((data, context) => {
 		.collection('Groups')
 		.doc(groupID)
 		.update({
-			bestTimes : bestTimeslots
+			bestTimes : bestTimeslots,
+			meetingDuration : duration,
+			selectedMeetingTime : -1 //-1 indicates that no meeting time has been selected
 		})
-	}).then(() => {
-		return bestTimeslots;
 	});
 
 });
