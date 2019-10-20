@@ -303,6 +303,10 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
         }
     }
 
+    public Timetable getTimetable() {
+        return mTimetable;
+    }
+
     public class TimeslotViewHolder extends TimetableAdapter.TimeslotViewHolder implements View.OnTouchListener {
         TimeslotViewHolder(View itemView) {
             super(itemView);
