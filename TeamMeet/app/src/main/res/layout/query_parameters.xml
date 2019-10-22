@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Number of half hours"
+        android:hint="Number of timeslots (half hours)"
         android:inputType="number"
         android:textColor="@color/colorWhite"
         android:textColorHint="@color/grey_500" />

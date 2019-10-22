@@ -20,7 +20,9 @@
     <color name="low_priority_colour">#B0E0E6</color>
     <color name="medium_priority_colour">#90EE90</color>
     <color name="high_priority_colour">#FF7F50</color>
+    <color name="group_meeting_colour">#C0392B</color>
 
-    <color name="selected_meeting_colour">#EEEEEE</color>
+
+    <color name="selected_meeting_colour">#DDDDDD</color>
     <color name="normal_meeting_colour">#FFFFFF</color>
 </resources>

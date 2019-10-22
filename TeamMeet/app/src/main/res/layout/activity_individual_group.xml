@@ -27,8 +27,8 @@
         android:layout_height="wrap_content"
 
         android:layout_alignTop="@id/add_new_member"
+        android:layout_alignParentRight="true"
         android:layout_marginLeft="20dp"
-        android:layout_toEndOf="@id/add_new_member"
         android:onClick="gotoGroupMeetingTimes"
         android:text="Meeting Times" />
 

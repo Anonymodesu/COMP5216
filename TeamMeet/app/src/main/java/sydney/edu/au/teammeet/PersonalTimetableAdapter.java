@@ -27,6 +27,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import org.litepal.LitePal;
+
+import java.util.Set;
+
 import static android.widget.Toast.LENGTH_SHORT;
 
 
@@ -34,12 +37,14 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
     private ItemTouchListener mItemTouchListener;
     private RecyclerView parentRecyclerView;
     private String fillActivity;
+    private Set<Integer> groupMeetingTimes;
 
-    public PersonalTimetableAdapter(final Context context, final Timetable timetable, int cellSize) {
+    public PersonalTimetableAdapter(final Context context, final Timetable timetable, Set<Integer> groupMeetingTimes, int cellSize) {
         super(context, timetable, cellSize);
         setupClickListeners(context);
         setOnTouchListener(null);
         fillActivity = "";
+        this.groupMeetingTimes = groupMeetingTimes;
     }
 
 
@@ -77,16 +82,22 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
             int timetablePos = adapterPosToTimetablePos(adapterPos);
             TextView textView = ((TimeslotViewHolder) holder).myTextView;
 
-            String text = mTimetable.getActivity(timetablePos);
-            if(text == null) {
-                text = "";
-            }
-            textView.setText(text);
+            if(groupMeetingTimes.contains(timetablePos)) {
+                textView.setText("Group Meeting");
+                textView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.group_meeting_colour));
 
-            //cell changes colour depending on weighting
-            int weighting = mTimetable.getWeighting(timetablePos);
-            int colour = weightingToColour(weighting);
-            textView.setBackgroundColor(colour);
+            } else {
+                String text = mTimetable.getActivity(timetablePos);
+                if(text == null) {
+                    text = "";
+                }
+                textView.setText(text);
+
+                //cell changes colour depending on weighting
+                int weighting = mTimetable.getWeighting(timetablePos);
+                int colour = weightingToColour(weighting);
+                textView.setBackgroundColor(colour);
+            }
 
         } else { //let super class handle descriptor cells
             super.onBindViewHolder(holder, adapterPos);
@@ -123,6 +134,10 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
                 int weighting = 0;
                 int oldWeighting = mTimetable.getWeighting(timetablePos);
                 String oldActivity = mTimetable.getActivity(timetablePos);
+
+                if(groupMeetingTimes.contains(timetablePos)) { //can't modify group meeting times
+                    return true;
+                }
 
                 switch(mode) {
                     case FREE:
@@ -169,6 +184,10 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
             public void onItemClick(View view, int adapterPos) {
                 int timetablePos = adapterPosToTimetablePos(adapterPos);
 
+                if(groupMeetingTimes.contains(timetablePos)) { //can't modify group meeting times
+                    return;
+                }
+
                 if(mTimetable.getWeighting(timetablePos) > 0) {
                     mTimetable.setWeighting(timetablePos, 0);
 
@@ -187,6 +206,11 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
 
             public boolean onItemLongClick(View view, final int adapterPos) {
                 final int timetablePos = adapterPosToTimetablePos(adapterPos);
+
+                if(groupMeetingTimes.contains(timetablePos)) { //can't modify group meeting times
+                    return true;
+                }
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 final View editFields = LayoutInflater.from(context).inflate(R.layout.edit_timeslot, null);
 
@@ -305,6 +329,10 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
 
     public Timetable getTimetable() {
         return mTimetable;
+    }
+
+    public Set<Integer> getGroupMeetingTimes() {
+        return groupMeetingTimes;
     }
 
     public class TimeslotViewHolder extends TimetableAdapter.TimeslotViewHolder implements View.OnTouchListener {

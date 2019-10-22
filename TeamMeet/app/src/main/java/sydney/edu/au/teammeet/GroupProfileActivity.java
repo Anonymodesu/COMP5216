@@ -118,7 +118,7 @@ public class GroupProfileActivity extends BaseActivity implements OnItemClicked 
 
         addMemberBtn = (Button) findViewById(R.id.add_new_member);
         if (!coordinates) {
-            addMemberBtn.setVisibility(View.GONE);
+            addMemberBtn.setVisibility(View.INVISIBLE);
         } else {
 
             addMemberBtn.setOnClickListener(new View.OnClickListener() {

@@ -165,25 +165,25 @@ public class GroupTimetableActivity extends BaseActivity {
                     coordinates = coordinators.contains(userAuth.getUid());
 
                     Map<String, ArrayList<Long>> meetingTimeslots = groupSnapshot.getBestTimes();
+                    Long duration = groupSnapshot.getMeetingDuration();
 
                     if(coordinates){ //coordinators can coordinate :0
                         Button queryButton = findViewById(R.id.query_timetable);
                         queryButton.setVisibility(View.VISIBLE);
                     }
 
-                    if(meetingTimeslots == null) { //no coordinator has requested meeting times yet
+                    if(duration == null) { //no coordinator has requested meeting times yet
 
                         String message = "";
                         if(coordinates) {
-                            message = "Please ask a coordinator to generate meeting times";
-                        } else {
                             message = "Please generate meeting times for the group";
+                        } else {
+                            message = "Please ask a coordinator to generate meeting times";
                         }
                         Toast.makeText(GroupTimetableActivity.this, message, Toast.LENGTH_LONG).show();
 
                     } else {
-                        int duration = (int) (long) groupSnapshot.getMeetingDuration();
-                        loadMeetingListView(convertMeetingTimesLong(meetingTimeslots.get("times"), meetingTimeslots.get("weights")), duration);
+                        loadMeetingListView(convertMeetingTimesLong(meetingTimeslots.get("times"), meetingTimeslots.get("weights")), (int)(long)duration);
                     }
 
                 } else {

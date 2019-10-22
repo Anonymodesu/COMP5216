@@ -38,6 +38,9 @@ import com.google.gson.Gson;
 import org.litepal.LitePal;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class  PersonalTimetableActivity extends BaseActivity {
     public enum Mode {
@@ -82,7 +85,133 @@ public class  PersonalTimetableActivity extends BaseActivity {
         loadSavedData();
     }
 
-    private void setupTimetable(Timetable timetable) {
+
+    public void onClear(View view) {
+        timetableGridAdapter.clearTimetable();
+    }
+
+    //swaps between two zoom levels
+    public void onZoom(View view) {
+        int newSize = standardZoom ? TimetableAdapter.LARGE_CELL_SIZE : TimetableAdapter.SMALL_CELL_SIZE;
+        standardZoom = !standardZoom;
+
+        Timetable timetable = timetableGridAdapter.getTimetable();
+        Set<Integer> groupMeetingTimes = timetableGridAdapter.getGroupMeetingTimes();
+
+        timetableGridAdapter = new PersonalTimetableAdapter(this, timetable, groupMeetingTimes, newSize);
+        timetableGridAdapter.switchMode(currentMode);
+        timetableRecyclerView.setAdapter(timetableGridAdapter);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if(timetableGridAdapter != null) {
+            saveByPreference();
+        }
+    }
+
+    /* save timetable's data to database in json format*/
+    private void saveByPreference(){
+
+        Gson gson = new Gson();
+        String json = gson.toJson(timetableGridAdapter.getTimetable());
+
+        //update timetable to database
+        DocumentReference currentUser = mFirestore.collection("Users").document(userId);
+        currentUser.update("timetable", json);
+    }
+
+    /** get json data Firebase and then restore the timetable */
+    private void loadSavedData() {
+
+        //check if firebase-stored timetable exists
+        DocumentReference userReference = mFirestore.collection("Users").document(userId);
+        userReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                if (task.isSuccessful()) {
+                    User user = task.getResult().toObject(User.class);
+
+                    setupTimetable(user);
+                    setupMassFill();
+
+                } else {
+                    Toast.makeText(PersonalTimetableActivity.this, "User Retrieval Failed", Toast.LENGTH_SHORT).show();
+
+//                    timetable = new Timetable();
+//                    Set<Integer> groupTimes = new HashSet<>();
+//                    setupTimetable(timetable);
+//                    setupMassFill();
+                }
+
+
+            }
+        });
+
+    }
+
+    private void setupTimetable(User user) {
+        final List<String> groupsIds = new ArrayList<String>();
+        for(String memberId : user.getCoordinates().keySet()) {
+            groupsIds.add(memberId);
+        }
+        for(String memberId : user.getIsMemberOf().keySet()) {
+            groupsIds.add(memberId);
+        }
+
+        Gson gson = new Gson();
+        String timetableJson = user.getTimetable();
+        final Timetable timetable = gson.fromJson(timetableJson, Timetable.class);
+        final List<Integer> groupMeetingTimes = new ArrayList<>();
+        final List<Integer> groupMeetingDurations = new ArrayList<>();
+
+        for(final String groupID : groupsIds) {
+
+            mFirestore.collection("Groups").document(groupID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    Group group = task.getResult().toObject(Group.class);
+                    Long selectedMeetingTimeIndex = group.getSelectedMeetingTime();
+
+                    if(selectedMeetingTimeIndex != null && selectedMeetingTimeIndex != -1) { //-1 indicates no selected meeting time
+                        List<Long> meetingTimes = group.getBestTimes().get("times");
+                        int selectedTime = (int) (long) meetingTimes.get((int) (long) selectedMeetingTimeIndex);
+
+                        groupMeetingTimes.add(selectedTime);
+                        groupMeetingDurations.add((int) (long)group.getMeetingDuration());
+
+                    } else { //group has not been assigned a meeting time
+                        groupMeetingTimes.add(null);
+                        groupMeetingDurations.add(null);
+                    }
+
+                    //all groups have been parsed
+                    if(groupMeetingTimes.size() == groupsIds.size()) {
+                        setUpTimetableSuccess(timetable, groupMeetingTimes, groupMeetingDurations);
+                    }
+
+                }
+            });
+        }
+
+    }
+
+    private void setUpTimetableSuccess(Timetable timetable, List<Integer> meetingTimes, List<Integer> durations) {
+        Set<Integer> cleanMeetingTimes = new HashSet<>();
+        for(int i = 0 ; i < meetingTimes.size(); i++) { //clear out duplicate times and null values
+            Integer meetingTime = meetingTimes.get(i);
+
+            if (meetingTime != null) {
+                for (int timeslot = 0; timeslot < durations.get(i); timeslot++) { //add meeting
+                    cleanMeetingTimes.add(meetingTime + timeslot * Timetable.NUM_DAYS);
+                }
+            }
+        }
+
         timetableHorizontalScroll = findViewById(R.id.timetable_scroll_view);
         timetableHorizontalScroll.setNestedScrollingEnabled(false);
 
@@ -95,10 +224,9 @@ public class  PersonalTimetableActivity extends BaseActivity {
         timetableRecyclerView.setLayoutManager(layoutManager);
         */
         timetableRecyclerView.setLayoutManager(new GridLayoutManager(this, Timetable.NUM_DAYS + 1));
-        timetableGridAdapter = new PersonalTimetableAdapter(this, timetable, TimetableAdapter.SMALL_CELL_SIZE);
+        timetableGridAdapter = new PersonalTimetableAdapter(this, timetable, cleanMeetingTimes, TimetableAdapter.SMALL_CELL_SIZE);
         timetableRecyclerView.setAdapter(timetableGridAdapter);
         //timetableRecyclerView.addOnItemTouchListener(recyclerViewTouchListener);
-
     }
 
     //allows switch to mass assignment of weightings and activities
@@ -153,96 +281,6 @@ public class  PersonalTimetableActivity extends BaseActivity {
             }
         });
     }
-
-    public void onClear(View view) {
-        timetableGridAdapter.clearTimetable();
-    }
-
-    //swaps between two zoom levels
-    public void onZoom(View view) {
-        int newSize = standardZoom ? TimetableAdapter.LARGE_CELL_SIZE : TimetableAdapter.SMALL_CELL_SIZE;
-        standardZoom = !standardZoom;
-
-        Timetable temp = timetableGridAdapter.getTimetable();
-
-        timetableGridAdapter = new PersonalTimetableAdapter(this, temp, newSize);
-        timetableGridAdapter.switchMode(currentMode);
-        timetableRecyclerView.setAdapter(timetableGridAdapter);
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        saveByPreference();
-    }
-
-    /* save timetable's data to SharedPreferences in json format*/
-    private void saveByPreference(){
-
-        //update timetable locally
-        SharedPreferences mPref = getSharedPreferences(SHARED_PREF_ID, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = mPref.edit();
-
-        Gson gson = new Gson();
-        String json = gson.toJson(timetableGridAdapter.getTimetable());
-
-        editor.putString(SHARED_PREF_TIMETABLE, json);
-        editor.putString(SHARED_PREF_USER, userId);
-
-        editor.apply();
-
-        //update timetable to database
-        DocumentReference currentUser = mFirestore.collection("Users").document(userId);
-        currentUser.update("timetable", json);
-    }
-
-    /** get json data from SharedPreferences or Firebase and then restore the timetable */
-    private void loadSavedData() {
-
-        final Gson gson = new Gson();
-
-        SharedPreferences mPref = getSharedPreferences(SHARED_PREF_ID, Context.MODE_PRIVATE);
-        String jsonTimetable = mPref.getString(SHARED_PREF_TIMETABLE, null);
-        String storedUser = mPref.getString(SHARED_PREF_USER, "");
-
-        //check if the locally stored user timetable is same as current user
-        if(userId.equals(storedUser)) {
-            Timetable timetable = gson.fromJson(jsonTimetable, Timetable.class);
-
-
-            setupTimetable(timetable);
-            setupMassFill();
-
-        } else {
-
-            //check if firebase-stored timetable exists
-            DocumentReference userReference = mFirestore.collection("Users").document(userId);
-            userReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                    Timetable timetable;
-
-                    if(task.isSuccessful()) {
-                        String timetableJson = task.getResult().getString("timetable");
-                        timetable = gson.fromJson(timetableJson, Timetable.class);
-
-                    } else {
-                        Log.e("timetable failed", task.getException().getMessage());
-
-                        timetable = new Timetable();
-                    }
-
-                    setupTimetable(timetable);
-                    setupMassFill();
-                }
-            });
-
-        }
-
-    }
-
 
     
 

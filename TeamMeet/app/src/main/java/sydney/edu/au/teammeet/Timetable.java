@@ -63,7 +63,7 @@ public class Timetable {
         activities[index] = activity;
     }
 
-    private int getIndex(int day, int halfHour) {
+    public int getIndex(int day, int halfHour) {
         return day * NUM_HALF_HOURS + halfHour;
     }
 
