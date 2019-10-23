@@ -164,40 +164,52 @@ public class  PersonalTimetableActivity extends BaseActivity {
         }
 
         Gson gson = new Gson();
+
+        // if server timetable is null, create a new one
         String timetableJson = user.getTimetable();
-        final Timetable timetable = gson.fromJson(timetableJson, Timetable.class);
+        Timetable timetableTemp = gson.fromJson(timetableJson, Timetable.class);
+        if(timetableTemp == null) {
+            timetableTemp = new Timetable();
+        }
+        final Timetable timetable = timetableTemp;
+
         final List<Integer> groupMeetingTimes = new ArrayList<>();
         final List<Integer> groupMeetingDurations = new ArrayList<>();
 
-        for(final String groupID : groupsIds) {
+        //user is not part of any groups
+        if(0 == groupsIds.size()) {
+            setUpTimetableSuccess(timetable, groupMeetingTimes, groupMeetingDurations);
 
-            mFirestore.collection("Groups").document(groupID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    Group group = task.getResult().toObject(Group.class);
-                    Long selectedMeetingTimeIndex = group.getSelectedMeetingTime();
+        } else { //parse through all groups
+            for(final String groupID : groupsIds) {
 
-                    if(selectedMeetingTimeIndex != null && selectedMeetingTimeIndex != -1) { //-1 indicates no selected meeting time
-                        List<Long> meetingTimes = group.getBestTimes().get("times");
-                        int selectedTime = (int) (long) meetingTimes.get((int) (long) selectedMeetingTimeIndex);
+                mFirestore.collection("Groups").document(groupID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        Group group = task.getResult().toObject(Group.class);
+                        Long selectedMeetingTimeIndex = group.getSelectedMeetingTime();
 
-                        groupMeetingTimes.add(selectedTime);
-                        groupMeetingDurations.add((int) (long)group.getMeetingDuration());
+                        if(selectedMeetingTimeIndex != null && selectedMeetingTimeIndex != -1) { //-1 indicates no selected meeting time
+                            List<Long> meetingTimes = group.getBestTimes().get("times");
+                            int selectedTime = (int) (long) meetingTimes.get((int) (long) selectedMeetingTimeIndex);
 
-                    } else { //group has not been assigned a meeting time
-                        groupMeetingTimes.add(null);
-                        groupMeetingDurations.add(null);
+                            groupMeetingTimes.add(selectedTime);
+                            groupMeetingDurations.add((int) (long)group.getMeetingDuration());
+
+                        } else { //group has not been assigned a meeting time
+                            groupMeetingTimes.add(null);
+                            groupMeetingDurations.add(null);
+                        }
+
+                        //all groups have been parsed
+                        if(groupMeetingTimes.size() == groupsIds.size()) {
+                            setUpTimetableSuccess(timetable, groupMeetingTimes, groupMeetingDurations);
+                        }
+
                     }
-
-                    //all groups have been parsed
-                    if(groupMeetingTimes.size() == groupsIds.size()) {
-                        setUpTimetableSuccess(timetable, groupMeetingTimes, groupMeetingDurations);
-                    }
-
-                }
-            });
+                });
+            }
         }
-
     }
 
     private void setUpTimetableSuccess(Timetable timetable, List<Integer> meetingTimes, List<Integer> durations) {

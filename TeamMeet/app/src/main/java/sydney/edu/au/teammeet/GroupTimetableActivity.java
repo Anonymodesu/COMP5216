@@ -28,6 +28,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.HttpsCallableResult;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -267,6 +268,7 @@ public class GroupTimetableActivity extends BaseActivity {
         Map<String, Object> data = new HashMap<>();
         data.put("duration", duration);
         data.put("numTimes", numTimes);
+        data.put("timetableLength", Timetable.NUM_CELLS);
         data.put("groupID", groupID);
 
         return mFunctions

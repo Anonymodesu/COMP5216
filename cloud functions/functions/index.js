@@ -39,6 +39,12 @@ exports.makeUppercase = functions.database.ref('/messages/{pushId}/original')
 */
 exports.getGroupTimes = functions.https.onCall((data, context) => {
 
+	//retrieve data from client
+	const duration = data.duration;
+	const numTimes = data.numTimes;
+	const timetableLength = data.timetableLength;
+	const groupID = data.groupID;
+
 	function sortPriorities(priorities) {
 		// Create items array
 		var items = Object.keys(priorities).map(function(key) {
@@ -63,7 +69,7 @@ exports.getGroupTimes = functions.https.onCall((data, context) => {
 
 		//load database with initial values
 		var priorities = {};
-		for(var i = 0; i < personalTimetables[0].length - additionalTimes * numDays; i++) {
+		for(var i = 0; i < timetableLength - additionalTimes * numDays; i++) {
 			priorities[i] = 0;
 		}
 
@@ -71,7 +77,7 @@ exports.getGroupTimes = functions.https.onCall((data, context) => {
 		for(var j = 0; j < personalTimetables.length; j++) {
 		var currentTimetable = personalTimetables[j];
 
-			for(var startTime = 0; startTime < currentTimetable.length  - additionalTimes * numDays; startTime++) {
+			for(var startTime = 0; startTime < timetableLength  - additionalTimes * numDays; startTime++) {
 				for(var timeslot = 0; timeslot <= additionalTimes ; timeslot++) {
 					priorities[startTime] += currentTimetable[startTime + timeslot * numDays];
 				}
@@ -81,10 +87,6 @@ exports.getGroupTimes = functions.https.onCall((data, context) => {
 		return priorities;
 	}
 
-
-	const duration = data.duration;
-	const numTimes = data.numTimes;
-	const groupID = data.groupID;
 
 	var db = admin.firestore();
 
@@ -135,7 +137,6 @@ exports.getGroupTimes = functions.https.onCall((data, context) => {
 				personalTimetables.push(JSON.parse(timetable).availabilities)
 			}
 		}
-
 
 		var priorities = timetableWeights(personalTimetables, duration - 1);
 		priorities = sortPriorities(priorities);

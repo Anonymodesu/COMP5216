@@ -24,7 +24,7 @@ public class Timetable {
         availabilities = new int[NUM_CELLS];
 
         for(int i = 0; i < availabilities.length; i++) {
-            availabilities[i] = 3;
+            availabilities[i] = 0;
         }
 
         for(int i = 0; i < activities.length; i++) {
