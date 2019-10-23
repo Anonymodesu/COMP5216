@@ -246,13 +246,14 @@ public class GroupProfileActivity extends BaseActivity implements OnItemClicked 
                 membersAdapter.deleteGroupMember(GroupProfileActivity.this, position);
                 //membersAdapter.removeDeletedMember(position);
                 //showUsers();
+                /**
                 Snackbar.make(memberRecycleView, getDeletedMemberName(), Snackbar.LENGTH_LONG)
                         .setAction("Undo", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 membersAdapter.insertDeletedMember(position);
                             }
-                        }).show();
+                        }).show();**/
             }
 
         }
