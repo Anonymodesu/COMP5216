@@ -155,12 +155,18 @@ public class  PersonalTimetableActivity extends BaseActivity {
     }
 
     private void setupTimetable(User user) {
+
         final List<String> groupsIds = new ArrayList<String>();
-        for(String memberId : user.getCoordinates().keySet()) {
-            groupsIds.add(memberId);
+        if(user.getCoordinates() != null) {
+            for(String memberId : user.getCoordinates().keySet()) {
+                groupsIds.add(memberId);
+            }
         }
-        for(String memberId : user.getIsMemberOf().keySet()) {
-            groupsIds.add(memberId);
+
+        if(user.getIsMemberOf() != null) {
+            for(String memberId : user.getIsMemberOf().keySet()) {
+                groupsIds.add(memberId);
+            }
         }
 
         Gson gson = new Gson();
