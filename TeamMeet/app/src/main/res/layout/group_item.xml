@@ -5,6 +5,7 @@
     android:layout_height="80dp"
     android:layout_gravity="center"
     android:orientation="horizontal"
+    android:layout_marginTop="5dp"
     app:cardUseCompatPadding="true">
 
         <androidx.cardview.widget.CardView
@@ -26,6 +27,8 @@
             <TextView
                 android:id="@+id/group_name"
                 android:text=""
+                android:textColor="@color/colorWhite"
+                android:textSize="20dp"
                 style="@style/TextAppearance.MaterialComponents.Headline6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -59,7 +62,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/field_margin_small"
                     android:text="@string/leave"
-                    android:textColor="@color/textSecondary"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorWhite"
                     android:layout_gravity="end|fill_horizontal"
                     style="@style/TextAppearance.MaterialComponents.Body2"/>
 

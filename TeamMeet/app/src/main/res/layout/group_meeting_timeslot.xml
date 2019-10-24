@@ -2,23 +2,44 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="horizontal"
+    android:layout_marginTop="20dp">
 
-    <TextView
-        android:id="@+id/meeting_time"
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_weight="1"
-        android:text="TextView"
-        android:textSize="18sp" />
+        android:background="@drawable/group_timetable"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="5dp"/>
 
-    <TextView
-        android:id="@+id/meeting_weighting"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_weight="1"
-        android:text="TextView"
-        android:textSize="16sp" />
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="6dp">
+
+        <TextView
+            android:id="@+id/meeting_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:text="TextView"
+            android:textSize="18sp"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:id="@+id/meeting_weighting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:text="TextView"
+            android:textSize="13sp"
+            android:textColor="#B0C4DE"
+            android:layout_marginTop="5dp"/>
+
+    </LinearLayout>
+
 </LinearLayout>

@@ -175,8 +175,8 @@ public class BaseActivity extends AppCompatActivity {
             }
 
 
-            PrimaryDrawerItem drawerItemHome = new PrimaryDrawerItem().withIdentifier(HOME_ID)
-                    .withName(R.string.home).withIcon(R.drawable.home);
+            /*PrimaryDrawerItem drawerItemHome = new PrimaryDrawerItem().withIdentifier(HOME_ID)
+                    .withName(R.string.home).withIcon(R.drawable.home);*/
             PrimaryDrawerItem drawerItemProfile = new PrimaryDrawerItem().withIdentifier(PROFILE_ID)
                     .withName(R.string.profile).withIcon(R.drawable.ic_person_grey_24dp);
             PrimaryDrawerItem drawerItemTimeTable = new PrimaryDrawerItem().withIdentifier(TIMETABLE_ID)
@@ -212,11 +212,11 @@ public class BaseActivity extends AppCompatActivity {
                     .withSelectedItem(-1)
                     .withDrawerGravity(Gravity.START)
                     .addDrawerItems(
-                            drawerItemHome,
+                            //drawerItemHome,
                             drawerItemProfile,
                             drawerItemTimeTable,
-                            drawerItemSignOut,
-                            drawerItemGroup
+                            drawerItemGroup,
+                            drawerItemSignOut
                     )
                     .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                         @Override

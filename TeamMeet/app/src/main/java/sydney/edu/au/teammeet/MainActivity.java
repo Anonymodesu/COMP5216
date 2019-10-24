@@ -51,7 +51,12 @@ public class MainActivity extends BaseActivity {
     private User newUser;
     DocumentReference currentUser;
 
-
+    //Variables for Time table page
+    private LockableRecyclerView timetableRecyclerView;
+    private PersonalTimetableAdapter timetableGridAdapter;
+    private LockableScrollView timetableHorizontalScroll;
+    private boolean standardZoom; //whether the timetable is zoomed at standard level
+    private PersonalTimetableActivity.Mode currentMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +110,13 @@ public class MainActivity extends BaseActivity {
             }
          }
         });
+
+        setTimetable();
+    }
+
+    public void setTimetable(){
+        Intent intent = new Intent(MainActivity.this, PersonalTimetableActivity.class);
+        startActivity(intent);
     }
 
 }

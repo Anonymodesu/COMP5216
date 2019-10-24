@@ -9,19 +9,30 @@
     tools:context=".LoginActivity"
     android:background="@color/grey_100"
     android:fitsSystemWindows="true">
+
+
     <include
         android:id="@+id/global_header"
-        layout="@layout/global_header">
+        layout="@layout/global_header"
+        android:visibility="invisible">
     </include>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/team_meet"/>
+
     <LinearLayout
         android:id="@+id/login_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/global_header"
         android:orientation="vertical"
-        android:layout_marginTop="@dimen/field_margin"
+        android:layout_marginTop="210dp"
         android:layout_marginLeft="@dimen/field_margin_small"
         android:layout_marginRight="@dimen/field_margin_small">
+
     <!-- Email Label -->
     <EditText android:id="@+id/userEmail"
         android:layout_width="match_parent"
@@ -30,6 +41,7 @@
         android:drawableLeft="@drawable/ic_email_grey_24dp"
         android:padding="10dp"
         android:hint=" Email" />
+
     <EditText android:id="@+id/userPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,14 +50,17 @@
         android:padding="10dp"
         android:drawableLeft="@drawable/ic_password_grey_24dp"
         android:hint=" Password"/>
+
     <Button
         android:id="@+id/btn_login"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_margin="@dimen/field_margin"
         android:text="Log In"
+        android:textAllCaps="false"
         android:textSize="@dimen/button_text_size"/>
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/link_forgetpw_signup"
         android:layout_width="wrap_content"
@@ -56,7 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sign up |"
-            android:textSize="16dip"
+            android:textSize="14dip"
             android:textColor="@color/textSecondary"/>
 
         <TextView android:id="@+id/link_forgetpw"
@@ -65,7 +80,7 @@
             android:layout_below="@+id/btn_login"
             android:text="  Forget your password?"
             android:textColor="@color/textSecondary"
-            android:textSize="16dip"/>
+            android:textSize="14dip"/>
     </LinearLayout>
 
 <LinearLayout
@@ -79,30 +94,31 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text=" or log in with"
-        android:textColor="@color/textNormal"
-        android:textSize="16dip"/>
+        android:textColor="#808080"
+        android:textSize="14dip"/>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/social_icons"
-        android:layout_width="match_parent"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:orientation="horizontal"
-        android:layout_margin="@dimen/field_margin"
+        android:layout_marginTop="20dp"
         android:layout_below="@id/social_text">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/facebook_signin_button"
-            android:layout_width="80dp"
-            android:layout_height="60dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_weight="1"
             android:src="@drawable/facebook">
         </androidx.appcompat.widget.AppCompatImageView>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/google_signin_button"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_weight="1"
             android:src="@drawable/google" />
     </LinearLayout>

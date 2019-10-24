@@ -1,10 +1,12 @@
 package sydney.edu.au.teammeet;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 
+import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.util.Log;
@@ -74,6 +76,7 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
     }
 
     // binds the data to View of each cell
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int adapterPos) {
         int viewType = getItemViewType(adapterPos);
@@ -84,6 +87,7 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
 
             if(groupMeetingTimes.contains(timetablePos)) {
                 textView.setText("Group Meeting");
+                textView.setTextColor(ContextCompat.getColor(mContext,R.color.normal_meeting_colour));
                 textView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.group_meeting_colour));
 
             } else {
@@ -275,11 +279,13 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
         notifyDataSetChanged();
     }
 
+    @SuppressLint("ResourceType")
     private int weightingToColour(int weighting) {
         int colour;
         switch(weighting) {
             case 0:
-                colour = ContextCompat.getColor(mContext, R.color.free_priority_colour);
+                //colour = ContextCompat.getColor(mContext, R.color.free_priority_colour);
+                colour = ContextCompat.getColor(mContext, R.color.normal_meeting_colour);
                 break;
 
             case 1:
