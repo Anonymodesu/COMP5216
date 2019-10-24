@@ -223,12 +223,28 @@ public class GroupProfileActivity extends BaseActivity implements OnItemClicked 
         editor.commit();
     }
 
+    //retrieve groupId from sharepreference
+    public String getGroupId(){
+
+        SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String groupId = mPref.getString("groupId", "" );
+        return groupId;
+    }
+
     //retrieve deleted memberName from sharepreference
     public String getDeletedMemberName() {
 
         SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(this);
         String deletedMemberName = mPref.getString("deletedMemberName", "");
         return deletedMemberName;
+    }
+
+    //retrieve deleted memberId from sharepreference
+    public String getDeletedMemberId(){
+
+        SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String deletedMemberId = mPref.getString("deletedMemberId", "" );
+        return deletedMemberId;
     }
 
     //deletes a group by swiping left
@@ -247,14 +263,33 @@ public class GroupProfileActivity extends BaseActivity implements OnItemClicked 
                 //membersAdapter.removeDeletedMember(position);
                 //showUsers();
 
-                /*Snackbar.make(memberRecycleView, getDeletedMemberName(), Snackbar.LENGTH_LONG)
-                        .setAction("Undo", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
+                final DocumentReference groupRef = mFirestore.collection("Groups").document(getGroupId());
+                groupRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Group group = documentSnapshot.toObject(Group.class);
+                        ArrayList<String> memberList = group.getMembers();
 
-                                membersAdapter.insertDeletedMember(position);
-                            }
-                        }).show();*/
+                        if(!memberList.contains(getDeletedMemberName())){
+                            Snackbar.make(memberRecycleView, getDeletedMemberName(), Snackbar.LENGTH_LONG)
+                                    .setAction("Undo", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            membersAdapter.insertDeletedMember(position);
+
+                                            /*Intent intent = new Intent(GroupProfileActivity.this,
+                                                    GroupProfileActivity.class);
+                                            intent.putExtra("groupname", groupName.getText());
+                                            intent.putExtra("groupid", groupID);
+                                            intent.putExtra("coordinates", coordinates);
+                                            startActivity(intent);*/
+                                        }
+                                    })
+                                    .show();
+                        }
+                    }
+                });
+
             }
 
         }

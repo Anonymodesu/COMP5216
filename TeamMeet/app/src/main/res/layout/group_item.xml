@@ -62,6 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/field_margin_small"
                     android:text="@string/leave"
+                    android:layout_marginLeft="5dp"
                     android:textStyle="bold"
                     android:textColor="@color/colorWhite"
                     android:layout_gravity="end|fill_horizontal"

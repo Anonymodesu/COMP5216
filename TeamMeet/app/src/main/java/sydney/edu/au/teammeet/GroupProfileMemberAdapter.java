@@ -117,6 +117,7 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
     }
 
     public void deleteMemberFromList(final Context context, final int position) {
+
         //remove data item from list
         memberNameList.remove(position);
         memberIdList.remove(position);
@@ -227,8 +228,11 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
     public void insertDeletedMember(int position){
 
         memberNameList.add(position, getDeletedMemberName());
+        memberIdList.add(position, getDeletedMemberId());
         notifyItemInserted(position);
         notifyItemRangeChanged(position, getItemCount());
+
+        //insertTheGroupToDeletedMember(getGroupId());
 
         insertDeletedMemberToTheGroup(getGroupId(), position);
 
@@ -243,19 +247,31 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
                 Group group = documentSnapshot.toObject(Group.class);
                 ArrayList<String> memberList = group.getMembers();
 
-                if(!memberList.contains(getDeletedMemberId())){
+                memberList.add(getDeletedMemberId());
+                group.setMembers(memberList);
+                groupRef.set(group)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                notifyItemInserted(position);
+                                notifyItemRangeChanged(position, getItemCount());
+                            }
+                        });
+                insertTheGroupToDeletedMember(groupId);
+
+                /*if(!memberList.contains(getDeletedMemberId())){
                     memberList.add(getDeletedMemberId());
                     group.setMembers(memberList);
                     groupRef.set(group)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                   /* notifyItemInserted(position);
-                                    notifyItemRangeChanged(position, getItemCount());*/
+                                    notifyItemInserted(position);
+                                    notifyItemRangeChanged(position, getItemCount());
                                 }
                             });
                     insertTheGroupToDeletedMember(groupId);
-                }
+                }*/
             }
         });
 
