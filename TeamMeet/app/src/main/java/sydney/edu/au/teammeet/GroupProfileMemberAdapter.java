@@ -230,12 +230,14 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
         memberNameList.add(position, getDeletedMemberName());
         memberIdList.add(position, getDeletedMemberId());
         notifyItemInserted(position);
-        notifyItemRangeChanged(position, getItemCount());
+        notifyItemRangeChanged(0, getItemCount());
+        /*if (position != memberNameList.size() - 1) {
+            notifyItemRangeChanged(position, memberNameList.size() - position);
+        }*/
 
         //insertTheGroupToDeletedMember(getGroupId());
 
-        insertDeletedMemberToTheGroup(getGroupId(), position);
-
+        //insertDeletedMemberToTheGroup(getGroupId(), position);
     }
 
     //insert the deleted memberId to previous group
@@ -253,8 +255,8 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                notifyItemInserted(position);
-                                notifyItemRangeChanged(position, getItemCount());
+
+                                insertDeletedMember(position);
                             }
                         });
                 insertTheGroupToDeletedMember(groupId);

@@ -275,7 +275,7 @@ public class GroupProfileActivity extends BaseActivity implements OnItemClicked 
                                     .setAction("Undo", new View.OnClickListener() {
                                         @Override
                                         public void onClick(View view) {
-                                            membersAdapter.insertDeletedMember(position);
+                                            membersAdapter.insertDeletedMemberToTheGroup(getGroupId(), position);
 
                                             /*Intent intent = new Intent(GroupProfileActivity.this,
                                                     GroupProfileActivity.class);
