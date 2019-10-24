@@ -145,13 +145,23 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
 
                         group.setMembers(members);
                         groupRef.set(group)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        deleteMemberFromList(context, position);
+                                        Log.d(TAG, "User deleted from group");
+                                    }
+                                });
+
+                        /*group.setMembers(members);
+                        groupRef.set(group)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         deleteMemberFromList(context, position);
                                         Log.d(TAG, "User deleted from group");
                                     }
-                                });
+                                });*/
                     }
                 });
     }
@@ -220,11 +230,12 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
         notifyItemInserted(position);
         notifyItemRangeChanged(position, getItemCount());
 
-        insertDeletedMemberToTheGroup(getGroupId());
+        insertDeletedMemberToTheGroup(getGroupId(), position);
+
     }
 
     //insert the deleted memberId to previous group
-    public void insertDeletedMemberToTheGroup(final String groupId){
+    public void insertDeletedMemberToTheGroup(final String groupId, final int position){
         final DocumentReference groupRef = mFirestore.collection("Groups").document(groupId);
         groupRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -232,14 +243,25 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
                 Group group = documentSnapshot.toObject(Group.class);
                 ArrayList<String> memberList = group.getMembers();
 
-                memberList.add(getDeletedMemberId());
-
-                group.setMembers(memberList);
-                groupRef.set(group);
-
-                insertTheGroupToDeletedMember(groupId);
+                if(!memberList.contains(getDeletedMemberId())){
+                    memberList.add(getDeletedMemberId());
+                    group.setMembers(memberList);
+                    groupRef.set(group)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                   /* notifyItemInserted(position);
+                                    notifyItemRangeChanged(position, getItemCount());*/
+                                }
+                            });
+                    insertTheGroupToDeletedMember(groupId);
+                }
             }
         });
+
+       /* memberNameList.add(position, getDeletedMemberName());
+        notifyItemInserted(position);
+        notifyItemRangeChanged(position, getItemCount());*/
     }
 
     public void insertTheGroupToDeletedMember(final String groupId){

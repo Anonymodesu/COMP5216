@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -111,11 +112,31 @@ public class MainActivity extends BaseActivity {
          }
         });
 
-        setTimetable();
+        //setTimetable();
     }
 
-    public void setTimetable(){
+   /* public void setTimetable(){
         Intent intent = new Intent(MainActivity.this, PersonalTimetableActivity.class);
+        startActivity(intent);
+    }*/
+
+   public void OnProfile(View view){
+       Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);
+       startActivity(intent);
+   }
+
+    public void OnTimetable(View view){
+        Intent intent = new Intent(MainActivity.this, PersonalTimetableActivity.class);
+        startActivity(intent);
+    }
+
+    public void OnGroup(View view){
+        Intent intent = new Intent(MainActivity.this, GroupsActivity.class);
+        startActivity(intent);
+    }
+
+    public void OnSignout(View view){
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
     }
 

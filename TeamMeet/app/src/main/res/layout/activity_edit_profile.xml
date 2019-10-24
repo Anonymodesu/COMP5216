@@ -6,10 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".EditProfileActivity"
     android:background="@color/grey_100">
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical">
+
     <include
         android:id="@+id/global_header"
         layout="@layout/global_header">
@@ -21,11 +25,11 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_margin="@dimen/field_margin"
-    android:background="@color/colorWhite">
+    android:background="@color/colorWhite"
+    android:layout_gravity="center_vertical">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="save"
         android:textSize="16dp"
         android:textColor="@color/grey_500"
         android:layout_gravity="end"
@@ -68,21 +72,23 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/field_margin_small"
         android:layout_gravity="center"
-        android:textColor="@color/textSecondary"
+        android:textColor="@color/colorPrimary"
         android:text="Reset password"
-        android:textSize="18dp"/>
+        android:textSize="15dp"/>
 </LinearLayout>
+
     </LinearLayout>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/save"
-        android:contentDescription="@string/save"
+        android:layout_margin="10dp"
+        android:layout_marginTop="10dp"
         app:backgroundTint="@color/colorPrimary"
         app:srcCompat="@drawable/ic_save_white_24dp"
         app:layout_anchor="@id/edit_field"
-        app:layout_anchorGravity="top|right|end"/>
+        app:layout_anchorGravity="top|right|end" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

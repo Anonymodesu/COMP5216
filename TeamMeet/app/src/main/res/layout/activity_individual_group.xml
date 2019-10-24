@@ -19,7 +19,9 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="20dp"
         android:background="@drawable/circle_button_shape"
-        android:text="+ Add New Member" />
+        android:text="+ Add New Member"
+        android:textAllCaps="false"
+        android:layout_marginLeft="10dp"/>
 
     <Button
         android:id="@+id/goto_meeting_times"
@@ -30,7 +32,9 @@
         android:layout_alignParentRight="true"
         android:layout_marginLeft="20dp"
         android:onClick="gotoGroupMeetingTimes"
-        android:text="Meeting Times" />
+        android:text="Meeting Times"
+        android:textAllCaps="false"
+        android:layout_marginRight="10dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"

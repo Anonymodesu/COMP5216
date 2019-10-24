@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryLight"
+    android:background="#E0ECF8"
     android:id="@+id/register_form"
     tools:context=".RegisterActivity">
     <include
@@ -14,30 +14,33 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
         android:src="@drawable/profile"
         app:civ_border_width="2dp"
         app:civ_border_color="@color/colorPrimary"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/global_header"
         android:layout_marginTop="@dimen/field_margin"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_height="wrap_content"
         android:layout_below="@+id/profile_image"
-        android:layout_margin="@dimen/field_margin_small"
+        android:layout_margin="15dp"
         android:elevation="5dp">
+
     <EditText
         android:id="@+id/Siginup_Username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint=" user name"
         android:ems="10"
-        android:background="@color/grey_100"
+        android:textSize="19dp"
+        android:background="@drawable/rounded_shape"
         android:padding="5dp"
-        android:layout_margin="5dp"
+        android:layout_margin="7dp"
         android:drawableLeft="@drawable/ic_person_grey_24dp"/>
 
     <EditText
@@ -47,7 +50,8 @@
         android:ems="10"
         android:hint=" email"
         android:inputType="textEmailAddress"
-        android:background="@color/grey_100"
+        android:textSize="19dp"
+        android:background="@drawable/rounded_shape"
         android:padding="5dp"
         android:layout_margin="5dp"
         android:drawableLeft="@drawable/ic_email_grey_24dp"/>
@@ -59,7 +63,8 @@
         android:ems="10"
         android:hint=" password"
         android:inputType="textPassword"
-        android:background="@color/grey_100"
+        android:textSize="19dp"
+        android:background="@drawable/rounded_shape"
         android:layout_margin="5dp"
         android:padding="5dp"
         android:drawableLeft="@drawable/ic_password_grey_24dp"/>
@@ -72,7 +77,8 @@
         android:layout_margin="5dp"
         android:hint=" confirm password"
         android:inputType="textPassword"
-        android:background="@color/grey_100"
+        android:textSize="19dp"
+        android:background="@drawable/rounded_shape"
         android:padding="5dp"
         android:drawableLeft="@drawable/ic_password_grey_24dp"/>
 
@@ -80,8 +86,9 @@
         android:id="@+id/Signup_Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/button_text_size"
-        android:layout_margin="@dimen/field_margin_small"
-        android:text="Create Account" />
+        android:textSize="22dp"
+        android:layout_margin="15dp"
+        android:text="Create Account"
+        android:textAllCaps="false"/>
     </LinearLayout>
 </RelativeLayout>

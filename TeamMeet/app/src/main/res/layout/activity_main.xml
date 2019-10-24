@@ -4,15 +4,161 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:fitsSystemWindows="true"
     tools:context=".MainActivity">
+
     <include
         android:id="@+id/global_header"
         layout="@layout/global_header">
     </include>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true">
 
-    <TextView
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="50dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginRight="30dp">
+
+                    <ImageButton
+                        android:id="@+id/profile_button"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:background="@drawable/ic_person_black_48dp"
+                        android:onClick="OnProfile"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="my profile"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_marginBottom="10dp"
+                        android:layout_gravity="center_horizontal"/>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorPrimary" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="30dp">
+
+                    <ImageButton
+                        android:id="@+id/timetable_button"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:background="@drawable/icon_timetable"
+                        android:onClick="OnTimetable"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="my timetable"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_marginBottom="10dp"
+                        android:layout_gravity="center_horizontal"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="300dp"
+                android:layout_height="1px"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/colorPrimary" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginRight="30dp">
+
+                    <ImageButton
+                        android:id="@+id/group_button"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:background="@drawable/ic_people_black_48dp"
+                        android:onClick="OnGroup"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="my groups"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_marginBottom="10dp"
+                        android:layout_gravity="center_horizontal"/>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorPrimary" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="30dp">
+
+                    <ImageButton
+                        android:id="@+id/sign_out_button"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:onClick="OnSignout"
+                        android:background="@drawable/ic_apps_black_48dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="sign out"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_marginBottom="10dp"
+                        android:layout_gravity="center_horizontal"/>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <!--<TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,7 +182,7 @@
         android:layout_margin="@dimen/field_margin_small"
         android:layout_gravity="center"
         android:text="Start setting up your group from global menu"
-        style="@style/TextAppearance.MaterialComponents.Body1"/>
+        style="@style/TextAppearance.MaterialComponents.Body1"/>-->
 
 
 </RelativeLayout>
