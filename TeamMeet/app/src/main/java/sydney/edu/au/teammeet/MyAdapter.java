@@ -142,11 +142,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     public void leaveGroup(final Context context, final int position, final String groupId){
         //confirm to leave dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(R.string.dialog_leave_title);
-        builder.setMessage(R.string.dialog_leave_msg);
-        builder.setPositiveButton("Leave", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int i) {
+        selfDialog = new GroupSelfDialog(context);
+        selfDialog.setTitle("Leave Group");
+        selfDialog.setMessage("Are you sure to leave this group?");
+        selfDialog.setYesOnclickListener("Leave", new GroupSelfDialog.onYesOnclickListener() {
+            @Override
+            public void onYesClick() {
                 deleteUserFromGroupInFirestore(groupId);
                 deleteGroupFromUserInFirestore(groupId);
                 //remove data item from list
@@ -154,21 +155,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 //update recycle view
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, getItemCount());
+                selfDialog.dismiss();
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int i) { // User cancelled the dialog
-// Nothing happens
+        selfDialog.setNoOnclickListener("Cancel", new GroupSelfDialog.onNoOnclickListener() {
+            @Override
+            public void onNoClick() {
+                selfDialog.dismiss();
             }
         });
-
-        AlertDialog alert = builder.create();
-        alert.show();
-
-        Button nbutton = alert.getButton(DialogInterface.BUTTON_NEGATIVE);
-        nbutton.setTextColor(Color.WHITE);
-        Button pbutton = alert.getButton(DialogInterface.BUTTON_POSITIVE);
-        pbutton.setTextColor(Color.WHITE);
+        selfDialog.show();
     }
 
     public void deleteUserFromGroupInFirestore(String groupId){

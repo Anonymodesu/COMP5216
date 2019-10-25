@@ -122,8 +122,11 @@ public class AddNewMemberActivity extends BaseActivity {
                                                     assert group != null;
                                                     //group.addMember(txtMemberEmail.getText().toString());
 
-                                                    //TODO:添加Name
-                                                    if (!group.getCoordinators().contains(newMemberDoc.getId()) && !group.getMembers().contains((newMemberDoc.getId()))) {
+                                                    if(group.getCoordinators().contains(newMemberDoc.getId()) || group.getMembers().contains((newMemberDoc.getId()))) {
+//                                                        Toast.makeText(AddNewMemberActivity.this, "User is already in the group", Toast.LENGTH_SHORT).show();
+                                                        showSnackbar("User is already in the group", AddNewMemberActivity.this);
+                                                    }
+                                                    else  {
                                                         group.addMember(newMemberDoc.getId().toString());
 
                                                         showSnackbar("Member has been added successfully", AddNewMemberActivity.this);
@@ -166,8 +169,6 @@ public class AddNewMemberActivity extends BaseActivity {
                                                                 showSnackbar("Error in add new member", AddNewMemberActivity.this);
                                                             }
                                                         });
-                                                    } else {
-                                                        Toast.makeText(AddNewMemberActivity.this, "User is already in the group", Toast.LENGTH_SHORT).show();
                                                     }
                                                 }
                                             }).addOnFailureListener(new OnFailureListener() {
