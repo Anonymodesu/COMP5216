@@ -287,14 +287,23 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
         usersRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User user = documentSnapshot.toObject(User.class);
-                HashMap<String, String> isMemberOfList = user.getIsMemberOf();
+                final User user = documentSnapshot.toObject(User.class);
+                final HashMap<String, String> isMemberOfList = user.getIsMemberOf();
 
-                //TODO: pur the group name later
-                isMemberOfList.put(groupId, "");
+                //TODO: put the group name later
+                final DocumentReference groupsRef = mFirestore.collection("Groups").document(groupId);
+                groupsRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Group group = documentSnapshot.toObject(Group.class);
+                        String groupName = group.getGroupName();
 
-                user.setIsMemberOf(isMemberOfList);
-                usersRef.set(user);
+                        isMemberOfList.put(groupId, groupName);
+
+                        user.setIsMemberOf(isMemberOfList);
+                        usersRef.set(user);
+                    }
+                });
             }
         });
     }
