@@ -10,6 +10,8 @@
     <color name="textNormal">#000000</color>
     <color name="textAccent">#b83383</color>
     <color name="colorWhite">#ffffff</color>
+    <color name="colorBlack">#000000</color>
+
 
 
     <color name="grey_100">#F5F5F5</color>

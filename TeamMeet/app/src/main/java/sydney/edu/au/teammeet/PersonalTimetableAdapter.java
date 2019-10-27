@@ -87,7 +87,7 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
 
             if(groupMeetingTimes.contains(timetablePos)) {
                 textView.setText("Group Meeting");
-                textView.setTextColor(ContextCompat.getColor(mContext,R.color.normal_meeting_colour));
+                textView.setTextColor(ContextCompat.getColor(mContext,R.color.colorWhite));
                 textView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.group_meeting_colour));
 
             } else {
@@ -100,6 +100,7 @@ public class PersonalTimetableAdapter extends TimetableAdapter {
                 //cell changes colour depending on weighting
                 int weighting = mTimetable.getWeighting(timetablePos);
                 int colour = weightingToColour(weighting);
+                textView.setTextColor(ContextCompat.getColor(mContext,R.color.colorBlack));
                 textView.setBackgroundColor(colour);
             }
 
