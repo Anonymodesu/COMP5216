@@ -85,7 +85,7 @@ public class EditProfileActivity extends BaseActivity {
         userPhone = (EditText) findViewById(R.id.edit_phone);
         saveBtn = (FloatingActionButton) findViewById(R.id.btn_save);
         resetPw = (TextView) findViewById(R.id.link_resetpw);
-        ProfileImage = (CircleImageView) findViewById(R.id.edit_profile_image);
+        ProfileImage = (CircleImageView) findViewById(R.id.group_profile_image);
 
 
         FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();

@@ -18,7 +18,6 @@
         android:layout_below="@id/global_header"
         android:layout_alignParentStart="true"
         android:layout_marginTop="20dp"
-        android:background="@drawable/circle_button_shape"
         android:text="+ Add New Member"
         android:textAllCaps="false"
         android:layout_marginLeft="10dp"/>
@@ -45,14 +44,13 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
 
             <TextView
                 android:id = "@+id/group_name_title"
-                android:textSize="20dp"
+                android:textSize="18dp"
                 android:textStyle="bold"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/textSecondary"
                 android:text="Current Group: "
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -63,8 +61,8 @@
 
             <TextView
                 android:id = "@+id/group_name"
-                android:textSize="20dp"
-                android:textColor="@color/colorPrimary"
+                android:textSize="18dp"
+                android:textColor="@color/textSecondary"
                 android:text="Group Profile"
                 android:textStyle="bold"
                 android:layout_width="wrap_content"
@@ -82,7 +80,7 @@
             android:text="Coordinators"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_margin="15dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:background="#DCDCDC"
@@ -91,11 +89,9 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list_of_coordinator"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginTop="5dp"
-            android:layout_below="@+id/group_name"
-            android:layout_weight="1"
-            android:scrollbars="horizontal" />
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/coordinator_list"
+            android:scrollbars="vertical" />
 
         <TextView
             android:id = "@+id/members_list"
@@ -113,40 +109,10 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list_of_members"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/list_of_coordinator"
-            android:layout_marginTop="5dp"
-            android:layout_weight="1"
-            android:scrollbars="vertical" />
-
-        <!-->
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/list_of_coord_groups"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/group_profile"
-            android:layout_weight="1"
-            android:scrollbars="vertical" />
-
-        <TextView
-            android:id = "@+id/members_in_group"
-            android:text="Members in Group"
-            android:textSize="24dp"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/list_of_coord_groups"
-            />
+            android:layout_below="@+id/members_list"
+            android:scrollbars="vertical" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id = "@+id/list_of_members_in_group"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/members_in_group"
-            android:layout_weight="1"
-            android:scrollbars = "vertical"
-            />
-        <!-->
     </LinearLayout>
 
 

@@ -4,33 +4,26 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:orientation="vertical">
+    android:orientation="horizontal">
 
 
-        <TextView
-            android:id="@+id/coordinator_icon"
-            android:text="C"
-            android:textSize="29dp"
-            android:gravity="center_horizontal"
-            android:layout_gravity="left"
-            android:textColor="#FFFFFF"
-            android:background="@drawable/circle_shape"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="30dp"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/coord_profile_image"
             android:layout_width="60dp"
-            android:layout_height="60dp" />
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/field_margin_small"
+            android:layout_marginRight="@dimen/field_margin_small"
+            android:src="@drawable/profile"
+            app:civ_border_color="@color/coordAvator"
+            app:civ_border_width="2dp" />
 
         <TextView
             android:id="@+id/coorinator_name"
             android:text=""
             android:textColor="#000000"
-            android:gravity="center_horizontal"
-            android:layout_width="60dp"
-            android:layout_marginTop="1dp"
-            android:layout_marginBottom="1dp"
-            android:layout_marginLeft="30dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"/>
-
+            android:layout_gravity="center_vertical"/>
 
 </LinearLayout>

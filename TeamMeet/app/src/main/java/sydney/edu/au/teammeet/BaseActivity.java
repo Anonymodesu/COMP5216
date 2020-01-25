@@ -161,7 +161,7 @@ public class BaseActivity extends AppCompatActivity {
                 DrawerImageLoader.init(new AbstractDrawerImageLoader() {
                     @Override
                     public void set(ImageView imageView, Uri uri, Drawable placeholder) {
-                        Picasso.get().load(uri).placeholder(placeholder).into(imageView);
+                        Picasso.get().load(uri).fit().centerCrop().placeholder(placeholder).into(imageView);
                     }
 
                     @Override

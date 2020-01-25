@@ -20,9 +20,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfileMemberAdapter.MyViewHolder> {
     //private String[] mDataset;
@@ -30,6 +33,7 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
     private Context context;
     private ArrayList<String> memberIdList;
     private ArrayList<String> memberNameList;
+    private ArrayList<String> memberPhotoList;
 
     private OnItemClicked onClick;
 
@@ -44,20 +48,23 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
     // you provide access to all the views for a data item in a view holder
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView groupMemberIcon, groupMemberName;
+        public TextView groupMemberName;
+        public CircleImageView groupMemberIcon;
 
         public MyViewHolder(View v) {
             super(v);
-            groupMemberIcon = v.findViewById(R.id.groupmember_icon);
+            //groupMemberIcon = v.findViewById(R.id.groupmember_icon);
+            groupMemberIcon = v.findViewById(R.id.group_profile_image);
             groupMemberName = v.findViewById(R.id.groupmember_name);
         }
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public GroupProfileMemberAdapter(ArrayList<String> memberNameList, ArrayList<String> memberIdList, Context context) {
+    public GroupProfileMemberAdapter(ArrayList<String> memberNameList, ArrayList<String> memberIdList, ArrayList<String> memberPhotoList, Context context) {
         //mDataset = dataset;
         this.memberNameList = memberNameList;
         this.memberIdList = memberIdList;
+        this.memberPhotoList = memberPhotoList;
         this.context = context;
     }
 
@@ -76,6 +83,13 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.groupMemberName.setText(memberNameList.get(position));
+        if(memberPhotoList.get(position) != null){
+            Picasso.get()
+                    .load(memberPhotoList.get(position))
+                    .fit().centerCrop()
+                    .placeholder(R.drawable.profile)
+                    .into(holder.groupMemberIcon);
+        }
         holder.groupMemberIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,6 +112,10 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
         return memberNameList.get(position);
     }
 
+    public String getMemberPhotoList(int position){
+        return memberPhotoList.get(position);
+    }
+
     //retrieve groupId from sharepreference
     public String getGroupId(){
 
@@ -113,6 +131,7 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
 
         //save member name to sharepreference
         saveDeletedMemberName(memberNameList.get(position));
+        saveDeletedMemberPhoto(memberPhotoList.get(position));
 
     }
 
@@ -121,6 +140,7 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
         //remove data item from list
         memberNameList.remove(position);
         memberIdList.remove(position);
+        memberPhotoList.remove(position);
         //update recycle view
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, getItemCount());
@@ -154,15 +174,6 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
                                     }
                                 });
 
-                        /*group.setMembers(members);
-                        groupRef.set(group)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        deleteMemberFromList(context, position);
-                                        Log.d(TAG, "User deleted from group");
-                                    }
-                                });*/
                     }
                 });
     }
@@ -207,6 +218,21 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
         return deletedMemberName;
     }
 
+    public String getDeletedMemberPhoto(){
+
+        SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(context);
+        String deletedMemberPhoto = mPref.getString("deletedMemberPhoto", "" );
+        return deletedMemberPhoto ;
+    }
+
+    public void saveDeletedMemberPhoto(String deletedMemberPhoto){
+
+        SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = mPref.edit();
+        editor.putString("deletedMemberPhoto", deletedMemberPhoto);
+        editor.commit();
+    }
+
     //save the memberName which is deleted to SharePreference
     public void saveDeletedMemberId(String deletedMemberId){
 
@@ -229,6 +255,7 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
 
         memberNameList.add(position, getDeletedMemberName());
         memberIdList.add(position, getDeletedMemberId());
+        memberPhotoList.add(position, getDeletedMemberPhoto());
         notifyItemInserted(position);
         notifyItemRangeChanged(0, getItemCount());
         /*if (position != memberNameList.size() - 1) {
@@ -261,25 +288,9 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
                         });
                 insertTheGroupToDeletedMember(groupId);
 
-                /*if(!memberList.contains(getDeletedMemberId())){
-                    memberList.add(getDeletedMemberId());
-                    group.setMembers(memberList);
-                    groupRef.set(group)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    notifyItemInserted(position);
-                                    notifyItemRangeChanged(position, getItemCount());
-                                }
-                            });
-                    insertTheGroupToDeletedMember(groupId);
-                }*/
             }
         });
 
-       /* memberNameList.add(position, getDeletedMemberName());
-        notifyItemInserted(position);
-        notifyItemRangeChanged(position, getItemCount());*/
     }
 
     public void insertTheGroupToDeletedMember(final String groupId){
@@ -322,6 +333,7 @@ public class GroupProfileMemberAdapter extends RecyclerView.Adapter<GroupProfile
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, getItemCount());
     }
+
 
     public void setOnClick(OnItemClicked onClick)
     {

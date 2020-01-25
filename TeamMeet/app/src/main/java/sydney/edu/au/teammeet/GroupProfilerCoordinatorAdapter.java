@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,10 +23,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class GroupProfilerCoordinatorAdapter extends RecyclerView.Adapter<GroupProfilerCoordinatorAdapter.MyViewHolder> {
 
     private Context context;
     private ArrayList<String> coordinatorList;
+    private ArrayList<String> coordPhotoList;
     //private final List<Map.Entry<String, String>> mData;
 
     FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
@@ -34,11 +38,12 @@ public class GroupProfilerCoordinatorAdapter extends RecyclerView.Adapter<GroupP
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView coordinatorIcon, coordinatorName;
+        public TextView coordinatorName;
+        CircleImageView coordinatorIcon;
 
         public MyViewHolder(View v) {
             super(v);
-            coordinatorIcon = v.findViewById(R.id.coordinator_icon);
+            coordinatorIcon = v.findViewById(R.id.coord_profile_image);
             coordinatorName = v.findViewById(R.id.coorinator_name);
         }
     }
@@ -51,9 +56,10 @@ public class GroupProfilerCoordinatorAdapter extends RecyclerView.Adapter<GroupP
         return vh;
     }
 
-    public GroupProfilerCoordinatorAdapter(ArrayList<String> coordinatorList, Context context) {
+    public GroupProfilerCoordinatorAdapter(ArrayList<String> coordinatorList,  ArrayList<String> coordPhotoList, Context context) {
         this.coordinatorList = coordinatorList;
         this.context = context;
+        this.coordPhotoList = coordPhotoList;
     }
 
     /*public String getMemberList(int position){
@@ -67,6 +73,13 @@ public class GroupProfilerCoordinatorAdapter extends RecyclerView.Adapter<GroupP
     @Override
     public void onBindViewHolder(@NonNull GroupProfilerCoordinatorAdapter.MyViewHolder holder, int position) {
         holder.coordinatorName.setText(coordinatorList.get(position));
+        if(coordPhotoList.get(position) != null){
+            Picasso.get()
+                    .load(coordPhotoList.get(position))
+                    .fit().centerCrop()
+                    .placeholder(R.drawable.profile)
+                    .into(holder.coordinatorIcon);
+        }
     }
 
     @Override

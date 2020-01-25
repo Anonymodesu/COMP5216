@@ -46,7 +46,7 @@ public class GroupProfileActivity extends BaseActivity implements OnItemClicked 
     //private RecyclerView.LayoutManager memberLayoutManager;
 
     private Button addMemberBtn;
-    private String currentUserID, userName, userEmail;
+    private String currentUserID, userName, userEmail, userProfile;
     private String memberEmail;
     private User user;
     private String groupID;
@@ -160,6 +160,8 @@ public class GroupProfileActivity extends BaseActivity implements OnItemClicked 
                         final ArrayList<String> groupMemberIDs = new ArrayList<String>();
                         final ArrayList<String> coordinatorIDs = new ArrayList<String>();
                         final ArrayList<String> coordinatorName = new ArrayList<String>();
+                        final ArrayList<String> userPhotos = new ArrayList<String>();
+                        final ArrayList<String> coordPhotos = new ArrayList<String>();
 
                         coordinatorIDs.addAll(group.getCoordinators());
                         userIDs.addAll(group.getMembers());
@@ -173,16 +175,18 @@ public class GroupProfileActivity extends BaseActivity implements OnItemClicked 
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                     User user = documentSnapshot.toObject(User.class);
                                     userName = user.getUsername();
+                                    userProfile = user.getPhoto();
                                     String userId = userDoc.getId();
 
                                     usernames.add(userName);
                                     groupMemberIDs.add(userId);
+                                    userPhotos.add(userProfile);
 //                                 Log.e("TAGGING THIS SHIT", "The size is " + usernames.size());
 
                                     if (usernames.size() == userIDs.size()) {
 
                                         //userAdapter = new sydney.edu.au.teammeet.UserViewAdapter(usernames.toArray(new String[usernames.size()]),groupMember, GroupProfileActivity.this);
-                                        membersAdapter = new GroupProfileMemberAdapter(usernames, groupMemberIDs, GroupProfileActivity.this);
+                                        membersAdapter = new GroupProfileMemberAdapter(usernames, groupMemberIDs, userPhotos, GroupProfileActivity.this);
                                         membersAdapter.setOnClick(GroupProfileActivity.this);
                                         memberRecycleView.setAdapter(membersAdapter);
                                     }
@@ -199,10 +203,12 @@ public class GroupProfileActivity extends BaseActivity implements OnItemClicked 
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                     User user = documentSnapshot.toObject(User.class);
                                     userName = user.getUsername();
+                                    userProfile = user.getPhoto();
                                     coordinatorName.add(userName);
+                                    coordPhotos.add(userProfile);
 
                                     if (coordinatorName.size() == coordinatorIDs.size()) {
-                                        coordinatorAdapter = new GroupProfilerCoordinatorAdapter(coordinatorName, GroupProfileActivity.this);
+                                        coordinatorAdapter = new GroupProfilerCoordinatorAdapter(coordinatorName, coordPhotos, GroupProfileActivity.this);
                                         coordinatorRecycleView.setAdapter(coordinatorAdapter);
                                     }
                                 }

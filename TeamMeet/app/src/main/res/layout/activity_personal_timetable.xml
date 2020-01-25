@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:background="@drawable/ic_zoom_in_black_36dp"
+            android:background="@drawable/ic_zoom_in_green_24dp"
             android:onClick="onZoom"
             android:text="Zoom" />
 
