@@ -10,37 +10,50 @@
         layout="@layout/global_header">
     </include>
 
-
-    <Button
-        android:id="@+id/add_new_member"
-        android:layout_width="wrap_content"
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/main_frame"
+    android:orientation="vertical"
+    android:paddingTop="?actionBarSize"
+    android:scrollbars="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/global_header"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="20dp"
-        android:text="+ Add New Member"
-        android:textAllCaps="false"
-        android:layout_marginLeft="10dp"/>
-
-    <Button
-        android:id="@+id/goto_meeting_times"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_alignTop="@id/add_new_member"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="20dp"
-        android:onClick="gotoGroupMeetingTimes"
-        android:text="Meeting Times"
-        android:textAllCaps="false"
-        android:layout_marginRight="10dp"/>
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/activity_horizontal_margin">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="1">
+            <Button
+                android:id="@+id/add_new_member"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+ Add New Member"
+                android:textAllCaps="false" />
+                </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="1">
+            <Button
+                android:id="@+id/goto_meeting_times"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="gotoGroupMeetingTimes"
+                android:text="Meeting Times"
+                android:textAllCaps="false" />
+        </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_below="@+id/add_new_member">
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -114,6 +127,16 @@
             android:scrollbars="vertical" />
 
     </LinearLayout>
-
+</LinearLayout>
+<com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|end"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentEnd="true"
+    android:layout_margin="@dimen/fab_margin"
+    android:backgroundTint="@color/accent"
+    android:text="Chat room">
+</com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton>
 
 </RelativeLayout>
