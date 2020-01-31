@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -51,6 +52,7 @@ public class GroupProfileActivity extends BaseActivity implements OnItemClicked 
     private User user;
     private String groupID;
     private TextView groupName;
+    ExtendedFloatingActionButton btn_chatroom;
     //private sydney.edu.au.teammeet.UserViewAdapter userAdapter;
     private sydney.edu.au.teammeet.GroupProfilerCoordinatorAdapter coordinatorAdapter;
     private sydney.edu.au.teammeet.GroupProfileMemberAdapter membersAdapter;
@@ -80,8 +82,9 @@ public class GroupProfileActivity extends BaseActivity implements OnItemClicked 
         setUpGlobalNav(GroupProfileActivity.this, "Group Profile");
 
         groupName = (TextView) findViewById(R.id.group_name);
+        btn_chatroom = findViewById(R.id.btn_chatroom);
 
-        String groupname = getIntent().getStringExtra("groupname");
+        final String groupname = getIntent().getStringExtra("groupname");
         groupID = getIntent().getStringExtra("groupid");
         groupName.setText(groupname);
         saveGroupId();
@@ -130,6 +133,15 @@ public class GroupProfileActivity extends BaseActivity implements OnItemClicked 
         }
 
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(memberRecycleView);
+        btn_chatroom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GroupProfileActivity.this, ChatActivity.class);
+                intent.putExtra("groupId", groupID);
+                intent.putExtra("groupName", groupname);
+                startActivity(intent);
+            }
+        });
 
     }
 

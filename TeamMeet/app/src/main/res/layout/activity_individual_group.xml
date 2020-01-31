@@ -123,7 +123,7 @@
             android:id="@+id/list_of_members"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/members_list"
+            android:layout_below="@id/members_list"
             android:scrollbars="vertical" />
 
     </LinearLayout>
@@ -131,6 +131,7 @@
 <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:id="@+id/btn_chatroom"
     android:layout_gravity="bottom|end"
     android:layout_alignParentBottom="true"
     android:layout_alignParentEnd="true"

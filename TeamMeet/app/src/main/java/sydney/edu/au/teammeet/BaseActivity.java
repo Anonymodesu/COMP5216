@@ -227,16 +227,16 @@ public class BaseActivity extends AppCompatActivity {
                                 Intent intent = new Intent(activity, LoginActivity.class);
                                 view.getContext().startActivity(intent);
 
-                            } else if (drawerItem.getIdentifier() == TIMETABLE_ID && !(activity instanceof PersonalTimetableActivity))  {
+                            } else if (drawerItem.getIdentifier() == TIMETABLE_ID )  {
                                 Intent intent = new Intent(activity, PersonalTimetableActivity.class);
                                 view.getContext().startActivity(intent);
-                            } else if (drawerItem.getIdentifier() == PROFILE_ID && !(activity instanceof EditProfileActivity))  {
+                            } else if (drawerItem.getIdentifier() == PROFILE_ID )  {
                                 Intent intent = new Intent(activity, EditProfileActivity.class);
                                 view.getContext().startActivity(intent);
-                            } else if (drawerItem.getIdentifier() == HOME_ID && !(activity instanceof MainActivity))  {
+                            } else if (drawerItem.getIdentifier() == HOME_ID )  {
                                 Intent intent = new Intent(activity, MainActivity.class);
                                 view.getContext().startActivity(intent);
-                            } else if (drawerItem.getIdentifier() == GROUP_ID && !(activity instanceof GroupsActivity))  {
+                            } else if (drawerItem.getIdentifier() == GROUP_ID )  {
                                 Intent intent = new Intent(activity, GroupsActivity.class);
                                 view.getContext().startActivity(intent);
                             }
