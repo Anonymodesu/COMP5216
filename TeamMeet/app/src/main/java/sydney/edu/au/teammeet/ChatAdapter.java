@@ -47,11 +47,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ChatAdapter.ViewHolder holder, int position) {
-
+        fuser = FirebaseAuth.getInstance().getCurrentUser();
         ChatMessage chat = mMessages.get(position);
         User user = chat.getUser();
 
         holder.show_message.setText(chat.getMessage());
+        if (!mMessages.get(position).getUser().getEmail().equals(fuser.getEmail())){
+        holder.user_name.setText(user.getUsername());}
         if(user.getPhoto() != null){
             Picasso.get()
                     .load(user.getPhoto())
@@ -79,7 +81,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     public  class ViewHolder extends RecyclerView.ViewHolder{
 
-        public TextView show_message;
+        public TextView show_message, user_name;
         public ImageView profile_image;
         public TextView txt_seen;
 
@@ -89,6 +91,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
             show_message = itemView.findViewById(R.id.show_message);
             profile_image = itemView.findViewById(R.id.profile_image);
             txt_seen = itemView.findViewById(R.id.txt_seen);
+            user_name = itemView.findViewById(R.id.user_name);
         }
     }
 

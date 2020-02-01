@@ -7,23 +7,34 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:id="@+id/profile_image" />
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/profile_image"
         android:layout_marginLeft="5dp"
+        android:id="@+id/message_box"
+        android:orientation="vertical"
+        android:background="@drawable/chatbackground_left">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="username"
+        android:id="@+id/user_name"
+        android:textSize="8sp"
+        android:textColor="@color/primary"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="hello"
         android:id="@+id/show_message"
-        android:textSize="18sp"
-        android:padding="8dp"
-        android:textColor = "@color/textSecondary"
-        android:background="@drawable/chatbackground_left"/>
-
+        android:textSize="15sp"
+        android:textColor = "@color/textSecondary" />
+    </LinearLayout>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/txt_seen"
         android:visibility="gone"
-        android:layout_below="@id/show_message"/>
+        android:layout_below="@id/message_box"/>
 
 </RelativeLayout>
