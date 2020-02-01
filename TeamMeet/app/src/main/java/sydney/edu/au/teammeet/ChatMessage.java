@@ -6,6 +6,7 @@ import com.google.firebase.firestore.ServerTimestamp;
 import java.util.Date;
 
 public class ChatMessage {
+    private String userId;
     private User user;
     private String message;
     private String message_id;
@@ -13,7 +14,8 @@ public class ChatMessage {
     Date timestamp;
     private boolean isseen;
 
-    public ChatMessage(User user, String message, String message_id, Date timestamp, boolean isseen) {
+    public ChatMessage(String userId, User user, String message, String message_id, Date timestamp, boolean isseen) {
+        this.userId = userId;
         this.user = user;
         this.message = message;
         this.message_id = message_id;
@@ -63,5 +65,13 @@ public class ChatMessage {
 
     public void setIsseen(boolean isseen) {
         this.isseen = isseen;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

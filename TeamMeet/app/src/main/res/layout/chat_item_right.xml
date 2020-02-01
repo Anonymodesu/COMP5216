@@ -23,9 +23,9 @@
             android:text="hello"
             android:layout_alignParentEnd="true"
             android:id="@+id/show_message"
-            android:textSize="18sp"
+            android:textSize="15sp"
             android:textColor="#fff"
-            android:padding="8dp"
+            android:padding="5dp"
             android:layout_alignParentRight="true" />
 
         <TextView

@@ -45,6 +45,7 @@ public class ChatActivity extends BaseActivity {
     TextView room_name;
     String groupId;
     FirebaseFirestore mDb;
+    FirebaseUser fuser;
     ChatAdapter mChatMessageRecyclerAdapter;
     ListenerRegistration mChatMessageEventListener;
     private ArrayList<ChatMessage> mMessages = new ArrayList<>();
@@ -64,6 +65,7 @@ public class ChatActivity extends BaseActivity {
         room_name.setText(groupname);
 
         mDb = FirebaseFirestore.getInstance();
+        fuser = FirebaseAuth.getInstance().getCurrentUser();
 
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +97,7 @@ public class ChatActivity extends BaseActivity {
 
         User user = ((UserClient)(getApplicationContext())).getUser();
         newChatMessage.setUser(user);
+        newChatMessage.setUserId(fuser.getUid());
 
         newMessageDoc.set(newChatMessage).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -168,6 +171,18 @@ public class ChatActivity extends BaseActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setStatus("online");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        setStatus("offline");
     }
 
 }

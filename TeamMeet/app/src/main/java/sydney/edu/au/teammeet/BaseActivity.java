@@ -7,6 +7,9 @@ import android.content.Context;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
@@ -52,8 +55,9 @@ public class BaseActivity extends AppCompatActivity {
 
     @VisibleForTesting
     public ProgressDialog mProgressDialog;
+    FirebaseFirestore mDb;
+    FirebaseUser fuser;
 
-    private FirebaseAuth mAuth;
 
     public void showProgressDialog() {
         if (mProgressDialog == null) {
@@ -70,7 +74,16 @@ public class BaseActivity extends AppCompatActivity {
             mProgressDialog.dismiss();
         }
     }
-
+    public void setStatus(String status){
+        mDb = FirebaseFirestore.getInstance();
+        fuser = FirebaseAuth.getInstance().getCurrentUser();
+        DocumentReference userDoc = mDb
+                .collection("Users")
+                .document(fuser.getUid());
+        User user = ((UserClient)(getApplicationContext())).getUser();
+        user.setStatus(status);
+        userDoc.set(user);
+    }
     //hide soft keyboard when clicking on places other than edit text and buttons
     public void setupUI(View view, final Activity activity) {
 
@@ -224,7 +237,7 @@ public class BaseActivity extends AppCompatActivity {
 
                             if (drawerItem.getIdentifier() == SIGNOUT_ID && !(activity instanceof LoginActivity)) {
                                 // load tournament screen
-                                Intent intent = new Intent(activity, LoginActivity.class);
+                                Intent intent = new Intent(activity, LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 view.getContext().startActivity(intent);
 
                             } else if (drawerItem.getIdentifier() == TIMETABLE_ID )  {

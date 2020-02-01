@@ -7,16 +7,18 @@ public class User {
     private String email;
     private String phone;
     private String photo;
+    private String status;
     private HashMap<String, String> coordinates;
     private HashMap<String, String> isMemberOf;
     private String timetable;
 
     public User(){}
-    public User(String username, String email, String phone, String photo, HashMap<String, String> coordinates, HashMap<String, String> isMemberOf, String timetable ){
+    public User(String username, String email, String phone, String photo, String status, HashMap<String, String> coordinates, HashMap<String, String> isMemberOf, String timetable ){
         this.username = username;
         this.email = email;
         this.phone = phone;
         this.photo = photo;
+        this.status = status;
         this.coordinates = coordinates;
         this.isMemberOf = isMemberOf;
         this.timetable = timetable;
@@ -110,5 +112,13 @@ public class User {
 
     public void setTimetable(String timetable) {
         this.timetable = timetable;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

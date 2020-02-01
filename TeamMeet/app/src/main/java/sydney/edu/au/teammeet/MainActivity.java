@@ -99,13 +99,14 @@ public class MainActivity extends BaseActivity {
                  DocumentSnapshot document = task.getResult();
                 if(!document.exists())
                 {
-                    newUser = new User(userName, userEmail.toLowerCase(), userPhone, userPhoto, null, null, null);
+                    newUser = new User(userName, userEmail.toLowerCase(), userPhone, userPhoto, "online", null, null, null);
                     currentUser.set(newUser);
                 }else{
                     newUser = document.toObject(User.class);
                 }
                 //set up User value for other pages
                  ((UserClient)(getApplicationContext())).setUser(newUser);
+                setStatus("online");
                 //update user information into nav menu
                  setUpGlobalNav(MainActivity.this, "Home");
             }
