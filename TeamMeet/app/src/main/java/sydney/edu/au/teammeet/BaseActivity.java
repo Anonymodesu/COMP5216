@@ -119,7 +119,7 @@ public class BaseActivity extends AppCompatActivity {
                 TextView pageName = findViewById(R.id.page_name);
                 pageName.setText(pagename);
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-                getSupportActionBar().setIcon(R.drawable.logo);
+                //getSupportActionBar().setIcon(R.drawable.logo);
                 if(user!=null) {
                     DrawerUtil.getDrawer(this, toolbar, user.getUsername(), user.getEmail());
                 }else{
@@ -133,7 +133,7 @@ public class BaseActivity extends AppCompatActivity {
             //set up page name
             TextView pageName = findViewById(R.id.page_name);
             pageName.setText(pagename);
-            getSupportActionBar().setIcon(R.drawable.logo);
+           // getSupportActionBar().setIcon(R.drawable.logo);
         }
 
     }
@@ -201,7 +201,7 @@ public class BaseActivity extends AppCompatActivity {
 
             AccountHeader headerResult = new AccountHeaderBuilder()
                     .withActivity(activity)
-                    .withHeaderBackground(R.color.primary)
+                    .withHeaderBackground(R.drawable.header)
                     .addProfiles(
                             profileItem
                     )

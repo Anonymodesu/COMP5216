@@ -7,56 +7,92 @@
     android:orientation="vertical"
     android:id="@+id/signin_form"
     tools:context=".LoginActivity"
-    android:background="@color/grey_100"
+    android:background="@color/primary"
     android:fitsSystemWindows="true">
-
-
     <include
         android:id="@+id/global_header"
         layout="@layout/global_header"
-        android:visibility="invisible">
+        android:visibility="gone">
     </include>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="188dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/header"/>
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
+        android:layout_width="150dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="60dp"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/team_meet"/>
+        android:id="@+id/logo"
+        android:src="@drawable/logo" />
 
     <LinearLayout
         android:id="@+id/login_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="210dp"
+        android:layout_below="@id/logo"
+        android:layout_marginTop="30dp"
         android:layout_marginLeft="@dimen/field_margin_small"
         android:layout_marginRight="@dimen/field_margin_small">
 
     <!-- Email Label -->
-    <EditText android:id="@+id/userEmail"
-        android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_gravity="center"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/iconmail"/>
+        <EditText android:id="@+id/userEmail"
+            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:backgroundTint="@color/grey_300"
+            android:padding="5dp"
+            android:hint=" Email"
+            android:textColorHint="@color/grey_300"/>
+        </LinearLayout>
+    <LinearLayout
+        android:layout_gravity="center"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:drawableLeft="@drawable/ic_email_grey_24dp"
-        android:padding="10dp"
-        android:hint=" Email" />
-
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/iconlock"/>
     <EditText android:id="@+id/userPassword"
         android:layout_width="match_parent"
+        android:layout_gravity="center"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:layout_marginTop="@dimen/field_margin_small"
-        android:padding="10dp"
-        android:drawableLeft="@drawable/ic_password_grey_24dp"
-        android:hint=" Password"/>
+        android:padding="5dp"
+        android:hint=" Password"
+        android:backgroundTint="@color/grey_300"
+        android:textColorHint="@color/grey_300"/>
+    </LinearLayout>
 
     <Button
         android:id="@+id/btn_login"
-        android:layout_width="fill_parent"
-        android:layout_height="60dp"
-        android:layout_margin="@dimen/field_margin"
-        android:text="Log In"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:text="SIGN IN"
+        android:backgroundTint="@color/grey_300"
         android:textAllCaps="false"
         android:textSize="@dimen/button_text_size"/>
     </LinearLayout>
@@ -67,19 +103,27 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_below="@+id/login_form">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Don't have an account?"
+            android:textSize="14dip"
+            android:layout_marginRight="20dp"
+            android:textColor="@color/grey_300" />
         <TextView android:id="@+id/link_register"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sign up |"
-            android:textSize="14dip"
-            android:textColor="@color/textSecondary"/>
+            android:text="SIGN UP"
+            android:textSize="14dp"
+            android:textColor="@color/primary_light"/>
 
         <TextView android:id="@+id/link_forgetpw"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/btn_login"
             android:text="  Forgot your password?"
-            android:textColor="@color/textSecondary"
+            android:textColor="@color/colorWhite"
+            android:visibility="gone"
             android:textSize="14dip"/>
     </LinearLayout>
 
@@ -94,7 +138,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text=" or log in with"
-        android:textColor="#808080"
+        android:textColor="@color/grey_300"
         android:textSize="14dip"/>
     </LinearLayout>
 
@@ -104,23 +148,23 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:orientation="horizontal"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:layout_below="@id/social_text">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/facebook_signin_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_weight="1"
             android:src="@drawable/facebook">
         </androidx.appcompat.widget.AppCompatImageView>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/google_signin_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_weight="1"
-            android:src="@drawable/google" />
+            android:src="@drawable/gmail" />
     </LinearLayout>
 
 </RelativeLayout>
