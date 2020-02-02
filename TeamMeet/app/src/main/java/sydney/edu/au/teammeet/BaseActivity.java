@@ -37,6 +37,8 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -104,6 +106,10 @@ public class BaseActivity extends AppCompatActivity {
                 setupUI(innerView, activity);
             }
         }
+    }
+    public void hideTitleBar(){
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     public void setUpGlobalNav(final Activity activity, String pagename){

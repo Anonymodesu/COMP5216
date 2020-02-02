@@ -10,6 +10,7 @@
     <string name="sign_out">Sign Out</string>
     <string name="time_table">My Timetable</string>
     <string name="group">My Groups</string>
+    <string name="terms_text"> <u>Terms &amp; Conditions</u></string>
 
     <string name="signed_out">Signed Out</string>
     <string name="sign_in">Sign In</string>

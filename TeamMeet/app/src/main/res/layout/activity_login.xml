@@ -20,21 +20,33 @@
         android:layout_centerHorizontal="true"
         android:background="@drawable/header"/>
 
-    <ImageView
-        android:layout_width="150dp"
-        android:layout_height="120dp"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/logo_block"
         android:layout_marginTop="60dp"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/logo"
-        android:src="@drawable/logo" />
+        android:layout_centerHorizontal="true">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/logo_1" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_gravity="center"
+            android:src="@drawable/teammeet" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/login_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_below="@id/logo"
-        android:layout_marginTop="30dp"
+        android:layout_below="@id/logo_block"
+        android:layout_marginTop="70dp"
         android:layout_marginLeft="@dimen/field_margin_small"
         android:layout_marginRight="@dimen/field_margin_small">
 
@@ -53,12 +65,15 @@
         <EditText android:id="@+id/userEmail"
             android:layout_width="match_parent"
             android:layout_gravity="center"
+            android:alpha=".6"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
-            android:backgroundTint="@color/grey_300"
+            android:backgroundTint="@color/colorWhite"
             android:padding="5dp"
+            android:fontFamily="@font/montserrat"
+            android:textSize="@dimen/edit_text_size"
             android:hint=" Email"
-            android:textColorHint="@color/grey_300"/>
+            android:textColorHint="@color/colorWhite"/>
         </LinearLayout>
     <LinearLayout
         android:layout_gravity="center"
@@ -70,7 +85,7 @@
             android:layout_height="25dp"
             android:layout_gravity="center"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/iconlock"/>
     <EditText android:id="@+id/userPassword"
         android:layout_width="match_parent"
@@ -78,10 +93,13 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:layout_marginTop="@dimen/field_margin_small"
+        android:textSize="@dimen/edit_text_size"
+        android:alpha=".6"
+        android:fontFamily="@font/montserrat"
         android:padding="5dp"
         android:hint=" Password"
-        android:backgroundTint="@color/grey_300"
-        android:textColorHint="@color/grey_300"/>
+        android:backgroundTint="@color/colorWhite"
+        android:textColorHint="@color/colorWhite"/>
     </LinearLayout>
 
     <Button
@@ -93,6 +111,7 @@
         android:layout_marginBottom="30dp"
         android:text="SIGN IN"
         android:backgroundTint="@color/grey_300"
+        android:fontFamily="@font/montserrat"
         android:textAllCaps="false"
         android:textSize="@dimen/button_text_size"/>
     </LinearLayout>
@@ -108,12 +127,14 @@
             android:layout_height="wrap_content"
             android:text="Don't have an account?"
             android:textSize="14dip"
+            android:fontFamily="@font/montserrat"
             android:layout_marginRight="20dp"
             android:textColor="@color/grey_300" />
         <TextView android:id="@+id/link_register"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="SIGN UP"
+            android:fontFamily="@font/montserrat"
             android:textSize="14dp"
             android:textColor="@color/primary_light"/>
 
@@ -122,7 +143,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/btn_login"
             android:text="  Forgot your password?"
+            android:fontFamily="@font/montserrat"
             android:textColor="@color/colorWhite"
+            android:alpha=".6"
             android:visibility="gone"
             android:textSize="14dip"/>
     </LinearLayout>
@@ -138,7 +161,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text=" or log in with"
-        android:textColor="@color/grey_300"
+        android:alpha=".6"
+        android:textColor="@color/colorWhite"
+        android:fontFamily="@font/montserrat"
         android:textSize="14dip"/>
     </LinearLayout>
 

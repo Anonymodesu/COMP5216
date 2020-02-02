@@ -10,6 +10,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -72,10 +74,12 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        hideTitleBar();
         setContentView(R.layout.activity_login);
        //setup soft keyboard setting for login
         setupUI(findViewById(R.id.signin_form), LoginActivity.this);
         setUpGlobalNav(LoginActivity.this, "Log In");
+
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();

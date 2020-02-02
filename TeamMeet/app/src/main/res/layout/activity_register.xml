@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E0ECF8"
+    android:background="@color/colorWhite"
     android:id="@+id/register_form"
     tools:context=".RegisterActivity">
     <include
@@ -12,83 +12,177 @@
         layout="@layout/global_header">
     </include>
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profile_image"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
-        android:src="@drawable/profile"
-        app:civ_border_width="2dp"
-        app:civ_border_color="@color/colorPrimary"
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="192dp"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/global_header"
-        android:layout_marginTop="@dimen/field_margin"/>
+        android:id="@+id/header_band"
+        android:background="@drawable/header"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:orientation="horizontal"
+        android:id="@+id/gobackbar"
+        android:layout_marginTop="50dp">
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/ic_back_white"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:id="@+id/go_back"
+            android:textSize="14dp"
+            android:layout_gravity="center"
+            android:textColor="@color/colorWhite"
+            android:fontFamily="@font/montserrat"
+            android:textStyle="bold"/>
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_below="@id/gobackbar"
+        android:layout_height="wrap_content"
+        android:text="Create a New Account"
+        android:textColor="@color/colorWhite"
+        android:fontFamily="@font/montserrat"
+        android:textSize="18dp"
+        android:layout_marginLeft="38dp"
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center"></TextView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/profile_image"
+        android:layout_below="@+id/header_band"
         android:layout_margin="15dp"
         android:elevation="5dp">
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:id="@+id/text_fields"
+    android:layout_marginTop="@dimen/activity_vertical_margin"
+    android:layout_gravity="center">
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:background="@drawable/iconuserblack"/>
     <EditText
         android:id="@+id/Siginup_Username"
-        android:layout_width="match_parent"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:hint=" user name"
+        android:textColor="@color/textSecondary"
+        android:fontFamily="@font/montserrat"
+        android:alpha=".6"
         android:ems="10"
-        android:textSize="19dp"
-        android:background="@drawable/rounded_shape"
+        android:textSize="@dimen/edit_text_size"
         android:padding="5dp"
-        android:layout_margin="7dp"
-        android:drawableLeft="@drawable/ic_person_grey_24dp"/>
-
-    <EditText
-        android:id="@+id/Siginup_Email"
-        android:layout_width="match_parent"
+        android:layout_margin="7dp" />
+</LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint=" email"
-        android:inputType="textEmailAddress"
-        android:textSize="19dp"
-        android:background="@drawable/rounded_shape"
-        android:padding="5dp"
-        android:layout_margin="5dp"
-        android:drawableLeft="@drawable/ic_email_grey_24dp"/>
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/edit_text_margin"
+        android:layout_gravity="center">
 
-    <EditText
-        android:id="@+id/Signup_Password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint=" password"
-        android:inputType="textPassword"
-        android:textSize="19dp"
-        android:background="@drawable/rounded_shape"
-        android:layout_margin="5dp"
-        android:padding="5dp"
-        android:drawableLeft="@drawable/ic_password_grey_24dp"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:background="@drawable/iconmailblack"/>
+            <EditText
+                android:id="@+id/Siginup_Email"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint=" email"
+                android:textColor="@color/textSecondary"
+                android:fontFamily="@font/montserrat"
+                android:inputType="textEmailAddress"
+                android:alpha=".6"
+                android:textSize="@dimen/edit_text_size"
+                android:padding="5dp"
+                android:layout_margin="5dp" />
+    </LinearLayout>
 
-    <EditText
-        android:id="@+id/Signup_Confirmpw"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:layout_margin="5dp"
-        android:hint=" confirm password"
-        android:inputType="textPassword"
-        android:textSize="19dp"
-        android:background="@drawable/rounded_shape"
-        android:padding="5dp"
-        android:drawableLeft="@drawable/ic_password_grey_24dp"/>
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/edit_text_margin"
+        android:layout_gravity="center">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:background="@drawable/iconlockblack"/>
+            <EditText
+                android:id="@+id/Signup_Password"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint=" password"
+                android:textColor="@color/textSecondary"
+                android:alpha=".6"
+                android:fontFamily="@font/montserrat"
+                android:inputType="textPassword"
+                android:textSize="@dimen/edit_text_size"
+                android:layout_margin="5dp"
+                android:padding="5dp" />
+    </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/activity_vertical_margin">
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/check_box">
+            </com.google.android.material.checkbox.MaterialCheckBox>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat"
+                android:text="I have accepted the"
+                android:textColor="@color/grey_500"
+                android:textSize="12dp"></TextView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/terms_text"
+                android:textSize="12dp"
+                android:fontFamily="@font/montserrat"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/primary_light">
+            </TextView>
+
+        </LinearLayout>
 
     <Button
         android:id="@+id/Signup_Button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="22dp"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:textSize="20dp"
+        android:enabled="false"
         android:layout_margin="15dp"
-        android:text="Create Account"
-        android:textAllCaps="false"/>
+        android:text="SIGN UP"
+        android:fontFamily="@font/montserrat"
+        android:backgroundTint="@color/grey_500"
+        android:textAllCaps="true"/>
     </LinearLayout>
 </RelativeLayout>

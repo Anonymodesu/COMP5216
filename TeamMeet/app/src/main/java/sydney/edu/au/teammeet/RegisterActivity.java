@@ -9,12 +9,16 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,24 +32,43 @@ public class RegisterActivity extends BaseActivity {
 
     //Views
     private EditText UserEmail, UserPassword, UserConfirmPassword,UserName;
+    private TextView GoBackButton;
     private Button CreateAccountButton;
-    private TextView pageName;
-    private CircleImageView ProfileImage;
+    private MaterialCheckBox checkbox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        hideTitleBar();
         setContentView(R.layout.activity_register);
-        //setup soft keyboard setting for login
         setupUI(findViewById(R.id.register_form), RegisterActivity.this);
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-        setUpGlobalNav(RegisterActivity.this, "Register");
+       // setUpGlobalNav(RegisterActivity.this, "Register");
         UserEmail = (EditText) findViewById(R.id.Siginup_Email);
         UserPassword = (EditText) findViewById(R.id.Signup_Password);
-        UserConfirmPassword = (EditText) findViewById(R.id.Signup_Confirmpw);
+       // UserConfirmPassword = (EditText) findViewById(R.id.Signup_Confirmpw);
         UserName = (EditText) findViewById(R.id.Siginup_Username);
         CreateAccountButton = (Button) findViewById(R.id.Signup_Button);
+        GoBackButton = (TextView) findViewById(R.id.go_back);
+        checkbox = findViewById(R.id.check_box);
+
+        checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    CreateAccountButton.setEnabled(true);
+                }else{
+                    CreateAccountButton.setEnabled(false);
+                }
+            }
+        });
+        GoBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SendUserToLoginActivity();
+            }
+        });
 
         CreateAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +93,7 @@ public class RegisterActivity extends BaseActivity {
     private void CreateNewAccount() {
         String email = UserEmail.getText().toString();
         String password = UserPassword.getText().toString();
-        String confirmPassword = UserConfirmPassword.getText().toString();
+//        String confirmPassword = UserConfirmPassword.getText().toString();
         final String userName = UserName.getText().toString();
         if (!validateForm()) {
             return;
@@ -134,15 +157,15 @@ public class RegisterActivity extends BaseActivity {
         } else {
             UserPassword.setError(null);
         }
-        String confirmPassword = UserConfirmPassword.getText().toString();
-        if (TextUtils.isEmpty(confirmPassword)) {
-            UserConfirmPassword.setError("Please confirm password!");
-            valid = false;
-        } else if (!password.equals(confirmPassword)) {
-            UserConfirmPassword.setError("The two passwords you entered does not match!");
-        } else {
-            UserConfirmPassword.setError(null);
-        }
+//        String confirmPassword = UserConfirmPassword.getText().toString();
+//        if (TextUtils.isEmpty(confirmPassword)) {
+//            UserConfirmPassword.setError("Please confirm password!");
+//            valid = false;
+//        } else if (!password.equals(confirmPassword)) {
+//            UserConfirmPassword.setError("The two passwords you entered does not match!");
+//        } else {
+//            UserConfirmPassword.setError(null);
+//        }
         return valid;
     }
 
