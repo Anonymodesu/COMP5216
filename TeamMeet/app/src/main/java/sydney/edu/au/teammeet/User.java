@@ -8,17 +8,19 @@ public class User {
     private String phone;
     private String photo;
     private String status;
+    private String token;
     private HashMap<String, String> coordinates;
     private HashMap<String, String> isMemberOf;
     private String timetable;
 
     public User(){}
-    public User(String username, String email, String phone, String photo, String status, HashMap<String, String> coordinates, HashMap<String, String> isMemberOf, String timetable ){
+    public User(String username, String email, String phone, String photo, String status, String token, HashMap<String, String> coordinates, HashMap<String, String> isMemberOf, String timetable ){
         this.username = username;
         this.email = email;
         this.phone = phone;
         this.photo = photo;
         this.status = status;
+        this.token = token;
         this.coordinates = coordinates;
         this.isMemberOf = isMemberOf;
         this.timetable = timetable;
@@ -120,5 +122,13 @@ public class User {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

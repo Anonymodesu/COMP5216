@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,11 +34,15 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.storage.FirebaseStorage;
 
 import org.json.JSONObject;
 
 import java.util.Objects;
+
+import sydney.edu.au.teammeet.Notifications.MyFirebaseMessaging;
 
 public class MainActivity extends BaseActivity {
     //Variables for global navigation
@@ -51,6 +56,7 @@ public class MainActivity extends BaseActivity {
     private String userName, userEmail, userId, userPhoto, userPhone;
     private User newUser;
     DocumentReference currentUser;
+    MyFirebaseMessaging messagingService;
 
     //Variables for Time table page
     private LockableRecyclerView timetableRecyclerView;
@@ -99,7 +105,7 @@ public class MainActivity extends BaseActivity {
                  DocumentSnapshot document = task.getResult();
                 if(!document.exists())
                 {
-                    newUser = new User(userName, userEmail.toLowerCase(), userPhone, userPhoto, "online", null, null, null);
+                    newUser = new User(userName, userEmail.toLowerCase(), userPhone, userPhoto, "online", FirebaseInstanceId.getInstance().getToken(), null, null, null);
                     currentUser.set(newUser);
                 }else{
                     newUser = document.toObject(User.class);
@@ -107,6 +113,7 @@ public class MainActivity extends BaseActivity {
                 //set up User value for other pages
                  ((UserClient)(getApplicationContext())).setUser(newUser);
                 setStatus("online");
+                getToken();
                 //update user information into nav menu
                  setUpGlobalNav(MainActivity.this, "Home");
             }
@@ -116,10 +123,31 @@ public class MainActivity extends BaseActivity {
         //setTimetable();
     }
 
-   /* public void setTimetable(){
-        Intent intent = new Intent(MainActivity.this, PersonalTimetableActivity.class);
-        startActivity(intent);
-    }*/
+
+   public void getToken(){
+       FirebaseInstanceId.getInstance().getInstanceId()
+               .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                   @Override
+                   public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                       if (!task.isSuccessful()) {
+                           Log.w(TAG, "getInstanceId failed", task.getException());
+                           return;
+                       }
+                       // Get new Instance ID token
+                       String token = task.getResult().getToken();
+                       registerToken(token, newUser);
+
+                   }
+               });
+   }
+
+    public void registerToken(String token, User user) {
+        DocumentReference userDoc = mDb
+                .collection("Users")
+                .document(userId);
+        user.setToken(token);
+        userDoc.set(user);
+    }
 
    public void OnProfile(View view){
        Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);

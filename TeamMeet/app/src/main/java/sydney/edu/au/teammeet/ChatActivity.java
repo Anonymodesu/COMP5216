@@ -1,10 +1,12 @@
 package sydney.edu.au.teammeet;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,12 +15,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -31,9 +32,17 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import sydney.edu.au.teammeet.Notifications.APIService;
+import sydney.edu.au.teammeet.Notifications.Client;
+import sydney.edu.au.teammeet.Notifications.Data;
+import sydney.edu.au.teammeet.Notifications.MyResponse;
+import sydney.edu.au.teammeet.Notifications.Sender;
 
 public class ChatActivity extends BaseActivity {
 
@@ -43,10 +52,11 @@ public class ChatActivity extends BaseActivity {
     EditText txt_send;
     RecyclerView userView;
     TextView room_name;
-    String groupId;
+    String groupId, groupname;
     FirebaseFirestore mDb;
     FirebaseUser fuser;
     ChatAdapter mChatMessageRecyclerAdapter;
+    APIService apiService;
     ListenerRegistration mChatMessageEventListener;
     private ArrayList<ChatMessage> mMessages = new ArrayList<>();
     private Set<String> mMessageIds = new HashSet<>();
@@ -59,13 +69,16 @@ public class ChatActivity extends BaseActivity {
         txt_send = findViewById(R.id.txt_send);
         userView = findViewById(R.id.users_view);
         room_name = findViewById(R.id.room_name);
-        String groupname = getIntent().getStringExtra("groupName");
+        groupname = getIntent().getStringExtra("groupName");
         groupId = getIntent().getStringExtra("groupId");
         setUpGlobalNav(ChatActivity.this, "Chat Room");
         room_name.setText(groupname);
 
         mDb = FirebaseFirestore.getInstance();
         fuser = FirebaseAuth.getInstance().getCurrentUser();
+
+
+        apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
 
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,6 +88,7 @@ public class ChatActivity extends BaseActivity {
                     showSnackbar("You can't send empty messages", ChatActivity.this);
                 } else {
                     sendMessage(msg);
+                    sendNotifications(msg);
                 }
                 txt_send.setText("");
             }
@@ -83,7 +97,7 @@ public class ChatActivity extends BaseActivity {
         initChatroomRecyclerView();
     }
 
-    private void sendMessage(String msg) {
+    private void sendMessage(final String msg) {
 
         DocumentReference newMessageDoc = mDb
                 .collection("Groups")
@@ -111,6 +125,65 @@ public class ChatActivity extends BaseActivity {
             }
         });
     }
+
+
+    public void sendNotifications(final String message) {
+        DocumentReference groupRef = mDb
+                .collection("Groups")
+                .document(groupId);
+        groupRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot != null) {
+                    Group group = documentSnapshot.toObject(Group.class);
+                    for (String userId : group.getCoordinators()) {
+                        if (userId != fuser.getUid()) {
+                            Log.e(TAG, userId);
+                            sendSingleNotification(userId, message);
+                        }
+                    }
+                    for (String userId : group.getMembers()) {
+                        if (userId != fuser.getUid()) {
+                            Log.e(TAG, userId);
+                            sendSingleNotification(userId, message);
+                        }
+                    }
+                }
+            }
+        });
+    }
+    public void sendSingleNotification(final String userId, final String message){
+        DocumentReference userRef = mDb
+                .collection("Users")
+                .document(userId);
+        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot!=null){
+                    User user = documentSnapshot.toObject(User.class);
+                    Log.e(TAG, "notify users"+user.getUsername());
+                    Data data = new Data(fuser.getUid(), R.mipmap.ic_launcher,user.getUsername()+" : "+message, groupname, userId, groupId, groupname);
+                    Sender sender = new Sender(data, user.getToken());
+                    apiService.sendNotification(sender)
+                            .enqueue(new Callback<MyResponse>() {
+                                @Override
+                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                    if(response.code() == 200){
+                                        if(response.body().success != 1){
+                                            showSnackbar("Send notification failed!", ChatActivity.this);
+                                        }
+                                    }
+                                }
+                                @Override
+                                public void onFailure(Call<MyResponse> call, Throwable t) {
+
+                                }
+                            });
+                }
+            }
+        });
+        }
+
 
     private void getChatMessages(){
         CollectionReference messagesRef = mDb

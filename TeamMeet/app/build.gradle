@@ -62,7 +62,10 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:21.1.1'
     implementation 'com.google.firebase:firebase-storage:19.0.1'
     // Add the SDK for Firebase Cloud Messaging
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.google.firebase:firebase-messaging:20.1.0'
+    implementation 'com.google.firebase:firebase-iid:20.0.2'
 
     //lib for display profile images see https://github.com/square/picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
