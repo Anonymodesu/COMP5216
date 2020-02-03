@@ -14,6 +14,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,6 +64,8 @@ public class LoginActivity extends BaseActivity {
 
     private EditText userEmail, userPassword;
     private TextView pageName;
+    private int failCount;
+    private LinearLayout signup_block, forgetpw_block;
     private ImageView googleSignInButton, facebookSignInButton;
     private GoogleSignInClient mGoogleSignInClient;
 //for facebook sign in
@@ -94,6 +97,10 @@ public class LoginActivity extends BaseActivity {
         userPassword = findViewById(R.id.userPassword);
         googleSignInButton = findViewById(R.id.google_signin_button);
         facebookSignInButton = findViewById(R.id.facebook_signin_button);
+        signup_block = findViewById(R.id.sign_up_block);
+        forgetpw_block = findViewById(R.id.forgetpw_block);
+        failCount = 0;
+
         facebookSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -184,9 +191,14 @@ public class LoginActivity extends BaseActivity {
                             SendUserToMainActivity();
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            Log.w(TAG, "signInWithCredential:failure"+failCount, task.getException());
                             String message = task.getException().getMessage();
-                            //Toast.makeText(LoginActivity.this, R.string.auth_failed + message, Toast.LENGTH_SHORT).show();
+                            if(failCount >= 3){
+                                signup_block.setVisibility(View.GONE);
+                                forgetpw_block.setVisibility(View.VISIBLE);
+                                findViewById(R.id.btn_login).setBackgroundResource(R.color.primary_light);
+                            }
+                            failCount = failCount + 1;
                             showSnackbar(R.string.auth_failed + message, LoginActivity.this);
                         }
 
@@ -283,9 +295,12 @@ public class LoginActivity extends BaseActivity {
                             SendUserToMainActivity();
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-//                            Toast.makeText(LoginActivity.this, R.string.auth_failed,
-//                                    Toast.LENGTH_SHORT).show();
+                            Log.w(TAG, "signInWithEmail:failure"+failCount, task.getException());
+                            failCount = failCount + 1;
+                            if(failCount >= 3){
+                                signup_block.setVisibility(View.GONE);
+                                forgetpw_block.setVisibility(View.VISIBLE);
+                            }
                             showSnackbar("Login failed. Please check your email and password", LoginActivity.this);
                         }
 

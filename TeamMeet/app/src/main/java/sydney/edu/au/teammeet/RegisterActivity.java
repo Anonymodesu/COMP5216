@@ -6,15 +6,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RadioGroup;
+
+import android.widget.Scroller;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -24,7 +25,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RegisterActivity extends BaseActivity {
     private static final String TAG = "Register";
@@ -32,9 +32,10 @@ public class RegisterActivity extends BaseActivity {
 
     //Views
     private EditText UserEmail, UserPassword, UserConfirmPassword,UserName;
-    private TextView GoBackButton;
+    private TextView GoBackButton, termsLink;
     private Button CreateAccountButton;
     private MaterialCheckBox checkbox;
+    private GroupSelfDialog selfDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +52,10 @@ public class RegisterActivity extends BaseActivity {
         UserName = (EditText) findViewById(R.id.Siginup_Username);
         CreateAccountButton = (Button) findViewById(R.id.Signup_Button);
         GoBackButton = (TextView) findViewById(R.id.go_back);
+        termsLink = (TextView) findViewById(R.id.terms_cons);
         checkbox = findViewById(R.id.check_box);
+
+
 
         checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
             @Override
@@ -63,6 +67,30 @@ public class RegisterActivity extends BaseActivity {
                 }
             }
         });
+
+        termsLink.setOnClickListener(new View.OnClickListener() {
+                                         @Override
+                                         public void onClick(View v) {
+                                             selfDialog = new GroupSelfDialog(RegisterActivity.this);
+                                             selfDialog.setTitle("Terms & Conditions");
+                                             selfDialog.setMessage(getResources().getString(R.string.terms_and_conditions));
+                                             selfDialog.setYesOnclickListener("Accept", new GroupSelfDialog.onYesOnclickListener() {
+                                                 @Override
+                                                 public void onYesClick() {
+                                                     checkbox.setChecked(true);
+                                                     selfDialog.dismiss();
+                                                 }
+                                             });
+                                             selfDialog.setNoOnclickListener("Cancel", new GroupSelfDialog.onNoOnclickListener() {
+                                                 @Override
+                                                 public void onNoClick() {
+                                                     selfDialog.dismiss();
+                                                 }
+                                             });
+                                             selfDialog.show();
+                                         }
+                                     });
+
         GoBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

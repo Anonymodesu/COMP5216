@@ -164,6 +164,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/terms_text"
+                android:id="@+id/terms_cons"
                 android:textSize="12dp"
                 android:fontFamily="@font/montserrat"
                 android:layout_marginLeft="5dp"

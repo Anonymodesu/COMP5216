@@ -27,11 +27,11 @@
     <!--自定义dialog背景全透明无边框theme -->
     <style name="MyDialog" parent="android:style/Theme.Dialog">
 
-        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowBackground">#454A48</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>
-        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:backgroundDimEnabled">true</item>
         <item name="android:button">@style/MyButton</item>
     </style>
 

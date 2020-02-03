@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#11ffffff">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="380dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:background="@drawable/free_dialog_bg"
+        android:background="@color/colorWhite"
         android:orientation="vertical">
 
         <TextView
@@ -19,8 +18,9 @@
             android:layout_margin="15dp"
             android:gravity="center"
             android:text="Alert"
+            android:fontFamily="@font/montserrat"
             android:textStyle="bold"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/primary_light"
             android:textSize="20sp" />
 
         <TextView
@@ -29,44 +29,45 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
+            android:fontFamily="@font/montserrat"
+            android:textColor="@color/textNormal"
+            android:scrollbars="vertical"
             android:text="Message" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginTop="15dp"
-            android:background="#E4E4E4" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
+            android:id="@+id/btns_bar"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/no"
-                android:layout_width="0dp"
+                android:layout_width="20dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:layout_weight="1"
-                android:background="#FFFFFF"
+                android:backgroundTint="@color/grey_500"
                 android:gravity="center"
                 android:singleLine="true"
+                android:fontFamily="@font/montserrat"
                 android:text="No"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp" />
 
-            <View
-                android:layout_width="1px"
-                android:layout_height="match_parent"
-                android:background="#E4E4E4" />
-
             <Button
                 android:id="@+id/yes"
-                android:layout_width="0dp"
+                android:layout_width="20dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="10dp"
+                android:fontFamily="@font/montserrat"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:layout_weight="1"
-                android:background="#FFFFFF"
+                android:backgroundTint="@color/grey_500"
                 android:gravity="center"
                 android:singleLine="true"
                 android:text="Yes"
@@ -75,4 +76,4 @@
         </LinearLayout>
     </LinearLayout>
 
-</RelativeLayout>  
+</RelativeLayout>

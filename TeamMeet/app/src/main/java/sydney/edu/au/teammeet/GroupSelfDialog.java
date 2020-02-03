@@ -3,8 +3,11 @@ package sydney.edu.au.teammeet;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.Scroller;
 import android.widget.TextView;
 
 public class GroupSelfDialog extends Dialog {
@@ -43,7 +46,6 @@ public class GroupSelfDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.customized_dialog);
-
         setCanceledOnTouchOutside(false);
 
 
@@ -98,6 +100,10 @@ public class GroupSelfDialog extends Dialog {
         no = (Button) findViewById(R.id.no);
         titleTv = (TextView) findViewById(R.id.title);
         messageTv = (TextView) findViewById(R.id.message);
+        messageTv.setMaxLines(20);
+        messageTv.setScroller(new Scroller(this.getContext()));
+        messageTv.setVerticalScrollBarEnabled(true);
+        messageTv.setMovementMethod(new ScrollingMovementMethod());
     }
 
     public void setTitle(String title) {

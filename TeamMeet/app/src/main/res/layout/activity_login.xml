@@ -116,12 +116,18 @@
         android:textSize="@dimen/button_text_size"/>
     </LinearLayout>
 
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:id="@+id/sign_up_block"
+    android:gravity="center"
+    android:layout_below="@+id/login_form">
     <LinearLayout
         android:id="@+id/link_forgetpw_signup"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_below="@+id/login_form">
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -137,17 +143,6 @@
             android:fontFamily="@font/montserrat"
             android:textSize="14dp"
             android:textColor="@color/primary_light"/>
-
-        <TextView android:id="@+id/link_forgetpw"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/btn_login"
-            android:text="  Forgot your password?"
-            android:fontFamily="@font/montserrat"
-            android:textColor="@color/colorWhite"
-            android:alpha=".6"
-            android:visibility="gone"
-            android:textSize="14dip"/>
     </LinearLayout>
 
 <LinearLayout
@@ -183,13 +178,47 @@
             android:layout_weight="1"
             android:src="@drawable/facebook">
         </androidx.appcompat.widget.AppCompatImageView>
-
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/google_signin_button"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_weight="1"
             android:src="@drawable/gmail" />
+    </LinearLayout>
+</LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/login_form"
+        android:id="@+id/forgetpw_block"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:gravity="center">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Trouble signing in?"
+                    android:layout_marginRight="20dp"
+                    android:fontFamily="@font/montserrat"
+                    android:textColor="@color/colorWhite"
+                    android:alpha=".6"
+                    android:textSize="14dip"/>
+            <TextView
+                android:id="@+id/link_forgetpw"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reset Password"
+                android:fontFamily="@font/montserrat"
+                android:textColor="@color/primary_light"
+                android:textStyle="bold"
+                android:textSize="14dip"/>
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

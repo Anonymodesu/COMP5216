@@ -67,6 +67,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:20.1.0'
     implementation 'com.google.firebase:firebase-iid:20.0.2'
 
+    //add for terms and conditions alert dialog
+
     //lib for display profile images see https://github.com/square/picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
     //for profile image cropping see https://github.com/ArthurHub/Android-Image-Cropper
